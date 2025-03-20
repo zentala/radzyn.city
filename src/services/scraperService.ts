@@ -79,13 +79,16 @@ export const scrapeSource = async (config: ScraperConfig): Promise<void> => {
     
     // Mock scraped articles (3-5 random articles)
     const numArticles = Math.floor(Math.random() * 3) + 3;
-    const scrapedArticles = Array.from({ length: numArticles }, (_, i) => {
+    const scrapedArticlesPromises = Array.from({ length: numArticles }, async (_, i) => {
       const title = `News article from ${config.sourceName} #${i + 1}`;
       const content = `This is a detailed content for the article. It contains multiple paragraphs of information about the event or news item. This would be the full content scraped from the source website.
 
 The content continues with more details and perhaps quotes from relevant people. It might include statistics or other factual information related to the news item.
 
 In conclusion, this is just a mock article, but in production, this would be real content scraped from the source website.`;
+      
+      // Get AI analysis
+      const analysis = await analyzeWithAI(title, content);
       
       const articleData: Omit<NewsArticleData, 'id'> = {
         title,
@@ -99,11 +102,14 @@ In conclusion, this is just a mock article, but in production, this would be rea
         slug: generateSlug(title),
         featured: i === 0, // First article is featured
         imageUrl: i % 2 === 0 ? `/images/placeholder-${(i % 2) + 1}.jpg` : undefined,
-        aiAnalysis: await analyzeWithAI(title, content)
+        aiAnalysis: analysis
       };
       
       return articleData;
     });
+    
+    // Wait for all article promises to resolve
+    const scrapedArticles = await Promise.all(scrapedArticlesPromises);
     
     // Save the scraped articles to the database
     for (const article of scrapedArticles) {
