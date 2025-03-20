@@ -1,4 +1,5 @@
 import NewsFeed from '@/components/NewsFeed';
+import NewsFilters from '@/components/NewsFilters';
 
 export default function NewsPage() {
   return (
@@ -8,7 +9,15 @@ export default function NewsPage() {
         Najnowsze informacje i wiadomości z Radzynia Podlaskiego i powiatu radzyńskiego. Bądź na bieżąco z wydarzeniami w regionie.
       </p>
       
-      <NewsFeed showMoreLink={false} title="Wszystkie aktualności" limit={12} />
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="w-full md:w-1/4">
+          <NewsFilters />
+        </div>
+        
+        <div className="w-full md:w-3/4">
+          <NewsFeed showMoreLink={false} title="Wszystkie aktualności" limit={9} />
+        </div>
+      </div>
     </div>
   );
 }

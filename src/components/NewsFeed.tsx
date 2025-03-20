@@ -1,74 +1,66 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NewsCard from './NewsCard';
-
-// Sample news data
-const newsData = [
-  {
-    title: 'Nowa fontanna w centrum miasta już otwarta',
-    summary: 'Po kilku miesiącach budowy, nowa fontanna w centrum Radzynia Podlaskiego została oficjalnie otwarta. Inwestycja o wartości 2 mln złotych ma być nową atrakcją turystyczną miasta.',
-    date: '20 marca 2025',
-    category: 'miasto',
-    slug: 'nowa-fontanna-w-centrum-miasta-juz-otwarta',
-    featured: true
-  },
-  {
-    title: 'Festiwal Kultury Ludowej przyciągnął tysiące gości',
-    summary: 'W miniony weekend odbył się doroczny Festiwal Kultury Ludowej, który zgromadził rekordową liczbę odwiedzających z całego regionu. Prezentacje lokalnego folkloru i tradycyjnego rękodzieła cieszyły się ogromną popularnością.',
-    date: '17 marca 2025',
-    category: 'kultura',
-    slug: 'festiwal-kultury-ludowej-przyciagnal-tysiace-gosci'
-  },
-  {
-    title: 'Radzyńscy sportowcy z sukcesami na zawodach wojewódzkich',
-    summary: 'Młodzi sportowcy z Radzynia Podlaskiego zdobyli 5 medali podczas Wojewódzkich Zawodów Lekkoatletycznych. Trener podkreśla potencjał młodych talentów i zapowiada kolejne sukcesy.',
-    date: '12 marca 2025',
-    category: 'sport',
-    slug: 'radzynscy-sportowcy-z-sukcesami-na-zawodach-wojewodzkich'
-  },
-  {
-    title: 'Rozpoczęto budowę nowej drogi do strefy przemysłowej',
-    summary: 'Ruszyła długo oczekiwana budowa drogi łączącej miasto ze strefą przemysłową. Inwestycja warta 8 mln złotych ma zostać ukończona do końca roku i znacząco poprawić dostępność komunikacyjną dla firm i mieszkańców.',
-    date: '8 marca 2025',
-    category: 'inwestycje',
-    slug: 'rozpoczeto-budowe-nowej-drogi-do-strefy-przemyslowej'
-  },
-  {
-    title: 'Szkoły z powiatu radzyńskiego z nowymi pracowniami komputerowymi',
-    summary: 'Wszystkie szkoły ponadpodstawowe w powiecie radzyńskim zostały wyposażone w nowe pracownie komputerowe. Projekt o wartości 1.5 mln złotych został zrealizowany ze środków unijnych i ma na celu podniesienie kompetencji cyfrowych uczniów.',
-    date: '5 marca 2025',
-    category: 'edukacja',
-    slug: 'szkoly-z-powiatu-radzynskiego-z-nowymi-pracowniami-komputerowymi'
-  },
-  {
-    title: 'Koncert symfoniczny "Muzyka Mistrzów" zachwyca publiczność',
-    summary: 'Lubelska Orkiestra Kameralna wystąpiła w Pałacu Potockich z programem "Muzyka Mistrzów". Koncert spotkał się z entuzjastycznym przyjęciem ze strony licznie przybyłej publiczności.',
-    date: '2 marca 2025',
-    category: 'kultura',
-    slug: 'koncert-symfoniczny-muzyka-mistrzow-zachwyca-publicznosc'
-  }
-];
+import { NewsArticle } from '@/utils/types';
+import { getAllNewsArticles } from '@/services/newsService';
+import { startScrapers } from '@/services/scraperService';
 
 interface NewsFeedProps {
   limit?: number;
   showFeatured?: boolean;
   title?: string;
   showMoreLink?: boolean;
+  categoryId?: string;
+  tagId?: string;
 }
 
 export default function NewsFeed({ 
   limit = 6, 
   showFeatured = true,
   title = "Aktualności",
-  showMoreLink = true
+  showMoreLink = true,
+  categoryId,
+  tagId
 }: NewsFeedProps) {
   const [visibleNewsCount, setVisibleNewsCount] = useState(limit);
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
+  useEffect(() => {
+    // Initialize scrapers (in production, this would be done server-side)
+    startScrapers().catch(console.error);
+    
+    // Fetch news articles
+    const fetchNews = async () => {
+      try {
+        setIsLoading(true);
+        const articles = await getAllNewsArticles();
+        setNewsArticles(articles);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching news:', err);
+        setError('Could not load news articles');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchNews();
+  }, []);
+  
+  // Filter news by category if categoryId is provided
+  const filteredNews = categoryId 
+    ? newsArticles.filter(news => news.category.id === categoryId)
+    : tagId 
+    ? newsArticles.filter(news => news.tags.some(tag => tag.id === tagId))
+    : newsArticles;
   
   // Filter and sort news (newest first)
-  const sortedNews = [...newsData].sort((a, b) => {
-    const dateA = new Date(a.date.split(' ').reverse().join('-'));
-    const dateB = new Date(b.date.split(' ').reverse().join('-'));
+  const sortedNews = [...filteredNews].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
     return dateB.getTime() - dateA.getTime();
   });
   
@@ -101,33 +93,80 @@ export default function NewsFeed({
         )}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Featured news item takes up 2 columns */}
-        {featuredNewsItem && (
-          <NewsCard
-            title={featuredNewsItem.title}
-            summary={featuredNewsItem.summary}
-            date={featuredNewsItem.date}
-            category={featuredNewsItem.category}
-            slug={featuredNewsItem.slug}
-            featured={true}
-          />
-        )}
-        
-        {/* Regular news items */}
-        {regularNews.map((news, index) => (
-          <NewsCard
-            key={index}
-            title={news.title}
-            summary={news.summary}
-            date={news.date}
-            category={news.category}
-            slug={news.slug}
-          />
-        ))}
-      </div>
+      {isLoading ? (
+        // Loading state
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: limit }).map((_, index) => (
+            <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md p-4 animate-pulse">
+              <div className="h-40 bg-gray-200 rounded mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/4 mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded w-3/4 mb-3"></div>
+              <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            </div>
+          ))}
+        </div>
+      ) : error ? (
+        // Error state
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-red-700">{error}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        // Content state
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Featured news item takes up 2 columns */}
+          {featuredNewsItem && (
+            <NewsCard
+              title={featuredNewsItem.title}
+              summary={featuredNewsItem.summary}
+              date={featuredNewsItem.date}
+              category={featuredNewsItem.category}
+              imageUrl={featuredNewsItem.imageUrl}
+              slug={featuredNewsItem.slug}
+              featured={true}
+              sourceName={featuredNewsItem.sourceName}
+              aiAnalysis={featuredNewsItem.aiAnalysis}
+              tags={featuredNewsItem.tags.map(tag => tag.name)}
+            />
+          )}
+          
+          {/* Regular news items */}
+          {regularNews.length > 0 ? (
+            regularNews.map((news, index) => (
+              <NewsCard
+                key={news.id}
+                title={news.title}
+                summary={news.summary}
+                date={news.date}
+                category={news.category}
+                imageUrl={news.imageUrl}
+                slug={news.slug}
+                sourceName={news.sourceName}
+                aiAnalysis={news.aiAnalysis}
+                tags={news.tags.map(tag => tag.name)}
+              />
+            ))
+          ) : (
+            <div className="col-span-3 text-center py-8">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+              </svg>
+              <p className="mt-2 text-gray-500">Brak aktualności do wyświetlenia.</p>
+            </div>
+          )}
+        </div>
+      )}
       
-      {hasMoreNews && (
+      {hasMoreNews && !isLoading && !error && (
         <div className="mt-8 text-center">
           <button
             onClick={loadMoreNews}
