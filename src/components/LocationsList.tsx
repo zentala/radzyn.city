@@ -15,11 +15,20 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  SelectChangeEvent
+  SelectChangeEvent,
+  useTheme
 } from '@mui/material';
 import PlaceIcon from '@mui/icons-material/Place';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import ParkIcon from '@mui/icons-material/Park';
+import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
+import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import PublicIcon from '@mui/icons-material/Public';
 import DashboardWidget from './DashboardWidget';
 import { LocationPoint } from './Map';
+import { CATEGORY_COLORS } from '@/utils/locationData';
 
 interface LocationsListProps {
   locations: LocationPoint[];
@@ -28,12 +37,35 @@ interface LocationsListProps {
   isDashboardWidget?: boolean;
 }
 
+// Helper function to get the appropriate icon for each category
+const getCategoryIcon = (category: string) => {
+  switch(category) {
+    case 'Zabytki':
+      return <AccountBalanceIcon />;
+    case 'Miejsca publiczne':
+      return <PublicIcon />;
+    case 'Instytucje':
+      return <ApartmentIcon />;
+    case 'Rekreacja':
+      return <ParkIcon />;
+    case 'Kultura':
+      return <TheaterComedyIcon />;
+    case 'Sport':
+      return <SportsSoccerIcon />;
+    case 'Gastronomia':
+      return <RestaurantIcon />;
+    default:
+      return <PlaceIcon />;
+  }
+};
+
 function LocationsList({ 
   locations, 
   onLocationSelect, 
   selectedLocationId,
   isDashboardWidget = false 
 }: LocationsListProps) {
+  const theme = useTheme();
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   
   // Extract unique categories
@@ -58,9 +90,31 @@ function LocationsList({
             label="Kategoria"
             onChange={handleCategoryChange}
           >
-            {categories.map((category) => (
-              <MenuItem key={category} value={category}>
-                {category === 'all' ? 'Wszystkie' : category}
+            <MenuItem value="all" sx={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: 1 
+            }}>
+              <PlaceIcon sx={{ color: theme.palette.grey[700] }} />
+              <span>Wszystkie kategorie</span>
+            </MenuItem>
+            
+            {categories.filter(c => c !== 'all').map((category) => (
+              <MenuItem 
+                key={category} 
+                value={category}
+                sx={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: 1 
+                }}
+              >
+                <Box sx={{ 
+                  color: CATEGORY_COLORS[category] || CATEGORY_COLORS.default 
+                }}>
+                  {getCategoryIcon(category)}
+                </Box>
+                <span>{category}</span>
               </MenuItem>
             ))}
           </Select>
@@ -78,17 +132,29 @@ function LocationsList({
                 cursor: onLocationSelect ? 'pointer' : 'default',
                 '&:hover': {
                   backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                }
+                },
+                borderLeft: location.id === selectedLocationId 
+                  ? `4px solid ${CATEGORY_COLORS[location.category] || CATEGORY_COLORS.default}`
+                  : '4px solid transparent',
+                transition: 'all 0.2s ease'
               }}
             >
               <ListItemAvatar>
-                <Avatar>
-                  <PlaceIcon />
+                <Avatar sx={{ 
+                  bgcolor: CATEGORY_COLORS[location.category] || CATEGORY_COLORS.default
+                }}>
+                  {getCategoryIcon(location.category)}
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  <Typography variant="subtitle1" component="span">
+                  <Typography 
+                    variant="subtitle1" 
+                    component="span"
+                    sx={{
+                      fontWeight: location.id === selectedLocationId ? 600 : 500,
+                    }}
+                  >
                     {location.name}
                   </Typography>
                 }
@@ -98,15 +164,28 @@ function LocationsList({
                       component="span"
                       variant="body2"
                       color="text.primary"
-                      sx={{ display: 'block', mb: 0.5 }}
+                      sx={{ 
+                        display: 'block', 
+                        mb: 0.5,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        lineHeight: 1.3
+                      }}
                     >
                       {location.description}
                     </Typography>
                     <Chip 
                       label={location.category} 
                       size="small"
-                      color="primary"
-                      variant="outlined"
+                      sx={{ 
+                        backgroundColor: CATEGORY_COLORS[location.category] || CATEGORY_COLORS.default,
+                        color: 'white',
+                        fontWeight: 500,
+                        fontSize: '0.7rem'
+                      }}
                     />
                   </>
                 }

@@ -3,6 +3,18 @@ import { LocationPoint } from '../components/Map';
 // Coordinates for Radzyń Podlaski, Poland
 const CITY_CENTER: [number, number] = [51.7833, 22.6167];
 
+// Category to color mapping for markers
+export const CATEGORY_COLORS = {
+  'Zabytki': '#9C27B0', // Purple
+  'Miejsca publiczne': '#2196F3', // Blue
+  'Instytucje': '#F44336', // Red
+  'Rekreacja': '#4CAF50', // Green
+  'Kultura': '#FF9800', // Orange
+  'Sport': '#3F51B5', // Indigo
+  'Gastronomia': '#795548', // Brown
+  'default': '#757575' // Grey
+};
+
 // Sample data for locations in Radzyń Podlaski
 export const locations: LocationPoint[] = [
   {
