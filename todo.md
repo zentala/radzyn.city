@@ -24,16 +24,16 @@
 ## Priority 2: Content & Functionality Enhancements
 
 ### Events Calendar Basic Implementation (13 points)
-- [ ] Create static sample data for upcoming events
-- [ ] Add filtering by event category
-- [ ] Implement simple event cards with visual enhancements
-- [ ] Add "Add to Calendar" functionality
+- [x] Create static sample data for upcoming events
+- [x] Add filtering by event category, month, and search
+- [x] Implement enhanced event cards with visual design
+- [x] Add "Add to Calendar" functionality
 
 ### News Section Basic Implementation (8 points)
-- [ ] Create static sample news articles (3-5 items)
-- [ ] Implement news card layout with images
-- [ ] Add "Featured News" section to homepage
-- [ ] Implement basic pagination UI
+- [x] Create static sample news articles (6+ items)
+- [x] Implement responsive news card layout with placeholders
+- [x] Add featured news section to homepage
+- [x] Add "load more" functionality
 
 ### Contact Form Enhancement (5 points)
 - [x] Add client-side form validation
