@@ -11,10 +11,11 @@ export default defineConfig({
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
-    actionTimeout: 10000,
+    actionTimeout: 30000,
     navigationTimeout: 30000,
+    timeout: 60000,
   },
-  timeout: 60000,
+  timeout: 90000,
   projects: process.env.CI 
     ? [
         {

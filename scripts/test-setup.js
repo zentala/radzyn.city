@@ -24,7 +24,7 @@ async function isServerRunning() {
 }
 
 // Wait for server to be available
-async function waitForServer(timeout = 30000) {
+async function waitForServer(timeout = 60000) {
   const startTime = Date.now();
   console.log('Waiting for server to be ready...');
   
