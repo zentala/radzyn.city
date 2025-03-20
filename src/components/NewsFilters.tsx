@@ -4,6 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { NewsCategory, NewsTag } from '@/utils/types';
 import { getAllCategories, getAllTags } from '@/services/newsService';
+import { 
+  Typography, Chip, List, ListItem, ListItemButton, 
+  ListItemText, Skeleton, Box, Stack, Paper
+} from '@mui/material';
 
 interface NewsFiltersProps {
   activeCategory?: string;
@@ -43,72 +47,109 @@ export default function NewsFilters({
   
   if (isLoading) {
     return (
-      <div className="animate-pulse">
-        <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
-        <div className="space-y-2">
+      <Box sx={{ mb: 4 }}>
+        <Skeleton variant="text" width="33%" height={32} sx={{ mb: 2 }} />
+        <Box sx={{ mb: 3 }}>
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-8 bg-gray-200 rounded"></div>
+            <Skeleton key={i} variant="rectangular" height={48} sx={{ mb: 1, borderRadius: 1 }} />
           ))}
-        </div>
-        <div className="h-6 bg-gray-200 rounded w-1/3 my-4"></div>
-        <div className="flex flex-wrap gap-2">
+        </Box>
+        <Skeleton variant="text" width="33%" height={32} sx={{ my: 2 }} />
+        <Stack direction="row" flexWrap="wrap" gap={1}>
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-6 bg-gray-200 rounded w-16"></div>
+            <Skeleton key={i} variant="rectangular" width={80} height={32} sx={{ borderRadius: 8 }} />
           ))}
-        </div>
-      </div>
+        </Stack>
+      </Box>
     );
   }
   
   return (
-    <div className="mb-8">
-      <h3 className="text-xl font-semibold mb-3">Kategorie</h3>
-      <div className="space-y-2 mb-6">
-        <Link 
-          href="/news"
-          className={`block px-3 py-2 rounded-lg transition-colors ${
-            !activeCategory && !activeTag 
-              ? 'bg-primary text-white' 
-              : 'hover:bg-gray-100'
-          }`}
-        >
-          Wszystkie aktualności
-          {showCounts && (
-            <span className="ml-2 text-sm opacity-80">({categories.length})</span>
-          )}
-        </Link>
-        
-        {categories.map((category) => (
-          <Link 
-            key={category.id}
-            href={`/news/category/${category.slug}`}
-            className={`block px-3 py-2 rounded-lg transition-colors ${
-              activeCategory === category.slug 
-                ? 'bg-primary text-white' 
-                : 'hover:bg-gray-100'
-            }`}
-          >
-            {category.name}
-          </Link>
-        ))}
-      </div>
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h5" component="h3" fontWeight="medium" sx={{ mb: 2 }}>
+        Kategorie
+      </Typography>
       
-      <h3 className="text-xl font-semibold mb-3">Tagi</h3>
-      <div className="flex flex-wrap gap-2">
+      <Paper variant="outlined" sx={{ mb: 3, borderRadius: 2, overflow: 'hidden' }}>
+        <List disablePadding>
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              href="/news"
+              selected={!activeCategory && !activeTag}
+              sx={{
+                py: 1.5,
+                '&.Mui-selected': {
+                  bgcolor: 'primary.main',
+                  color: 'common.white',
+                  '&:hover': {
+                    bgcolor: 'primary.dark',
+                  }
+                }
+              }}
+            >
+              <ListItemText 
+                primary={
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    Wszystkie aktualności
+                    {showCounts && (
+                      <Typography component="span" variant="body2" sx={{ ml: 1, opacity: 0.8 }}>
+                        ({categories.length})
+                      </Typography>
+                    )}
+                  </Box>
+                } 
+              />
+            </ListItemButton>
+          </ListItem>
+          
+          {categories.map((category) => (
+            <ListItem key={category.id} disablePadding>
+              <ListItemButton
+                component={Link}
+                href={`/news/category/${category.slug}`}
+                selected={activeCategory === category.slug}
+                sx={{
+                  py: 1.5,
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.main',
+                    color: 'common.white',
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                    }
+                  }
+                }}
+              >
+                <ListItemText primary={category.name} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
+      
+      <Typography variant="h5" component="h3" fontWeight="medium" sx={{ mb: 2 }}>
+        Tagi
+      </Typography>
+      
+      <Stack direction="row" flexWrap="wrap" gap={1}>
         {tags.map((tag) => (
-          <Link 
-            key={tag.id} 
+          <Chip
+            key={tag.id}
+            label={`#${tag.name}`}
+            component={Link}
             href={`/news/tag/${tag.slug}`}
-            className={`inline-block px-3 py-1 rounded-full text-sm transition-colors ${
-              activeTag === tag.slug
-                ? 'bg-primary text-white'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
-            }`}
-          >
-            #{tag.name}
-          </Link>
+            clickable
+            color={activeTag === tag.slug ? "primary" : "default"}
+            variant={activeTag === tag.slug ? "filled" : "outlined"}
+            sx={{ 
+              borderRadius: 4,
+              '&:hover': {
+                bgcolor: activeTag === tag.slug ? 'primary.dark' : 'action.hover',
+              }
+            }}
+          />
         ))}
-      </div>
-    </div>
+      </Stack>
+    </Box>
   );
 }
