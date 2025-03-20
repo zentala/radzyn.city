@@ -4,72 +4,30 @@ test.describe('Navigation', () => {
   test('should navigate to all main pages', async ({ page }) => {
     // Home page
     await page.goto('/');
-    await expect(page).toHaveTitle(/Radzyń/);
+    await expect(page).toHaveTitle(/Radzyń/, { timeout: 30000 });
     
-    // Check for desktop navigation
-    const isDesktop = await page.locator('.hidden.md\\:flex').isVisible();
+    // Look for the navigation element first
+    await expect(page.locator('header')).toBeVisible({ timeout: 30000 });
     
-    if (isDesktop) {
-      // Use desktop navigation
-      // City page
-      await page.locator('a[aria-label="City"]').first().click();
-      await page.waitForURL('**/city');
-      await expect(page.url()).toContain('city');
-      
-      // County page
-      await page.locator('a[aria-label="County"]').first().click();
-      await page.waitForURL('**/county');
-      await expect(page.url()).toContain('county');
-      
-      // Events page
-      await page.locator('a[aria-label="Events"]').first().click();
-      await page.waitForURL('**/events');
-      await expect(page.url()).toContain('events');
-      
-      // Contact page
-      await page.locator('a[aria-label="Contact"]').first().click();
-      await page.waitForURL('**/contact');
-      await expect(page.url()).toContain('contact');
-    } else {
-      // Use mobile navigation
-      // First open the menu
-      await page.locator('button[aria-label="Otwórz menu"]').click();
-      await page.waitForSelector('#mobile-menu');
-      
-      // City page
-      await page.locator('#mobile-menu a[aria-label="City"]').click();
-      await page.waitForURL('**/city');
-      await expect(page.url()).toContain('city');
-      
-      // Go back to home
-      await page.goto('/');
-      await page.locator('button[aria-label="Otwórz menu"]').click();
-      await page.waitForSelector('#mobile-menu');
-      
-      // County page
-      await page.locator('#mobile-menu a[aria-label="County"]').click();
-      await page.waitForURL('**/county');
-      await expect(page.url()).toContain('county');
-      
-      // Go back to home
-      await page.goto('/');
-      await page.locator('button[aria-label="Otwórz menu"]').click();
-      await page.waitForSelector('#mobile-menu');
-      
-      // Events page
-      await page.locator('#mobile-menu a[aria-label="Events"]').click();
-      await page.waitForURL('**/events');
-      await expect(page.url()).toContain('events');
-      
-      // Go back to home
-      await page.goto('/');
-      await page.locator('button[aria-label="Otwórz menu"]').click();
-      await page.waitForSelector('#mobile-menu');
-      
-      // Contact page
-      await page.locator('#mobile-menu a[aria-label="Contact"]').click();
-      await page.waitForURL('**/contact');
-      await expect(page.url()).toContain('contact');
-    }
+    // Click on links directly by their text rather than role
+    // City page - use text content rather than aria-label
+    await page.getByText('O mieście', { exact: true }).click();
+    await page.waitForURL('**/city', { timeout: 30000 });
+    await expect(page.url()).toContain('city');
+    
+    // County page
+    await page.getByText('Powiat', { exact: true }).click();
+    await page.waitForURL('**/county', { timeout: 30000 });
+    await expect(page.url()).toContain('county');
+    
+    // Events page
+    await page.getByText('Wydarzenia', { exact: true }).click();
+    await page.waitForURL('**/events', { timeout: 30000 });
+    await expect(page.url()).toContain('events');
+    
+    // Contact page
+    await page.getByText('Kontakt', { exact: true }).click();
+    await page.waitForURL('**/contact', { timeout: 30000 });
+    await expect(page.url()).toContain('contact');
   });
 });

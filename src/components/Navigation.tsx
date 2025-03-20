@@ -3,11 +3,21 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { 
+  AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, 
+  List, ListItem, ListItemButton, ListItemText, useScrollTrigger,
+  Container
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const currentPath = usePathname();
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 10,
+  });
 
   const navigation = [
     { name: 'Strona główna', href: '/', enName: 'Home' },
@@ -17,22 +27,6 @@ export default function Navigation() {
     { name: 'Kontakt', href: '/contact', enName: 'Contact' },
   ];
 
-  // Handle scroll event to add background on scroll
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    
-    // Initial check
-    handleScroll();
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   // Close mobile menu when changing route
   useEffect(() => {
     setIsMenuOpen(false);
@@ -41,99 +35,130 @@ export default function Navigation() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <header role="banner">
-      <nav className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
-        isScrolled ? 'bg-primary shadow-md' : 'bg-primary/90'
-      } text-white`}>
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="font-bold text-xl md:text-2xl hover:opacity-90 transition">
-                Radzyń Podlaski
-              </Link>
-            </div>
+    <Box component="header" role="banner">
+      <AppBar 
+        position="fixed" 
+        sx={{ 
+          transition: 'all 300ms ease-in-out',
+          backgroundColor: trigger ? 'primary.main' : 'rgba(25, 118, 210, 0.9)',
+          boxShadow: trigger ? 2 : 0,
+        }}
+      >
+        <Container maxWidth="lg">
+          <Toolbar sx={{ justifyContent: 'space-between', py: 0.5 }}>
+            <Typography 
+              variant="h6" 
+              component={Link} 
+              href="/"
+              sx={{ 
+                textDecoration: 'none', 
+                color: 'white',
+                fontWeight: 'bold',
+                '&:hover': {
+                  opacity: 0.9
+                }
+              }}
+            >
+              Radzyń Podlaski
+            </Typography>
 
-          {/* Desktop navigation */}
-          <div className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`${
-                  isActive(item.href) 
-                    ? 'font-bold border-b-2 border-white' 
-                    : 'hover:border-b-2 border-white/50'
-                } hover:text-gray-200 transition py-1`}
-                aria-label={item.enName}
-              >
-                {item.name}
-                <span className="sr-only">{item.enName}</span>
-              </Link>
-            ))}
-          </div>
+            {/* Desktop navigation */}
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              {navigation.map((item) => (
+                <Button
+                  key={item.name}
+                  component={Link}
+                  href={item.href}
+                  sx={{
+                    color: 'white',
+                    mx: 1, 
+                    py: 1,
+                    borderBottom: isActive(item.href) ? '2px solid white' : 'none',
+                    borderRadius: 0,
+                    fontWeight: isActive(item.href) ? 'bold' : 'regular',
+                    '&:hover': {
+                      borderBottom: '2px solid rgba(255, 255, 255, 0.5)',
+                      backgroundColor: 'transparent'
+                    }
+                  }}
+                  aria-label={item.enName}
+                >
+                  {item.name}
+                  <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+                    {item.enName}
+                  </span>
+                </Button>
+              ))}
+            </Box>
 
-          {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white focus:outline-none p-2"
-              aria-label={isMenuOpen ? "Zamknij menu" : "Otwórz menu"}
+            {/* Mobile menu button */}
+            <IconButton
+              size="large"
+              edge="end"
+              color="inherit"
+              aria-label="Otwórz menu"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              sx={{ display: { xs: 'flex', md: 'none' } }}
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                {isMenuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
+              {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+            </IconButton>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
-        {/* Mobile navigation - slide down animation */}
-        <div 
-          id="mobile-menu"
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          <div className="pt-2 pb-4 space-y-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
+      {/* Mobile navigation drawer */}
+      <Drawer
+        id="mobile-menu"
+        anchor="top"
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+          '& .MuiDrawer-paper': { 
+            top: '64px', 
+            backgroundColor: 'primary.main',
+            color: 'white',
+          },
+        }}
+        SlideProps={{
+          sx: {
+            transition: 'transform 300ms ease-in-out'
+          }
+        }}
+      >
+        <List sx={{ pt: 0 }}>
+          {navigation.map((item) => (
+            <ListItem key={item.name} disablePadding>
+              <ListItemButton
+                component={Link}
                 href={item.href}
-                className={`block py-3 px-4 rounded-md text-center ${
-                  isActive(item.href) 
-                    ? 'bg-white/20 font-bold' 
-                    : 'hover:bg-white/10'
-                } transition-colors active:bg-white/30 touch-manipulation`}
+                sx={{
+                  textAlign: 'center',
+                  py: 1.5,
+                  backgroundColor: isActive(item.href) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                  fontWeight: isActive(item.href) ? 'bold' : 'normal',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
+                  }
+                }}
                 aria-label={item.enName}
               >
-                {item.name}
-                <span className="sr-only">{item.enName}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-    </nav>
-    </header>
+                <ListItemText 
+                  primary={item.name} 
+                  primaryTypographyProps={{ 
+                    fontWeight: isActive(item.href) ? 'bold' : 'normal',
+                  }}
+                />
+                <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+                  {item.enName}
+                </span>
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+    </Box>
   );
 }

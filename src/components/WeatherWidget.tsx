@@ -2,6 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { 
+  Card, CardContent, Typography, Box, Grid, Skeleton, Alert, Divider,
+  CircularProgress
+} from '@mui/material';
 
 interface WeatherData {
   main: {
@@ -166,23 +170,32 @@ export default function WeatherWidget() {
 
   if (loading) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-          <div className="flex space-x-4">
-            <div className="rounded-full bg-gray-200 h-16 w-16"></div>
-            <div className="flex-1 space-y-2 py-1">
-              <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="h-20 bg-gray-200 rounded"></div>
-            <div className="h-20 bg-gray-200 rounded"></div>
-            <div className="h-20 bg-gray-200 rounded"></div>
-          </div>
-        </div>
-      </div>
+      <Card sx={{ p: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3 }}>
+          <CircularProgress />
+        </Box>
+        <CardContent>
+          <Skeleton variant="text" width="75%" height={30} />
+          <Box sx={{ display: 'flex', mt: 2, mb: 2 }}>
+            <Skeleton variant="circular" width={64} height={64} />
+            <Box sx={{ ml: 2 }}>
+              <Skeleton variant="text" width={80} height={40} />
+              <Skeleton variant="text" width={120} height={20} />
+            </Box>
+          </Box>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid item xs={4}>
+              <Skeleton variant="rectangular" height={60} />
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton variant="rectangular" height={60} />
+            </Grid>
+            <Grid item xs={4}>
+              <Skeleton variant="rectangular" height={60} />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -190,72 +203,130 @@ export default function WeatherWidget() {
   const forecastData = useFallback ? mockForecast : forecast;
 
   if (error && !useFallback) {
-    return <div className="p-4 bg-white rounded-lg shadow-md text-red-500">{error}</div>;
+    return <Alert severity="error" sx={{ p: 2 }}>{error}</Alert>;
   }
   
   if (!currentWeatherData) return null;
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      {useFallback && (
-        <div className="text-xs text-amber-600 mb-2 bg-amber-50 px-2 py-1 rounded">
-          Tryb demonstracyjny - dane pogodowe są symulowane
-        </div>
-      )}
-      
-      <h3 className="text-xl font-semibold mb-3">Pogoda w Radzyniu Podlaskim</h3>
-      
-      {/* Current weather */}
-      <div className="flex items-center">
-        <div className="flex-shrink-0 bg-blue-50 rounded-full p-2">
-          <img 
-            src={`https://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`}
-            alt={currentWeatherData.weather[0].description}
-            width={64}
-            height={64}
-          />
-        </div>
-        <div className="ml-3">
-          <p className="text-3xl font-bold">{Math.round(currentWeatherData.main.temp)}°C</p>
-          <p className="text-gray-600 capitalize">{currentWeatherData.weather[0].description}</p>
-        </div>
-      </div>
-      
-      <div className="mt-4 grid grid-cols-3 gap-2 text-sm">
-        <div className="bg-gray-50 p-2 rounded">
-          <p className="text-gray-500">Odczuwalna</p>
-          <p className="font-medium">{Math.round(currentWeatherData.main.feels_like)}°C</p>
-        </div>
-        <div className="bg-gray-50 p-2 rounded">
-          <p className="text-gray-500">Wilgotność</p>
-          <p className="font-medium">{currentWeatherData.main.humidity}%</p>
-        </div>
-        <div className="bg-gray-50 p-2 rounded">
-          <p className="text-gray-500">Wiatr</p>
-          <p className="font-medium">{Math.round(currentWeatherData.wind.speed * 3.6)} km/h</p>
-        </div>
-      </div>
-      
-      {/* Forecast for next days */}
-      <div className="mt-5 pt-4 border-t">
-        <h4 className="text-md font-medium mb-3">Prognoza na kolejne dni</h4>
-        <div className="grid grid-cols-3 gap-2">
-          {forecastData.map((day, index) => (
-            <div key={index} className="text-center bg-blue-50 p-2 rounded">
-              <p className="font-medium text-xs">{day.dayName}</p>
-              <img 
-                src={`https://openweathermap.org/img/wn/${day.icon}.png`}
-                alt={day.description}
-                width={40}
-                height={40}
-                className="mx-auto"
-              />
-              <p className="font-bold">{Math.round(day.temp)}°C</p>
-              <p className="text-xs text-gray-600 truncate">{day.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+    <Card>
+      <CardContent>
+        {useFallback && (
+          <Alert severity="warning" sx={{ mb: 2 }} variant="outlined">
+            Tryb demonstracyjny - dane pogodowe są symulowane
+          </Alert>
+        )}
+        
+        <Typography variant="h5" component="h3" gutterBottom>
+          Pogoda w Radzyniu Podlaskim
+        </Typography>
+        
+        {/* Current weather */}
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+          <Box 
+            sx={{ 
+              flexShrink: 0, 
+              backgroundColor: 'primary.light', 
+              borderRadius: '50%',
+              p: 0.5,
+              opacity: 0.2
+            }}
+          >
+            <img 
+              src={`https://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`}
+              alt={currentWeatherData.weather[0].description}
+              width={64}
+              height={64}
+            />
+          </Box>
+          <Box sx={{ ml: 2 }}>
+            <Typography variant="h4" component="p" sx={{ fontWeight: 'bold' }}>
+              {Math.round(currentWeatherData.main.temp)}°C
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+              {currentWeatherData.weather[0].description}
+            </Typography>
+          </Box>
+        </Box>
+        
+        <Grid container spacing={1} sx={{ mt: 2 }}>
+          <Grid item xs={4}>
+            <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Odczuwalna
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                {Math.round(currentWeatherData.main.feels_like)}°C
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={4}>
+            <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Wilgotność
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                {currentWeatherData.main.humidity}%
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={4}>
+            <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
+              <Typography variant="body2" color="text.secondary">
+                Wiatr
+              </Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                {Math.round(currentWeatherData.wind.speed * 3.6)} km/h
+              </Typography>
+            </Box>
+          </Grid>
+        </Grid>
+        
+        {/* Forecast for next days */}
+        <Box sx={{ mt: 3 }}>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'medium' }}>
+            Prognoza na kolejne dni
+          </Typography>
+          <Grid container spacing={1}>
+            {forecastData.map((day, index) => (
+              <Grid item xs={4} key={index}>
+                <Box sx={{ 
+                  textAlign: 'center', 
+                  backgroundColor: 'primary.light', 
+                  p: 1.5, 
+                  borderRadius: 1,
+                  opacity: 0.2
+                }}>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                    {day.dayName}
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <img 
+                      src={`https://openweathermap.org/img/wn/${day.icon}.png`}
+                      alt={day.description}
+                      width={40}
+                      height={40}
+                    />
+                  </Box>
+                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                    {Math.round(day.temp)}°C
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" sx={{ 
+                    display: 'block',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textTransform: 'capitalize'
+                  }}>
+                    {day.description}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }

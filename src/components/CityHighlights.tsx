@@ -1,4 +1,5 @@
 import PlaceholderImage from './PlaceholderImage';
+import { Typography, Grid, Card, CardContent, Box } from '@mui/material';
 
 export default function CityHighlights() {
   const highlights = [
@@ -20,25 +21,72 @@ export default function CityHighlights() {
   ];
 
   return (
-    <section>
-      <h2 className="text-3xl font-bold mb-6">Odkryj Radzyń Podlaski</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <Box 
+      className="city-highlights-section" 
+      sx={{ 
+        my: 4,
+        paddingX: 2, 
+        maxWidth: '1200px',
+        marginX: 'auto'
+      }}
+    >
+      <Typography 
+        variant="h2" 
+        component="h2" 
+        id="odkryj-radzyn"
+        sx={{ 
+          mb: 3, 
+          fontWeight: 'bold',
+          fontSize: { xs: '1.75rem', md: '2rem' }
+        }}
+      >
+        Odkryj Radzyń Podlaski
+      </Typography>
+      <Grid container spacing={3} className="city-highlights-grid">
         {highlights.map((item, index) => (
-          <div key={index} className="bg-white rounded-lg overflow-hidden shadow-md">
-            <PlaceholderImage 
-              title={item.title}
-              src={item.imageUrl}
-              className="w-full h-48"
-              height={192}
-              aspectRatio="landscape"
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-              <p className="text-gray-600">{item.description}</p>
-            </div>
-          </div>
+          <Grid item xs={12} md={4} key={index}>
+            <Card 
+              className="city-highlight-card" 
+              sx={{ 
+                height: '100%',
+                overflow: 'hidden',
+                borderRadius: 2,
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              }}
+            >
+              <Box sx={{ height: 192 }}>
+                <PlaceholderImage 
+                  title={item.title}
+                  src={item.imageUrl}
+                  className="w-full h-full"
+                  height={192}
+                  aspectRatio="landscape"
+                />
+              </Box>
+              <CardContent>
+                <Typography 
+                  variant="h5" 
+                  component="h3" 
+                  gutterBottom
+                  sx={{ 
+                    fontWeight: 500,
+                    fontSize: { xs: '1.25rem', md: '1.5rem' }
+                  }}
+                >
+                  {item.title}
+                </Typography>
+                <Typography 
+                  variant="body1" 
+                  color="text.secondary"
+                  sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
+                >
+                  {item.description}
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         ))}
-      </div>
-    </section>
+      </Grid>
+    </Box>
   );
 }
