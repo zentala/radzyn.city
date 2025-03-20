@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Navigation from '@/components/Navigation';
 import './globals.css';
-import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { Box, Container, CssBaseline, Link, ThemeProvider, Typography, createTheme } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 
 export const metadata: Metadata = {
@@ -89,50 +89,46 @@ export default function RootLayout({
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <Navigation />
-            <main style={{ paddingTop: '64px' }}>{children}</main>
-            <footer style={{ 
-              backgroundColor: '#333',
-              color: 'white',
-              padding: '1.5rem 0',
-              marginTop: '3rem'
-            }}>
-              <div style={{ 
-                maxWidth: '1200px', 
-                margin: '0 auto', 
-                padding: '0 1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center'
-              }}>
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  width: '100%',
-                  '@media (min-width: 768px)': {
-                    flexDirection: 'row',
-                  }
-                }}>
-                  <p>© {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.</p>
-                  <div style={{ 
-                    marginTop: '1rem',
+            <Box component="main" sx={{ paddingTop: '64px' }}>{children}</Box>
+            <Box 
+              component="footer"
+              sx={{ 
+                backgroundColor: '#333',
+                color: 'white',
+                padding: '1.5rem 0',
+                marginTop: '3rem'
+              }}
+            >
+              <Container maxWidth="lg">
+                <Box
+                  sx={{
                     display: 'flex',
-                    gap: '1rem',
-                    '@media (min-width: 768px)': {
-                      marginTop: 0,
-                    }
-                  }}>
-                    <a href="#" style={{ color: 'white', textDecoration: 'none', ':hover': { textDecoration: 'underline' } }}>
+                    flexDirection: { xs: 'column', md: 'row' },
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
+                  <Typography component="p">
+                    © {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.
+                  </Typography>
+                  <Box 
+                    sx={{ 
+                      mt: { xs: 2, md: 0 },
+                      display: 'flex',
+                      gap: 2
+                    }}
+                  >
+                    <Link href="#" sx={{ color: 'white', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
                       Polityka prywatności
-                    </a>
-                    <a href="#" style={{ color: 'white', textDecoration: 'none', ':hover': { textDecoration: 'underline' } }}>
+                    </Link>
+                    <Link href="#" sx={{ color: 'white', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
                       Mapa strony
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </footer>
+                    </Link>
+                  </Box>
+                </Box>
+              </Container>
+            </Box>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
