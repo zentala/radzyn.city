@@ -4,6 +4,7 @@
 - [x] Replace Tailwind CSS with MUI components in several key pages [10]
 - [x] Refactor PlaceholderImage component to use MUI styling exclusively [9]
 - [x] Update News, City, County, and Contact pages to use MUI components [10]
+- [x] Convert Events page from Tailwind to MUI styling system [9]
 - [ ] Convert remaining pages from Tailwind to MUI styling system [9]
 - [ ] Remove Tailwind CSS dependencies from the project [8]
 - [ ] Implement consistent MUI theming throughout the application [9]

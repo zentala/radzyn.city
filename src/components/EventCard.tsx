@@ -172,7 +172,7 @@ export default function EventCard({ title, date, location, description, category
           <PlaceholderImage
             title={title}
             src={imageUrl}
-            className="w-full h-full"
+            sx={{ width: '100%', height: '100%' }}
             height={180}
             aspectRatio="landscape"
           />

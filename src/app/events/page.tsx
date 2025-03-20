@@ -1,6 +1,26 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { 
+  Container, 
+  Typography, 
+  Box, 
+  Grid, 
+  Paper, 
+  TextField, 
+  Select, 
+  MenuItem, 
+  InputLabel, 
+  FormControl, 
+  Button, 
+  Chip, 
+  Divider, 
+  Stack,
+  InputAdornment
+} from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import NoEventsIcon from '@mui/icons-material/FolderOff';
 import EventCard from '@/components/EventCard';
 import { months } from '@/utils/dates';
 
@@ -145,173 +165,204 @@ export default function EventsPage() {
     return monthNames[month] || month;
   };
 
+  // Get category color for chips
+  const getCategoryColor = (category: string): "primary" | "secondary" | "success" | "warning" | "error" | "info" | "default" => {
+    switch (category.toLowerCase()) {
+      case 'kulturalne':
+        return 'secondary';
+      case 'sportowe':
+        return 'success';
+      case 'edukacyjne':
+        return 'primary';
+      case 'biznesowe':
+        return 'warning';
+      default:
+        return 'default';
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8 pt-20">
-      <h1 className="text-4xl font-bold mb-8">Wydarzenia w Radzyniu Podlaskim i Powiecie</h1>
+    <Container maxWidth="lg" sx={{ py: 4, pt: 10 }}>
+      <Typography variant="h3" component="h1" gutterBottom fontWeight="bold" sx={{ mb: 4 }}>
+        Wydarzenia w Radzyniu Podlaskim i Powiecie
+      </Typography>
       
-      <section className="mb-12">
-        <p className="text-lg mb-6">
+      <Box component="section" sx={{ mb: 6 }}>
+        <Typography variant="h6" paragraph>
           Poniżej znajduje się kalendarz nadchodzących wydarzeń w Radzyniu Podlaskim i powiecie radzyńskim. 
           Zapraszamy do aktywnego uczestnictwa w życiu kulturalnym, sportowym i społecznym naszego regionu.
-        </p>
+        </Typography>
 
         {/* Filters Section */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-          <h2 className="text-xl font-semibold mb-4">Filtruj wydarzenia</h2>
+        <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
+          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+            Filtruj wydarzenia
+          </Typography>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <Grid container spacing={3} sx={{ mb: 2 }}>
             {/* Search input */}
-            <div>
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">
-                Szukaj
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  id="search"
-                  placeholder="Szukaj wydarzenia..."
-                  className="pl-10 w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
+            <Grid item xs={12} md={4}>
+              <TextField
+                id="search"
+                label="Szukaj"
+                placeholder="Szukaj wydarzenia..."
+                fullWidth
+                variant="outlined"
+                size="small"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
             
             {/* Category select */}
-            <div>
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
-                Kategoria
-              </label>
-              <select
-                id="category"
-                className="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary"
-                value={selectedCategory || ''}
-                onChange={(e) => setSelectedCategory(e.target.value || null)}
-              >
-                <option value="">Wszystkie kategorie</option>
-                {allCategories.map(category => (
-                  <option key={category} value={category}>
-                    {formatCategory(category)}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="category-label">Kategoria</InputLabel>
+                <Select
+                  labelId="category-label"
+                  id="category"
+                  value={selectedCategory || ''}
+                  label="Kategoria"
+                  onChange={(e) => setSelectedCategory(e.target.value || null)}
+                >
+                  <MenuItem value="">Wszystkie kategorie</MenuItem>
+                  {allCategories.map(category => (
+                    <MenuItem key={category} value={category}>
+                      {formatCategory(category)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
             
             {/* Month select */}
-            <div>
-              <label htmlFor="month" className="block text-sm font-medium text-gray-700 mb-1">
-                Miesiąc
-              </label>
-              <select
-                id="month"
-                className="w-full p-2 border border-gray-300 rounded focus:ring-primary focus:border-primary"
-                value={selectedMonth || ''}
-                onChange={(e) => setSelectedMonth(e.target.value || null)}
-              >
-                <option value="">Wszystkie miesiące</option>
-                {allMonths.map(month => (
-                  <option key={month} value={month}>
-                    {formatMonth(month)}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="month-label">Miesiąc</InputLabel>
+                <Select
+                  labelId="month-label"
+                  id="month"
+                  value={selectedMonth || ''}
+                  label="Miesiąc"
+                  onChange={(e) => setSelectedMonth(e.target.value || null)}
+                >
+                  <MenuItem value="">Wszystkie miesiące</MenuItem>
+                  {allMonths.map(month => (
+                    <MenuItem key={month} value={month}>
+                      {formatMonth(month)}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
           
           {/* Active filters display and clear button */}
           {(selectedCategory || selectedMonth || searchQuery) && (
-            <div className="flex items-center mt-4 pt-4 border-t border-gray-200">
-              <div className="flex-1">
-                <p className="text-sm text-gray-600">
-                  <span className="font-medium">Aktywne filtry:</span> {' '}
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                  <Box component="span" sx={{ fontWeight: 'medium' }}>
+                    Aktywne filtry:
+                  </Box>
                   {selectedCategory && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary mr-2">
-                      {formatCategory(selectedCategory)}
-                    </span>
+                    <Chip
+                      label={formatCategory(selectedCategory)}
+                      size="small"
+                      color={getCategoryColor(selectedCategory)}
+                      variant="outlined"
+                    />
                   )}
                   {selectedMonth && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 mr-2">
-                      {formatMonth(selectedMonth)}
-                    </span>
+                    <Chip
+                      label={formatMonth(selectedMonth)}
+                      size="small"
+                      color="primary"
+                      variant="outlined"
+                    />
                   )}
                   {searchQuery && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                      Wyszukiwanie: "{searchQuery}"
-                    </span>
+                    <Chip
+                      label={`Wyszukiwanie: "${searchQuery}"`}
+                      size="small"
+                      color="default"
+                      variant="outlined"
+                    />
                   )}
-                </p>
-              </div>
-              <button
-                className="text-sm text-gray-500 hover:text-primary transition"
+                </Typography>
+              </Box>
+              <Button
+                variant="text"
+                size="small"
+                color="inherit"
                 onClick={() => {
                   setSelectedCategory(null);
                   setSelectedMonth(null);
                   setSearchQuery('');
                 }}
+                sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
               >
                 Wyczyść filtry
-              </button>
-            </div>
+              </Button>
+            </Box>
           )}
-        </div>
+        </Paper>
 
         {/* Results section */}
         {filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Grid container spacing={3}>
             {filteredEvents.map((event, index) => (
-              <EventCard
-                key={index}
-                title={event.title}
-                date={event.date}
-                location={event.location}
-                description={event.description}
-                category={event.category}
-                imageUrl={event.imageUrl}
-              />
+              <Grid item xs={12} sm={6} lg={4} key={index}>
+                <EventCard
+                  title={event.title}
+                  date={event.date}
+                  location={event.location}
+                  description={event.description}
+                  category={event.category}
+                  imageUrl={event.imageUrl}
+                />
+              </Grid>
             ))}
-          </div>
+          </Grid>
         ) : (
-          <div className="text-center py-10 bg-gray-50 rounded-lg">
-            <svg
-              className="mx-auto h-12 w-12 text-gray-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
-            </svg>
-            <h3 className="mt-2 text-lg font-medium text-gray-900">Nie znaleziono wydarzeń</h3>
-            <p className="mt-1 text-gray-500">Zmień kryteria filtrowania, aby zobaczyć więcej wydarzeń.</p>
-          </div>
+          <Paper sx={{ textAlign: 'center', py: 5, px: 2, borderRadius: 2, bgcolor: 'background.paper' }}>
+            <NoEventsIcon sx={{ fontSize: 60, color: 'text.disabled', mb: 2 }} />
+            <Typography variant="h6" color="text.primary" gutterBottom>
+              Nie znaleziono wydarzeń
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Zmień kryteria filtrowania, aby zobaczyć więcej wydarzeń.
+            </Typography>
+          </Paper>
         )}
-      </section>
+      </Box>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">Organizujesz wydarzenie?</h2>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <p className="mb-4">
+      <Box component="section">
+        <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+          Organizujesz wydarzenie?
+        </Typography>
+        <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
+          <Typography variant="body1" paragraph>
             Jeśli organizujesz wydarzenie w Radzyniu Podlaskim lub powiecie radzyńskim i chcesz, aby pojawiło się w naszym kalendarzu,
             skontaktuj się z nami. Pomożemy Ci promować Twoje wydarzenie wśród mieszkańców regionu.
-          </p>
-          <button className="px-4 py-2 bg-primary text-white rounded hover:bg-primary/80 transition flex items-center">
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<AddIcon />}
+            sx={{ textTransform: 'none' }}
+          >
             Zgłoś wydarzenie
-          </button>
-        </div>
-      </section>
-    </div>
+          </Button>
+        </Paper>
+      </Box>
+    </Container>
   );
 }
