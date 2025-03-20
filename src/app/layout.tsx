@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Navigation from '@/components/Navigation';
 import './globals.css';
 import ThemeRegistry from '@/components/ThemeRegistry';
+import { Box, Container, Stack, Link as MuiLink } from '@mui/material';
 
 export const metadata: Metadata = {
   title: {
@@ -42,41 +43,43 @@ export default function RootLayout({
       <body>
         <ThemeRegistry>
           <Navigation />
-          <main style={{ paddingTop: '64px' }}>{children}</main>
-          <footer style={{ 
-            backgroundColor: '#333',
-            color: 'white',
-            padding: '1.5rem 0',
-            marginTop: '3rem'
-          }}>
-            <div style={{ 
-              maxWidth: '1200px', 
-              margin: '0 auto', 
-              padding: '0 1rem'
-            }}>
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%'
-              }}>
-                <p>© {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.</p>
-                <div style={{ 
-                  marginTop: '1rem',
-                  display: 'flex',
-                  gap: '1rem'
-                }}>
-                  <a href="#" style={{ color: 'white', textDecoration: 'none' }}>
+          <Box component="main" sx={{ pt: 8 }}>
+            {children}
+          </Box>
+          <Box 
+            component="footer" 
+            sx={{ 
+              bgcolor: 'grey.900', 
+              color: 'common.white', 
+              py: 3, 
+              mt: 6 
+            }}
+          >
+            <Container maxWidth="lg">
+              <Stack 
+                direction="column"
+                justifyContent="space-between"
+                alignItems="center"
+                width="100%"
+              >
+                <Box sx={{ typography: 'body2' }}>
+                  © {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.
+                </Box>
+                <Stack 
+                  direction="row" 
+                  spacing={2}
+                  sx={{ mt: 2 }}
+                >
+                  <MuiLink href="#" color="inherit" underline="hover">
                     Polityka prywatności
-                  </a>
-                  <a href="#" style={{ color: 'white', textDecoration: 'none' }}>
+                  </MuiLink>
+                  <MuiLink href="#" color="inherit" underline="hover">
                     Mapa strony
-                  </a>
-                </div>
-              </div>
-            </div>
-          </footer>
+                  </MuiLink>
+                </Stack>
+              </Stack>
+            </Container>
+          </Box>
         </ThemeRegistry>
       </body>
     </html>

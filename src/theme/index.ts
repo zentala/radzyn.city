@@ -1,4 +1,4 @@
-import { PaletteOptions, createTheme, alpha } from '@mui/material/styles';
+import { PaletteOptions, createTheme, alpha, responsiveFontSizes } from '@mui/material/styles';
 import { TypographyOptions } from '@mui/material/styles/createTypography';
 
 // Modern-Classical color palette 
@@ -416,8 +416,8 @@ const themeOptions = {
   },
 };
 
-// Create the theme
-export const theme = createTheme(themeOptions);
+// Create the theme with responsive font sizes
+export const theme = responsiveFontSizes(createTheme(themeOptions));
 
 // Add a function to get category colors - useful for the map and other components
 export const getCategoryColor = (category: string, variant: 'main' | 'light' | 'dark' = 'main'): string => {

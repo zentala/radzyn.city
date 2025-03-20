@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { Skeleton, Box } from '@mui/material';
 
 interface PlaceholderImageProps {
   title: string;
@@ -53,7 +54,6 @@ export default function PlaceholderImage({
   
   if (showPlaceholder) {
     // Check if we have specific SVG for this title (for public images)
-    // Convert title to a potential file name in the public directory
     const safeTitle = title.toLowerCase().replace(/\s+/g, '-');
     let specificSvgPath = '';
     
@@ -66,50 +66,84 @@ export default function PlaceholderImage({
     // If we have a specific SVG, use it
     if (specificSvgPath) {
       return (
-        <div className={`relative overflow-hidden ${className}`}>
+        <Box 
+          sx={{ 
+            position: 'relative', 
+            overflow: 'hidden',
+            borderRadius: 1,
+            width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
+            height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight
+          }}
+          className={className}
+        >
           <Image
             src={specificSvgPath}
             alt={title}
             width={finalWidth}
             height={finalHeight}
-            className="object-cover w-full h-full rounded-md"
+            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
-        </div>
+        </Box>
       );
     }
     
-    // Otherwise, use SVG placeholder
+    // Otherwise, use MUI Skeleton with title overlay
     return (
-      <div className={`relative flex items-center justify-center overflow-hidden ${className}`}>
-        <svg 
-          width={finalWidth} 
-          height={finalHeight} 
-          viewBox={`0 0 ${finalWidth} ${finalHeight}`}
-          className="w-full h-full"
-          style={{ backgroundColor: bgColor }}
-          xmlns="http://www.w3.org/2000/svg"
+      <Box
+        sx={{
+          position: 'relative',
+          width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
+          height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight,
+          borderRadius: 1,
+          overflow: 'hidden'
+        }}
+        className={className}
+      >
+        <Skeleton
+          variant="rectangular"
+          animation="wave"
+          width="100%"
+          height="100%"
+          sx={{ bgcolor: bgColor }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center',
+            width: '80%',
+            color: 'text.secondary',
+            typography: 'subtitle1'
+          }}
         >
-          <rect width="100%" height="100%" fill={bgColor} />
-          <rect x="10%" y="10%" width="80%" height="80%" fill="none" stroke="#ffffff" strokeWidth="2" strokeDasharray="10 5" />
-          <text x="50%" y="50%" fontFamily="Arial" fontSize="24" fill="#555" textAnchor="middle">{title}</text>
-        </svg>
-      </div>
+          {title}
+        </Box>
+      </Box>
     );
   }
   
   // Render actual image if src is provided and there's no error
   return (
-    <div className={`relative overflow-hidden ${className}`} 
-      style={{ width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth, height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight }}
+    <Box
+      sx={{ 
+        position: 'relative', 
+        overflow: 'hidden',
+        borderRadius: 1,
+        width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
+        height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight
+      }}
+      className={className}
     >
       <Image
         src={src}
         alt={alt || title}
         width={finalWidth}
         height={finalHeight}
-        className="object-cover w-full h-full rounded-md"
+        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
         onError={() => setIsError(true)}
       />
-    </div>
+    </Box>
   );
 }
