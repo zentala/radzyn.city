@@ -1,3 +1,9 @@
+# Next task
+
+Commit what was done.
+Check in TODO.md what to to next. 
+Use TODO.md as memory for tasks and prioritzation. 
+
 # Material UI Design Rules
 
 1. Use responsive MUI Grid system instead of custom Tailwind classes
