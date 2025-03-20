@@ -1,9 +1,27 @@
+import { 
+  Container, 
+  Typography, 
+  Grid, 
+  Box, 
+  Paper, 
+  Card, 
+  CardContent,
+  List,
+  ListItem,
+  ListItemText,
+  alpha,
+  useTheme
+} from '@mui/material';
+import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+
 export const metadata = {
   title: 'Powiat Radzyński - Informacje',
   description: 'Informacje o powiecie radzyńskim, gminach, atrakcjach turystycznych i lokalnych inicjatywach.',
 };
 
 export default function CountyPage() {
+  const theme = useTheme();
+  
   const countyDistricts = [
     {
       name: 'Gmina Radzyń Podlaski',
@@ -50,62 +68,112 @@ export default function CountyPage() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Powiat Radzyński</h1>
+    <Container maxWidth="lg" sx={{ py: 8 }}>
+      <Typography variant="h2" component="h1" sx={{ mb: 6, fontWeight: 'bold' }}>
+        Powiat Radzyński
+      </Typography>
       
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">O Powiecie</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <p className="mb-4">
+      <Box component="section" sx={{ mb: 8 }}>
+        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
+          O Powiecie
+        </Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Typography variant="body1" paragraph>
               Powiat radzyński to jednostka administracyjna położona w północnej części województwa lubelskiego. 
               Zajmuje powierzchnię około 965 km² i zamieszkuje go blisko 60 000 mieszkańców.
-            </p>
-            <p className="mb-4">
+            </Typography>
+            <Typography variant="body1" paragraph>
               W skład powiatu wchodzi miasto Radzyń Podlaski, będące siedzibą władz powiatowych, oraz siedem gmin wiejskich. 
               Region ma charakter głównie rolniczy, z licznymi obszarami przyrodniczymi wartymi odwiedzenia.
-            </p>
-            <p>
+            </Typography>
+            <Typography variant="body1">
               Powiat radzyński łączy bogate dziedzictwo kulturowe z potencjałem gospodarczym i turystycznym, 
               oferując zarówno mieszkańcom jak i turystom wiele możliwości rekreacji i wypoczynku.
-            </p>
-          </div>
-          <div className="bg-gray-200 h-64 flex items-center justify-center text-gray-500">
-            [Mapa powiatu radzyńskiego]
-          </div>
-        </div>
-      </section>
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box sx={{ 
+              height: 256, 
+              bgcolor: 'grey.200', 
+              borderRadius: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'grey.500',
+              typography: 'h6'
+            }}>
+              [Mapa powiatu radzyńskiego]
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
 
-      <section className="mb-12">
-        <h2 className="text-2xl font-semibold mb-4">Gminy Powiatu Radzyńskiego</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Box component="section" sx={{ mb: 8 }}>
+        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
+          Gminy Powiatu Radzyńskiego
+        </Typography>
+        <Grid container spacing={3}>
           {countyDistricts.map((district, index) => (
-            <div key={index} className="bg-white rounded-lg p-6 shadow-md">
-              <h3 className="text-xl font-semibold mb-2">{district.name}</h3>
-              <p className="text-gray-600 mb-2">{district.description}</p>
-              <p className="mb-1"><span className="font-medium">Liczba mieszkańców:</span> {district.population}</p>
-              <p><span className="font-medium">Atrakcje:</span> {district.attractions}</p>
-            </div>
+            <Grid item xs={12} md={6} key={index}>
+              <Card sx={{ height: '100%', boxShadow: 2, borderRadius: 2 }}>
+                <CardContent>
+                  <Typography variant="h6" component="h3" sx={{ mb: 1, fontWeight: 600 }}>
+                    {district.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                    {district.description}
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    <Box component="span" sx={{ fontWeight: 500, mr: 1 }}>Liczba mieszkańców:</Box>
+                    {district.population}
+                  </Typography>
+                  <Typography variant="body2">
+                    <Box component="span" sx={{ fontWeight: 500, mr: 1 }}>Atrakcje:</Box>
+                    {district.attractions}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
           ))}
-        </div>
-      </section>
+        </Grid>
+      </Box>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-4">Turystyka w Powiecie</h2>
-        <p className="mb-4">
+      <Box component="section" sx={{ mb: 8 }}>
+        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
+          Turystyka w Powiecie
+        </Typography>
+        <Typography variant="body1" paragraph>
           Powiat radzyński oferuje wiele atrakcji dla miłośników turystyki aktywnej, kulturowej i przyrodniczej. 
           Region słynie z malowniczych krajobrazów, zabytków architektury oraz gościnności mieszkańców.
-        </p>
-        <div className="bg-primary/10 p-6 rounded-lg border border-primary/30">
-          <h3 className="text-xl font-semibold mb-3">Szlaki turystyczne</h3>
-          <ul className="list-disc list-inside space-y-2">
-            <li>Szlak Ziemi Radzyńskiej - prowadzi przez najciekawsze zabytki i atrakcje przyrodnicze powiatu</li>
-            <li>Szlak Rezerwatów Przyrody - łączy najcenniejsze obszary chronione regionu</li>
-            <li>Rowerowy Szlak Doliny Tyśmienicy - idealna trasa dla miłośników dwóch kółek</li>
-            <li>Szlak Dworów i Pałaców - prezentuje bogactwo architektury rezydencjonalnej regionu</li>
-          </ul>
-        </div>
-      </section>
-    </div>
+        </Typography>
+        <Paper 
+          sx={{ 
+            p: 3, 
+            borderRadius: 2, 
+            bgcolor: alpha(theme.palette.primary.main, 0.05),
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
+          }}
+        >
+          <Typography variant="h6" component="h3" sx={{ mb: 2, fontWeight: 600 }}>
+            Szlaki turystyczne
+          </Typography>
+          <List sx={{ pl: 2 }}>
+            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
+              <ListItemText primary="Szlak Ziemi Radzyńskiej - prowadzi przez najciekawsze zabytki i atrakcje przyrodnicze powiatu" />
+            </ListItem>
+            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
+              <ListItemText primary="Szlak Rezerwatów Przyrody - łączy najcenniejsze obszary chronione regionu" />
+            </ListItem>
+            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
+              <ListItemText primary="Rowerowy Szlak Doliny Tyśmienicy - idealna trasa dla miłośników dwóch kółek" />
+            </ListItem>
+            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
+              <ListItemText primary="Szlak Dworów i Pałaców - prezentuje bogactwo architektury rezydencjonalnej regionu" />
+            </ListItem>
+          </List>
+        </Paper>
+      </Box>
+    </Container>
   );
 }
