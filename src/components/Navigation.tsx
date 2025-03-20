@@ -106,7 +106,8 @@ export default function Navigation() {
               size="large"
               edge="end"
               color="inherit"
-              aria-label="Otwórz menu"
+              aria-label="menu"
+              data-testid="mobile-menu-button"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
