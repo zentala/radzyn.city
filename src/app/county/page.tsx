@@ -1,3 +1,5 @@
+'use client';
+
 import { 
   Container, 
   Typography, 
@@ -8,19 +10,10 @@ import {
   CardContent,
   List,
   ListItem,
-  ListItemText,
-  alpha,
-  useTheme
+  ListItemText
 } from '@mui/material';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-
-export const metadata = {
-  title: 'Powiat Radzyński - Informacje',
-  description: 'Informacje o powiecie radzyńskim, gminach, atrakcjach turystycznych i lokalnych inicjatywach.',
-};
 
 export default function CountyPage() {
-  const theme = useTheme();
   
   const countyDistricts = [
     {
@@ -151,8 +144,9 @@ export default function CountyPage() {
           sx={{ 
             p: 3, 
             borderRadius: 2, 
-            bgcolor: alpha(theme.palette.primary.main, 0.05),
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`
+            bgcolor: 'primary.50',
+            border: '1px solid',
+            borderColor: 'primary.100'
           }}
         >
           <Typography variant="h6" component="h3" sx={{ mb: 2, fontWeight: 600 }}>

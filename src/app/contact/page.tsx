@@ -1,3 +1,5 @@
+'use client';
+
 import ContactForm from '@/components/ContactForm';
 import PlaceholderImage from '@/components/PlaceholderImage';
 import { 
@@ -8,21 +10,14 @@ import {
   Paper, 
   Card, 
   CardContent,
-  Stack,
-  useTheme
+  Stack
 } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-export const metadata = {
-  title: 'Kontakt - Radzyń Podlaski',
-  description: 'Dane kontaktowe i formularze kontaktowe dla Urzędu Miasta Radzyń Podlaski, Starostwa Powiatowego i innych instytucji.',
-};
-
 export default function ContactPage() {
-  const theme = useTheme();
   
   const contactInfo = [
     {
