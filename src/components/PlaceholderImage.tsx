@@ -8,10 +8,10 @@ interface PlaceholderImageProps {
   title: string;
   alt?: string;
   src?: string;
-  width?: number;
-  height?: number;
-  className?: string;
+  width?: number | string;
+  height?: number | string;
   aspectRatio?: "square" | "landscape" | "portrait"; // Options for different aspect ratios
+  sx?: object; // Added MUI sx prop for styling customization
 }
 
 export default function PlaceholderImage({
@@ -20,8 +20,8 @@ export default function PlaceholderImage({
   src,
   width = 800,
   height = 400,
-  className = "",
-  aspectRatio = "landscape"
+  aspectRatio = "landscape",
+  sx = {}
 }: PlaceholderImageProps) {
   const [isError, setIsError] = useState(false);
   
@@ -32,9 +32,9 @@ export default function PlaceholderImage({
   let finalWidth = width;
   let finalHeight = height;
   
-  if (aspectRatio === "square") {
+  if (aspectRatio === "square" && typeof width === 'number') {
     finalHeight = width;
-  } else if (aspectRatio === "portrait") {
+  } else if (aspectRatio === "portrait" && typeof height === 'number') {
     finalWidth = height / 1.5;
   }
   
@@ -52,9 +52,18 @@ export default function PlaceholderImage({
   
   const bgColor = generateColor(title);
   
+  // Base box styling for all variants
+  const baseBoxSx = {
+    position: 'relative', 
+    overflow: 'hidden',
+    borderRadius: 1,
+    width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
+    height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight,
+    ...sx
+  };
+  
   if (showPlaceholder) {
     // Check if we have specific SVG for this title (for public images)
-    const safeTitle = title.toLowerCase().replace(/\s+/g, '-');
     let specificSvgPath = '';
     
     if (title === 'Pałac Potockich') {
@@ -66,21 +75,12 @@ export default function PlaceholderImage({
     // If we have a specific SVG, use it
     if (specificSvgPath) {
       return (
-        <Box 
-          sx={{ 
-            position: 'relative', 
-            overflow: 'hidden',
-            borderRadius: 1,
-            width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
-            height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight
-          }}
-          className={className}
-        >
+        <Box sx={baseBoxSx}>
           <Image
             src={specificSvgPath}
             alt={title}
-            width={finalWidth}
-            height={finalHeight}
+            width={typeof finalWidth === 'number' ? finalWidth : 800}
+            height={typeof finalHeight === 'number' ? finalHeight : 400}
             style={{ objectFit: 'cover', width: '100%', height: '100%' }}
           />
         </Box>
@@ -89,16 +89,7 @@ export default function PlaceholderImage({
     
     // Otherwise, use MUI Skeleton with title overlay
     return (
-      <Box
-        sx={{
-          position: 'relative',
-          width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
-          height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight,
-          borderRadius: 1,
-          overflow: 'hidden'
-        }}
-        className={className}
-      >
+      <Box sx={baseBoxSx}>
         <Skeleton
           variant="rectangular"
           animation="wave"
@@ -126,21 +117,12 @@ export default function PlaceholderImage({
   
   // Render actual image if src is provided and there's no error
   return (
-    <Box
-      sx={{ 
-        position: 'relative', 
-        overflow: 'hidden',
-        borderRadius: 1,
-        width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth,
-        height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight
-      }}
-      className={className}
-    >
+    <Box sx={baseBoxSx}>
       <Image
         src={src}
         alt={alt || title}
-        width={finalWidth}
-        height={finalHeight}
+        width={typeof finalWidth === 'number' ? finalWidth : 800}
+        height={typeof finalHeight === 'number' ? finalHeight : 400}
         style={{ objectFit: 'cover', width: '100%', height: '100%' }}
         onError={() => setIsError(true)}
       />

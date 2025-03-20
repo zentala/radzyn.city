@@ -22,7 +22,6 @@ export default function CityHighlights() {
 
   return (
     <Box 
-      className="city-highlights-section" 
       sx={{ 
         my: 4,
         paddingX: 2, 
@@ -42,11 +41,10 @@ export default function CityHighlights() {
       >
         Odkryj Radzyń Podlaski
       </Typography>
-      <Grid container spacing={3} className="city-highlights-grid">
+      <Grid container spacing={3}>
         {highlights.map((item, index) => (
           <Grid item xs={12} md={4} key={index}>
             <Card 
-              className="city-highlight-card" 
               sx={{ 
                 height: '100%',
                 overflow: 'hidden',
@@ -58,9 +56,9 @@ export default function CityHighlights() {
                 <PlaceholderImage 
                   title={item.title}
                   src={item.imageUrl}
-                  className="w-full h-full"
                   height={192}
                   aspectRatio="landscape"
+                  sx={{ width: '100%', height: '100%' }}
                 />
               </Box>
               <CardContent>
