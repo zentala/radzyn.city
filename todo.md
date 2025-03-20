@@ -36,11 +36,11 @@
 - [ ] Add form for community-submitted announcements [9]
 
 ### Places Catalog
-- [ ] Enhance locations database with additional fields [7]
-- [ ] Add detailed business information (hours, contact info) [8]
-- [ ] Implement user ratings and reviews [9]
-- [ ] Create dedicated place detail pages [7]
-- [ ] Add search functionality for places [8]
+- [x] Enhance locations database with additional fields [7]
+- [x] Add detailed business information (hours, contact info) [8]
+- [x] Implement user ratings and reviews [9]
+- [x] Create dedicated place detail pages [7]
+- [x] Add search functionality for places [8]
 - [ ] Create admin tools for place management [6]
 
 ## Future Development (Post-MVP)

@@ -16,8 +16,12 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  useTheme
+  useTheme,
+  Rating,
+  Stack,
+  Button
 } from '@mui/material';
+import Link from 'next/link';
 import PlaceIcon from '@mui/icons-material/Place';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
@@ -26,6 +30,10 @@ import TheaterComedyIcon from '@mui/icons-material/TheaterComedy';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import PublicIcon from '@mui/icons-material/Public';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import StarIcon from '@mui/icons-material/Star';
 import DashboardWidget from './DashboardWidget';
 import { LocationPoint } from './Map';
 import { CATEGORY_COLORS } from '@/utils/locationData';
@@ -169,7 +177,6 @@ function LocationsList({
                         mb: 0.5,
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
-                        display: '-webkit-box',
                         WebkitLineClamp: 2,
                         WebkitBoxOrient: 'vertical',
                         lineHeight: 1.3
@@ -177,16 +184,84 @@ function LocationsList({
                     >
                       {location.description}
                     </Typography>
-                    <Chip 
-                      label={location.category} 
-                      size="small"
-                      sx={{ 
-                        backgroundColor: CATEGORY_COLORS[location.category] || CATEGORY_COLORS.default,
-                        color: 'white',
-                        fontWeight: 500,
-                        fontSize: '0.7rem'
-                      }}
-                    />
+                    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1, mb: 0.5 }}>
+                      <Chip 
+                        label={location.category} 
+                        size="small"
+                        sx={{ 
+                          backgroundColor: CATEGORY_COLORS[location.category] || CATEGORY_COLORS.default,
+                          color: 'white',
+                          fontWeight: 500,
+                          fontSize: '0.7rem'
+                        }}
+                      />
+                      
+                      {location.rating && (
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                          <Rating value={location.rating} precision={0.5} readOnly size="small" />
+                          <Typography variant="caption" sx={{ ml: 0.5 }}>
+                            {location.rating.toFixed(1)}
+                          </Typography>
+                        </Box>
+                      )}
+                    </Box>
+                    
+                    {location.address && (
+                      <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center',
+                        fontSize: '0.75rem',
+                        mb: 0.5,
+                        color: 'text.secondary'
+                      }}>
+                        <LocationOnIcon fontSize="inherit" sx={{ mr: 0.5 }} />
+                        <Typography variant="caption" noWrap>
+                          {location.address}
+                        </Typography>
+                      </Box>
+                    )}
+                    
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 0.5 }}>
+                      {location.amenities && location.amenities.length > 0 && (
+                        <Stack direction="row" spacing={0.5}>
+                          {location.amenities.slice(0, 2).map((amenity, index) => (
+                            <Chip
+                              key={index}
+                              label={amenity}
+                              variant="outlined"
+                              size="small"
+                              sx={{ 
+                                fontSize: '0.65rem',
+                                height: '20px' 
+                              }}
+                            />
+                          ))}
+                          {location.amenities.length > 2 && (
+                            <Chip
+                              label={`+${location.amenities.length - 2}`}
+                              variant="outlined"
+                              size="small"
+                              sx={{ 
+                                fontSize: '0.65rem',
+                                height: '20px' 
+                              }}
+                            />
+                          )}
+                        </Stack>
+                      )}
+                      
+                      <Button
+                        component={Link}
+                        href={`/places/${location.id}`}
+                        size="small"
+                        sx={{ 
+                          fontSize: '0.7rem',
+                          ml: 'auto'
+                        }}
+                      >
+                        Szczegóły
+                      </Button>
+                    </Box>
                   </>
                 }
               />

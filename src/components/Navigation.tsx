@@ -24,6 +24,7 @@ export default function Navigation() {
     { name: 'O mieście', href: '/city', enName: 'City' },
     { name: 'Powiat', href: '/county', enName: 'County' },
     { name: 'Mapa', href: '/map', enName: 'Map' },
+    { name: 'Miejsca', href: '/places', enName: 'Places' },
     { name: 'Wydarzenia', href: '/events', enName: 'Events' },
     { name: 'Kontakt', href: '/contact', enName: 'Contact' },
   ];

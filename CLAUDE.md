@@ -1,43 +1,45 @@
-# Next task
+# Agent Instructions
 
-Commit what was done.
-Check in TODO.md what to to next. 
-Use TODO.md as memory for tasks and prioritzation. 
+## Task Management
+1. Use TODO.md as the primary task tracking and prioritization system
+2. Before each commit:
+   - Add completed items to TODO.md under "Completed Features"
+   - Update remaining crucial tasks
+   - Use `/compact` command after committing
 
-# Material UI Design Rules
+## Material UI Design Rules
 
-1. Use responsive MUI Grid system instead of custom Tailwind classes
-   - Replace `md-show-flex`, `md-hide` with `sx={{ display: { xs: 'none', md: 'flex' } }}`
+1. Grid System
+   - Use MUI Grid system for responsive layouts
+   - Replace custom responsive classes with MUI sx props
+   - Example: `sx={{ display: { xs: 'none', md: 'flex' } }}`
 
-2. Replace custom inputs with MUI TextField and FormControl components
-   - Use proper MUI form components instead of raw HTML inputs
+2. Form Components
+   - Use MUI TextField and FormControl components
+   - Replace HTML inputs with proper MUI equivalents
 
-3. Implement theme spacing system instead of hardcoded pixel values
-   - Use theme spacing units (e.g., `mb: 2` instead of `mb: '16px'`)
-   - Use spacing multipliers consistently for margins and paddings
+3. Spacing System
+   - Use theme spacing units (e.g., `mb: 2`)
+   - Avoid hardcoded pixel values
+   - Maintain consistent spacing multipliers
 
-4. Use MUI Stack for layouts instead of custom flexbox containers
-   - Particularly for button/tag layouts in cards
+4. Layout Components
+   - Prefer MUI Stack over custom flexbox
+   - Use MUI Box instead of plain divs
+   - Use CardActions for card interactions
 
-5. Add proper dark mode support with palette.mode
-   - Update theme to include proper darkMode palette
-   - Use palette.mode to conditionally render styles
+5. Theme Configuration
+   - Implement proper dark mode with palette.mode
+   - Define component defaults in theme.components
+   - Use responsiveFontSizes for typography
+   - Define consistent container widths
 
-6. Replace divs with MUI Box components
-   - Use Box instead of div for basic layout elements
-   - Use CardActions for card action areas
+6. Loading States
+   - Use MUI Skeleton components
+   - Implement loading states for data-dependent components
 
-7. Define component defaults in theme.components
-   - Move reused styles to theme to prevent repetition
-   - Define focus states for accessibility
-
-8. Use MUI Skeleton for loading states
-   - Replace PlaceholderImage with MUI Skeleton
-   - Add loading states to data-dependent components
-
-9. Use MUI Container consistently
-   - Replace custom container divs with MUI Container components
-
-10. Implement proper theme responsive typography
-    - Define responsive font sizes using MUI's `responsiveFontSizes` utility
-    - Replace hardcoded font sizes with theme typography tokens
+## Code Standards
+- Write all comments, UI text, and code in English
+- Include JSDoc comments for future developer reference
+- Follow project structure defined in arch.md
+- Adhere to principles outlined in PRINCIPLES.md

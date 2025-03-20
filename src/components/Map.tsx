@@ -15,6 +15,28 @@ export interface LocationPoint {
   position: [number, number]; // [latitude, longitude]
   category: string;
   imageUrl?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  website?: string;
+  openingHours?: {
+    monday?: string;
+    tuesday?: string;
+    wednesday?: string;
+    thursday?: string;
+    friday?: string;
+    saturday?: string;
+    sunday?: string;
+  };
+  amenities?: string[];
+  rating?: number;
+  reviews?: {
+    id: string;
+    author: string;
+    date: string;
+    rating: number;
+    comment: string;
+  }[];
 }
 
 // Default center position for Radzyń Podlaski, Poland
@@ -102,8 +124,8 @@ function Map({
           >
             <Popup>
               <div style={{ 
-                minWidth: '200px', 
-                maxWidth: '300px',
+                minWidth: '250px', 
+                maxWidth: '350px',
                 padding: '0',
                 borderRadius: '8px',
                 overflow: 'hidden',
@@ -173,6 +195,250 @@ function Map({
                   lineHeight: '1.5'
                 }}>{location.description}</p>
                 
+                {/* Additional Information */}
+                <div style={{ padding: '0 12px 12px 12px' }}>
+                  {location.address && (
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      marginBottom: '6px', 
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        minWidth: '70px' 
+                      }}>Adres:</span>
+                      <span>{location.address}</span>
+                    </div>
+                  )}
+                  
+                  {location.phone && (
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      marginBottom: '6px',
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        minWidth: '70px' 
+                      }}>Telefon:</span>
+                      <a 
+                        href={`tel:${location.phone}`} 
+                        style={{ 
+                          color: theme.palette.primary.main,
+                          textDecoration: 'none'
+                        }}
+                      >
+                        {location.phone}
+                      </a>
+                    </div>
+                  )}
+                  
+                  {location.email && (
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      marginBottom: '6px',
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        minWidth: '70px' 
+                      }}>Email:</span>
+                      <a 
+                        href={`mailto:${location.email}`} 
+                        style={{ 
+                          color: theme.palette.primary.main,
+                          textDecoration: 'none'
+                        }}
+                      >
+                        {location.email}
+                      </a>
+                    </div>
+                  )}
+                  
+                  {location.website && (
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'flex-start', 
+                      marginBottom: '6px',
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        minWidth: '70px' 
+                      }}>Strona WWW:</span>
+                      <a 
+                        href={location.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        style={{ 
+                          color: theme.palette.primary.main,
+                          textDecoration: 'none'
+                        }}
+                      >
+                        {location.website.replace('https://', '')}
+                      </a>
+                    </div>
+                  )}
+                  
+                  {location.openingHours && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      marginBottom: '8px',
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <div style={{ 
+                        fontWeight: '500', 
+                        marginBottom: '4px' 
+                      }}>Godziny otwarcia:</div>
+                      {location.openingHours.monday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Poniedziałek:</span>
+                          <span>{location.openingHours.monday}</span>
+                        </div>
+                      )}
+                      {location.openingHours.tuesday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Wtorek:</span>
+                          <span>{location.openingHours.tuesday}</span>
+                        </div>
+                      )}
+                      {location.openingHours.wednesday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Środa:</span>
+                          <span>{location.openingHours.wednesday}</span>
+                        </div>
+                      )}
+                      {location.openingHours.thursday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Czwartek:</span>
+                          <span>{location.openingHours.thursday}</span>
+                        </div>
+                      )}
+                      {location.openingHours.friday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Piątek:</span>
+                          <span>{location.openingHours.friday}</span>
+                        </div>
+                      )}
+                      {location.openingHours.saturday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Sobota:</span>
+                          <span>{location.openingHours.saturday}</span>
+                        </div>
+                      )}
+                      {location.openingHours.sunday && (
+                        <div style={{ 
+                          display: 'flex', 
+                          justifyContent: 'space-between',
+                          fontSize: '12px',
+                          marginBottom: '2px'
+                        }}>
+                          <span>Niedziela:</span>
+                          <span>{location.openingHours.sunday}</span>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {location.amenities && location.amenities.length > 0 && (
+                    <div style={{ 
+                      marginTop: '8px', 
+                      marginBottom: '8px',
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <div style={{ 
+                        fontWeight: '500', 
+                        marginBottom: '4px' 
+                      }}>Udogodnienia:</div>
+                      <div style={{ 
+                        display: 'flex', 
+                        flexWrap: 'wrap', 
+                        gap: '4px',
+                        fontSize: '12px'
+                      }}>
+                        {location.amenities.map((amenity, index) => (
+                          <span 
+                            key={index} 
+                            style={{
+                              background: '#eee',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              fontSize: '11px'
+                            }}
+                          >
+                            {amenity}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  {location.rating && (
+                    <div style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      marginTop: '8px',
+                      marginBottom: '6px',
+                      fontSize: '13px',
+                      color: '#555'
+                    }}>
+                      <span style={{ 
+                        fontWeight: '500', 
+                        marginRight: '8px' 
+                      }}>Ocena:</span>
+                      <div style={{
+                        background: '#f5f5f5',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        color: '#333'
+                      }}>
+                        {location.rating.toFixed(1)}/5.0
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
                 <div style={{
                   padding: '8px 12px',
                   backgroundColor: '#f5f5f5',
@@ -180,16 +446,12 @@ function Map({
                   textAlign: 'right'
                 }}>
                   <a 
-                    href="#" 
+                    href={`/places/${location.id}`}
                     style={{
                       color: theme.palette.primary.main,
                       fontSize: '14px',
                       textDecoration: 'none',
                       fontWeight: '500'
-                    }}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // Future enhancement: link to details page
                     }}
                   >
                     Zobacz więcej
