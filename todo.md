@@ -1,41 +1,31 @@
 # Radzyń City Portal MVP - TODO List
 
+## Completed Features
+- ✅ Simple Map Integration
+- ✅ Enhanced Weather Implementation
+- ✅ Homepage Dashboard Modules with Material UI
+
 ## Priority 3: Technical & Polish
 
 ### Performance Optimization
 - [ ] Set up basic performance monitoring [5]
+- [ ] Implement code-splitting to reduce initial load time [6] 
+- [ ] Add service worker for offline capabilities [7]
+- [ ] Optimize image loading with blur placeholders [4]
 
-### Simple Map Integration
-- [ ] Mark key locations on the map [9]
-- [ ] Add basic tooltips for locations [7]
-- [ ] Create simple POI (points of interest) list [8]
+### Responsive Enhancements
+- [ ] Implement responsive tables for mobile views [6]
+- [ ] Add mobile-specific navigation improvements [7]
+- [ ] Create adaptive layouts for different screen sizes [8]
 
-## Priority 4: New Features from Vision Document
-
-### Enhanced Weather Implementation
-- [ ] Implement real weather data integration with API [7]
-- [ ] Create dedicated weather page at /pogoda/ [6]
-- [ ] Add 7-day forecast with detailed information [6]
-- [ ] Implement caching for API requests [5]
-- [ ] Add visual weather indicators (icons, animations) [8]
-
-### Homepage Dashboard Modules - IMPLEMENTATION PLAN
-- [ ] Install Material-UI 5 package and dependencies [10]
-  ```
-  pnpm add @mui/material @emotion/react @emotion/styled @mui/icons-material
-  ```
-- [ ] Create modular dashboard layout framework in homepage [10]
-- [ ] Set up responsive widget grid system with MUI Grid [9]
-- [ ] Implement Dashboard context provider for state management [8]
-- [ ] Refactor existing widgets to use MUI Card components [8]
-- [ ] Create widget configuration options [6]
-- [ ] Add loading states using MUI Skeleton components [8]
+## Priority 4: Current Implementation Focus
 
 ### News Aggregation System
 - [ ] Set up independent cron-based scraper process [9]
 - [ ] Create database schema for storing scraped news [8]
-- [ ] Implement fake example data for initial development [10]
-- [ ] Add data normalization for multiple sources [7]
+- [ ] Implement real web scraping for local news sources [10]
+- [ ] Add AI-based categorization of news articles [9]
+- [ ] Implement keyword extraction and tagging [7]
 - [ ] Create admin interface for scraper configuration [6]
 
 ### Announcements/Classifieds System
@@ -44,43 +34,42 @@
 - [ ] Implement filtering and categorization [9]
 - [ ] Add sorting by date, relevance, location [7]
 - [ ] Create announcement detail page template [8]
+- [ ] Add form for community-submitted announcements [9]
 
 ### Places Catalog
-- [ ] Implement locations database with categories (shops, services, culture, sports, etc.) [9]
-- [ ] Create map-based browsing interface [10]
-- [ ] Add category filtering system [8]
-- [ ] Implement place detail pages [7]
+- [ ] Enhance locations database with additional fields [7]
+- [ ] Add detailed business information (hours, contact info) [8]
+- [ ] Implement user ratings and reviews [9]
+- [ ] Create dedicated place detail pages [7]
 - [ ] Add search functionality for places [8]
 - [ ] Create admin tools for place management [6]
 
 ## Future Development (Post-MVP)
 
-### Internationalization Support
-- Add English language support [5]
-- Implement language switcher [4]
-- Translate all static content [5]
-- Handle language-specific formatting [3]
+### Interactive City Experience
+- [ ] Create virtual tour of key attractions [7]
+- [ ] Add 360° photos where available [8]
+- [ ] Implement guided navigation between points [6]
+- [ ] Add historical information at each stop [7]
+- [ ] Create AR (Augmented Reality) experiences for landmarks [10]
 
-### Server-side Weather Implementation
-- Move API calls to server-side [5]
-- Set up proper caching [4]
-- Implement error handling [5]
-- Add more detailed weather information [6]
-
-### Interactive City Tour
-- Create virtual tour of key attractions [7]
-- Add 360° photos where available [8]
-- Implement guided navigation between points [6]
-- Add historical information at each stop [7]
-
-### User-Generated Content
-- Allow user photo submissions [6]
-- Implement community events submission [7]
-- Add commenting functionality [5]
-- Create moderation system [4]
+### Community Engagement Features
+- [ ] Allow user photo submissions [6]
+- [ ] Implement community events submission [7]
+- [ ] Add commenting functionality to news and places [5]
+- [ ] Create user accounts and profiles [8]
+- [ ] Add social sharing integration [4]
+- [ ] Implement community forum or discussion board [9]
 
 ### Administration Panel
-- Create secure admin login [5]
-- Build news/events management interface [7]
-- Implement content editing capabilities [6]
-- Add analytics dashboard [5]
+- [ ] Create secure admin login with role-based access [7]
+- [ ] Build comprehensive content management system [9]
+- [ ] Add analytics dashboard with visitor tracking [8]
+- [ ] Implement content approval workflows [6]
+- [ ] Create automated content moderation system [8]
+
+### Mobile App Development
+- [ ] Convert web app to PWA (Progressive Web App) [8]
+- [ ] Implement push notifications for local news and events [7]
+- [ ] Add offline capabilities for essential information [6]
+- [ ] Create dedicated mobile interfaces [9]
