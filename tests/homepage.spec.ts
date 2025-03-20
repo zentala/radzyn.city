@@ -8,7 +8,7 @@ test.describe('Homepage', () => {
     await expect(page).toHaveTitle(/Radzyń/, { timeout: 30000 });
     
     // Check for key elements - use more resilient selectors that work with MUI
-    await expect(page.locator('header')).toBeVisible(); // Navigation
+    await expect(page.locator('header .MuiAppBar-root')).toBeVisible(); // Navigation
     await expect(page.locator('main')).toBeVisible(); // Main content
     
     // The homepage should have some core content sections
@@ -27,8 +27,8 @@ test.describe('Homepage', () => {
     await page.goto('/');
     
     // Check if mobile menu toggle exists (adjusted for MUI)
-    await page.waitForSelector('button[aria-label="menu"]', { timeout: 30000 });
-    const mobileMenuButton = page.locator('button[aria-label="menu"]');
+    await page.waitForSelector('[data-testid="mobile-menu-button"]', { timeout: 30000 });
+    const mobileMenuButton = page.locator('[data-testid="mobile-menu-button"]');
     await expect(mobileMenuButton).toBeVisible({ timeout: 30000 });
     
     // Open mobile menu

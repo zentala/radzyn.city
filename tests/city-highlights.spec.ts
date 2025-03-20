@@ -8,10 +8,10 @@ test.describe('City Highlights Component', () => {
     await expect(page.locator('#odkryj-radzyn')).toBeVisible({ timeout: 30000 });
     
     // Check if all three highlights are displayed - MUI uses different heading structure
-    // Using contains to handle potential whitespace or style differences
-    await expect(page.getByText('Pałac Potockich', { exact: false })).toBeVisible({ timeout: 30000 });
-    await expect(page.getByText('Kościół Świętej Trójcy', { exact: false })).toBeVisible({ timeout: 30000 });
-    await expect(page.getByText('Park Miejski', { exact: false })).toBeVisible({ timeout: 30000 });
+    // Using role for headings to avoid matching placeholder text in SVGs
+    await expect(page.getByRole('heading', { name: 'Pałac Potockich' })).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('heading', { name: 'Kościół Świętej Trójcy' })).toBeVisible({ timeout: 30000 });
+    await expect(page.getByRole('heading', { name: 'Park Miejski' })).toBeVisible({ timeout: 30000 });
     
     // Check if descriptions are present - using contains for more tolerance
     await expect(page.getByText('Barokowy pałac z XVIII wieku', { exact: false })).toBeVisible();

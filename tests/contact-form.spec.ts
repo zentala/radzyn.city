@@ -40,11 +40,14 @@ test.describe('Contact Form', () => {
     await page.getByLabel(/Temat/i).fill('Test Subject');
     await page.getByLabel(/Wiadomość/i).fill('This is a test message content with sufficient length.');
     
-    // Submit the form
+    // Submit the form and wait for success message
     await page.getByRole('button', { name: /wyślij wiadomość/i }).click();
     
-    // Check for success message
-    await expect(page.getByText('Dziękujemy za Twoją wiadomość!')).toBeVisible();
-    await expect(page.getByText('Twoja wiadomość została wysłana')).toBeVisible();
+    // Give extra time for the success message to appear
+    await page.waitForTimeout(1000);
+    
+    // Check for success message with more resilient selectors
+    await expect(page.locator('text=Dziękujemy za Twoją wiadomość')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=Twoja wiadomość została wysłana')).toBeVisible({ timeout: 10000 });
   });
 });

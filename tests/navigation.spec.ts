@@ -6,8 +6,8 @@ test.describe('Navigation', () => {
     await page.goto('/');
     await expect(page).toHaveTitle(/Radzyń/, { timeout: 30000 });
     
-    // Look for the navigation element first
-    await expect(page.locator('header')).toBeVisible({ timeout: 30000 });
+    // Look for the navigation element first - use specific selector for MUI AppBar
+    await expect(page.locator('header .MuiAppBar-root')).toBeVisible({ timeout: 30000 });
     
     // Click on links directly by their text rather than role
     // City page - use text content rather than aria-label

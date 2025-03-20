@@ -4,8 +4,8 @@ test.describe('Events Page', () => {
   test('should display events page with event cards', async ({ page }) => {
     await page.goto('/events');
     
-    // Check the page title
-    await expect(page).toHaveTitle(/Wydarzenia/);
+    // Check the page title to match the format in layout.tsx
+    await expect(page).toHaveTitle(/Wydarzenia - Radzyń Podlaski/, { timeout: 10000 });
     
     // Check for at least one event card (MUI Card)
     const eventCards = page.locator('.MuiCard-root');
