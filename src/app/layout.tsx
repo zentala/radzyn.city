@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import Navigation from '@/components/Navigation';
 import './globals.css';
-import { Box, Container, CssBaseline, Link, ThemeProvider, Typography, createTheme } from '@mui/material';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import ThemeRegistry from '@/components/ThemeRegistry';
 
 export const metadata: Metadata = {
   title: {
@@ -30,50 +29,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Create a theme
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-      light: '#42a5f5',
-      dark: '#1565c0',
-    },
-    secondary: {
-      main: '#9c27b0',
-      light: '#ba68c8',
-      dark: '#7b1fa2',
-    },
-    background: {
-      default: '#f5f5f5',
-    },
-  },
-  typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    h1: {
-      fontSize: '2.5rem',
-      fontWeight: 700,
-    },
-    h2: {
-      fontSize: '2rem',
-      fontWeight: 600,
-    },
-    h3: {
-      fontSize: '1.5rem',
-      fontWeight: 600,
-    },
-  },
-  components: {
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: '8px',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-        },
-      },
-    },
-  },
-});
-
 export default function RootLayout({
   children,
 }: {
@@ -85,52 +40,44 @@ export default function RootLayout({
         <title>Radzyń Podlaski - Oficjalny Portal Miasta i Powiatu</title>
       </head>
       <body>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <Navigation />
-            <Box component="main" sx={{ paddingTop: '64px' }}>{children}</Box>
-            <Box 
-              component="footer"
-              sx={{ 
-                backgroundColor: '#333',
-                color: 'white',
-                padding: '1.5rem 0',
-                marginTop: '3rem'
-              }}
-            >
-              <Container maxWidth="lg">
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    width: '100%',
-                  }}
-                >
-                  <Typography component="p">
-                    © {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.
-                  </Typography>
-                  <Box 
-                    sx={{ 
-                      mt: { xs: 2, md: 0 },
-                      display: 'flex',
-                      gap: 2
-                    }}
-                  >
-                    <Link href="#" sx={{ color: 'white', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
-                      Polityka prywatności
-                    </Link>
-                    <Link href="#" sx={{ color: 'white', textDecoration: 'none', '&:hover': { textDecoration: 'underline' } }}>
-                      Mapa strony
-                    </Link>
-                  </Box>
-                </Box>
-              </Container>
-            </Box>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <ThemeRegistry>
+          <Navigation />
+          <main style={{ paddingTop: '64px' }}>{children}</main>
+          <footer style={{ 
+            backgroundColor: '#333',
+            color: 'white',
+            padding: '1.5rem 0',
+            marginTop: '3rem'
+          }}>
+            <div style={{ 
+              maxWidth: '1200px', 
+              margin: '0 auto', 
+              padding: '0 1rem'
+            }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%'
+              }}>
+                <p>© {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.</p>
+                <div style={{ 
+                  marginTop: '1rem',
+                  display: 'flex',
+                  gap: '1rem'
+                }}>
+                  <a href="#" style={{ color: 'white', textDecoration: 'none' }}>
+                    Polityka prywatności
+                  </a>
+                  <a href="#" style={{ color: 'white', textDecoration: 'none' }}>
+                    Mapa strony
+                  </a>
+                </div>
+              </div>
+            </div>
+          </footer>
+        </ThemeRegistry>
       </body>
     </html>
   );

@@ -63,7 +63,7 @@ export default function Navigation() {
             </Typography>
 
             {/* Desktop navigation */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: 'none' }} className="md-show-flex">
               {navigation.map((item) => (
                 <Button
                   key={item.name}
@@ -109,7 +109,8 @@ export default function Navigation() {
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              sx={{ display: { xs: 'flex', md: 'none' } }}
+              sx={{ display: 'flex' }}
+              className="md-hide"
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
@@ -123,8 +124,9 @@ export default function Navigation() {
         anchor="top"
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
+        className="md-hide"
         sx={{
-          display: { xs: 'block', md: 'none' },
+          display: 'block',
           '& .MuiDrawer-paper': { 
             top: '64px', 
             backgroundColor: 'primary.main',

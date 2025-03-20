@@ -17,3 +17,22 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Responsive utility classes */
+@media (min-width: 900px) {
+  .md-show-flex {
+    display: flex !important;
+  }
+  
+  .md-hide {
+    display: none !important;
+  }
+}
+
+/* Primary color variables for use without breakpoint functions */
+:root {
+  --primary-main: #1976d2;
+  --primary-light: #42a5f5;
+  --primary-dark: #1565c0;
+  --secondary-main: #9c27b0;
+}
