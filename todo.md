@@ -1,102 +1,86 @@
 # Radzyń City Portal MVP - TODO List
 
-## Priority 1: Core Visual Improvements (Essential for Demo)
+## Priority 3: Technical & Polish
 
-### Add Basic City Images (13 points)
-- [x] Create flexible PlaceholderImage component for image display
-- [x] Implement proper image loading with Next.js Image component
-- [x] Replace image placeholders in CityHighlights component
-- [x] Add hero image for homepage
-- [x] Make images responsive for different screen sizes
+### Performance Optimization
+- [ ] Set up basic performance monitoring [5]
 
-### Weather Widget Enhancement (8 points)
-- [x] Create fallback UI for demo when API key isn't available
-- [x] Add weather forecast for next 3 days (not just current)
-- [x] Improve weather icons and styling
-- [x] Add loading state animation
+### Simple Map Integration
+- [ ] Mark key locations on the map [9]
+- [ ] Add basic tooltips for locations [7]
+- [ ] Create simple POI (points of interest) list [8]
 
-### Mobile Responsiveness Improvements (5 points)
-- [x] Fix layout issues on small screens
-- [x] Optimize navigation for mobile experience with animations
-- [x] Create responsive grid layouts
-- [x] Add proper touch interaction areas
+## Priority 4: New Features from Vision Document
 
-## Priority 2: Content & Functionality Enhancements
+### Enhanced Weather Implementation
+- [ ] Implement real weather data integration with API [7]
+- [ ] Create dedicated weather page at /pogoda/ [6]
+- [ ] Add 7-day forecast with detailed information [6]
+- [ ] Implement caching for API requests [5]
+- [ ] Add visual weather indicators (icons, animations) [8]
 
-### Events Calendar Basic Implementation (13 points)
-- [x] Create static sample data for upcoming events
-- [x] Add filtering by event category, month, and search
-- [x] Implement enhanced event cards with visual design
-- [x] Add "Add to Calendar" functionality
+### Homepage Dashboard Modules - IMPLEMENTATION PLAN
+- [ ] Install Material-UI 5 package and dependencies [10]
+  ```
+  pnpm add @mui/material @emotion/react @emotion/styled @mui/icons-material
+  ```
+- [ ] Create modular dashboard layout framework in homepage [10]
+- [ ] Set up responsive widget grid system with MUI Grid [9]
+- [ ] Implement Dashboard context provider for state management [8]
+- [ ] Refactor existing widgets to use MUI Card components [8]
+- [ ] Create widget configuration options [6]
+- [ ] Add loading states using MUI Skeleton components [8]
 
-### News Section Basic Implementation (8 points)
-- [x] Create static sample news articles (6+ items)
-- [x] Implement responsive news card layout with placeholders
-- [x] Add featured news section to homepage
-- [x] Add "load more" functionality
+### News Aggregation System
+- [ ] Set up independent cron-based scraper process [9]
+- [ ] Create database schema for storing scraped news [8]
+- [ ] Implement fake example data for initial development [10]
+- [ ] Add data normalization for multiple sources [7]
+- [ ] Create admin interface for scraper configuration [6]
 
-### Contact Form Enhancement (5 points)
-- [x] Add client-side form validation
-- [x] Create success/error UI states
-- [x] Implement mock form submission for demo
-- [x] Add visual feedback on form interactions
+### Announcements/Classifieds System
+- [ ] Set up database schema for announcements [8]
+- [ ] Create fake example data for initial development [10]
+- [ ] Implement filtering and categorization [9]
+- [ ] Add sorting by date, relevance, location [7]
+- [ ] Create announcement detail page template [8]
 
-## Priority 3: Technical & Polish (If Time Permits)
-
-### Basic SEO Optimization (3 points)
-- [x] Complete metadata for all pages
-- [x] Add proper canonical URLs
-- [x] Create basic sitemap.xml and robots.txt
-- [x] Implement basic structured data
-
-### Performance Optimization (5 points)
-- [x] Configure Next.js for better performance
-- [x] Optimize Tailwind usage
-- [x] Add loading states for key components
-- [ ] Set up basic performance monitoring
-
-### Simple Map Integration (8 points)
-- [x] Add map placeholder with PlaceholderImage component
-- [ ] Mark key locations on the map
-- [ ] Add basic tooltips for locations
-- [ ] Create simple POI (points of interest) list
+### Places Catalog
+- [ ] Implement locations database with categories (shops, services, culture, sports, etc.) [9]
+- [ ] Create map-based browsing interface [10]
+- [ ] Add category filtering system [8]
+- [ ] Implement place detail pages [7]
+- [ ] Add search functionality for places [8]
+- [ ] Create admin tools for place management [6]
 
 ## Future Development (Post-MVP)
 
 ### Internationalization Support
-- Add English language support
-- Implement language switcher
-- Translate all static content
-- Handle language-specific formatting
+- Add English language support [5]
+- Implement language switcher [4]
+- Translate all static content [5]
+- Handle language-specific formatting [3]
 
 ### Server-side Weather Implementation
-- Move API calls to server-side
-- Set up proper caching
-- Implement error handling
-- Add more detailed weather information
+- Move API calls to server-side [5]
+- Set up proper caching [4]
+- Implement error handling [5]
+- Add more detailed weather information [6]
 
 ### Interactive City Tour
-- Create virtual tour of key attractions
-- Add 360° photos where available
-- Implement guided navigation between points
-- Add historical information at each stop
+- Create virtual tour of key attractions [7]
+- Add 360° photos where available [8]
+- Implement guided navigation between points [6]
+- Add historical information at each stop [7]
 
 ### User-Generated Content
-- Allow user photo submissions
-- Implement community events submission
-- Add commenting functionality
-- Create moderation system
+- Allow user photo submissions [6]
+- Implement community events submission [7]
+- Add commenting functionality [5]
+- Create moderation system [4]
 
 ### Administration Panel
-- Create secure admin login
-- Build news/events management interface
-- Implement content editing capabilities
-- Add analytics dashboard
-
-## Notes for MVP Demo
-
-- Focus on visual appeal and core content first
-- Use placeholder/mock data where real data isn't available
-- Ensure the demo showcases the potential of the platform
-- Optimize for presenting to potential investors/stakeholders
-- Prepare talking points about future functionality
+- Create secure admin login [5]
+- Build news/events management interface [7]
+- Implement content editing capabilities [6]
+- Add analytics dashboard [5]
