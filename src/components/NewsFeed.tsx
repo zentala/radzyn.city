@@ -46,8 +46,11 @@ export default function NewsFeed({
   const fetchNews = async () => {
     try {
       setIsLoading(true);
-      // Initialize scrapers (in production, this would be done server-side)
-      await startScrapers().catch(console.error);
+      // Only use scrapers in browser environment
+      if (typeof window !== 'undefined') {
+        // Initialize scrapers (in production, this would be done server-side)
+        await startScrapers().catch(console.error);
+      }
       
       // Fetch news articles
       const articles = await getAllNewsArticles();
@@ -62,7 +65,10 @@ export default function NewsFeed({
   };
   
   useEffect(() => {
-    fetchNews();
+    // Only fetch news in browser environment
+    if (typeof window !== 'undefined') {
+      fetchNews();
+    }
   }, []);
   
   // Filter news by category if categoryId is provided

@@ -1,9 +1,18 @@
 import { NewsArticleData } from '../utils/types';
 import { addNewsArticle } from './newsService';
 import * as cheerio from 'cheerio';
-import puppeteer from 'puppeteer';
 import * as db from '../utils/db';
 import { analyzeContent, categorizeArticle, extractTags as aiExtractTags, generateSummary } from './aiService';
+
+// Dynamically import puppeteer only in server context to avoid client-side issues
+let puppeteer: any = null;
+if (typeof window === 'undefined') {
+  import('puppeteer').then(module => {
+    puppeteer = module.default;
+  }).catch(err => {
+    console.error('Failed to import puppeteer:', err);
+  });
+}
 
 // Interface for a scraper configuration
 interface ScraperConfig {
@@ -122,6 +131,12 @@ const fetchHtml = async (url: string): Promise<string> => {
 
 // Fetch HTML content with puppeteer for JavaScript-heavy sites
 const fetchHtmlWithPuppeteer = async (url: string): Promise<string> => {
+  // If in client-side environment or puppeteer failed to load, use fallback
+  if (typeof window !== 'undefined' || !puppeteer) {
+    console.warn('Puppeteer is not available in this environment, using fetch instead');
+    return fetchHtml(url);
+  }
+  
   console.log(`Starting puppeteer to fetch: ${url}`);
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -352,7 +367,14 @@ export const scrapeSource = async (config: ScraperConfig): Promise<void> => {
 
 // Start the scraper for all configured sources
 export const startScrapers = async (): Promise<void> => {
-  console.log('Starting news scrapers...');
+  // Skip operation entirely if we're in client-side environment
+  // This ensures we don't try to do server-side operations in the browser
+  if (typeof window !== 'undefined') {
+    console.log('Running in browser environment - only fetching existing news');
+    return;
+  }
+
+  console.log('Starting news scrapers in server environment...');
   
   // Initial scrape of all sources
   for (const config of scraperConfigs) {
@@ -364,29 +386,6 @@ export const startScrapers = async (): Promise<void> => {
   // scraper at regular intervals. Setting intervals here is only for development
   // and demo purposes and might cause memory leaks in long-running applications.
   
-  // Only set up intervals if we're running in a browser environment
-  if (typeof window !== 'undefined') {
-    // Clear any existing intervals
-    if ((global as any).__scraperIntervals) {
-      (global as any).__scraperIntervals.forEach(clearInterval);
-    }
-    
-    (global as any).__scraperIntervals = [];
-    
-    // Set up interval scraping for demo purposes
-    scraperConfigs.forEach(config => {
-      const interval = setInterval(() => {
-        scrapeSource(config).catch(console.error);
-      }, config.scrapeInterval * 60 * 1000); // Convert minutes to milliseconds
-      
-      (global as any).__scraperIntervals.push(interval);
-    });
-    
-    console.log('Demo scraper intervals set up for browser environment');
-  } else {
-    console.log('Running in server environment - no intervals set up');
-  }
-  
   console.log('News scrapers started successfully');
 };
 
@@ -394,11 +393,8 @@ export const startScrapers = async (): Promise<void> => {
 export const stopScrapers = (): void => {
   console.log('Stopping news scrapers...');
   
-  if (typeof window !== 'undefined' && (global as any).__scraperIntervals) {
-    (global as any).__scraperIntervals.forEach(clearInterval);
-    (global as any).__scraperIntervals = [];
-    console.log('All scraper intervals cleared');
-  }
+  // No-op in both client and server environments since we're not using intervals anymore
+  console.log('No running scrapers to stop');
 };
 
 // Export the scraperConfigs for testing or admin panels

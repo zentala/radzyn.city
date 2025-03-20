@@ -118,3 +118,29 @@ The application is organized into four distinct workspaces:
 - Municipal service request system
 - Tourism promotion features
 - Integration with regional government services
+
+
+---
+
+
+
+create facades:
+- https://apilayer.com/ 
+- https://rapidapi.com/
+- https://huggingface.co
+- replicate.com
+
+
+
+`@ui/components` - all based on mui5
+ - weather
+ - newses
+ - news
+ - adv
+ - photo
+ - 
+`@ui/pages`
+  - `ui-demo` - visible only in dev mode cotaing demonstation of all `@ui/components`
+`@ui/views`
+`@ui/symbols`
+`@ui/symbols`

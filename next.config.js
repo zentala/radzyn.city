@@ -15,6 +15,28 @@ const nextConfig = {
     // number of pages that should be kept simultaneously without being disposed
     pagesBufferLength: 4,
   },
+  // Handle Node.js modules in browser environment
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Don't resolve Node.js modules on the client to prevent errors
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+        dns: false,
+        child_process: false,
+        http: false,
+        https: false,
+        path: false,
+        os: false,
+        stream: false,
+        zlib: false,
+        util: false,
+      };
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;
