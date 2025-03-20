@@ -118,24 +118,26 @@ export default function ContactForm() {
     setIsSubmitting(true);
     
     // Simulate API call with timeout
+    // For demo and testing, immediately show success message
+    console.log('Form data submitted:', formData);
+    
+    // Add a small delay for test stability
     setTimeout(() => {
-      // For demo, just simulate a successful submission
-      console.log('Form data submitted:', formData);
       setFormStatus('success');
       setIsSubmitting(false);
-      
-      // Reset form after 5 seconds
-      setTimeout(() => {
-        setFormStatus('idle');
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: ''
-        });
-        setTouched({});
-      }, 5000);
-    }, 1500);
+    }, 100);
+    
+    // Reset form after 5 seconds
+    setTimeout(() => {
+      setFormStatus('idle');
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      setTouched({});
+    }, 5000);
   };
   
   if (formStatus === 'success') {

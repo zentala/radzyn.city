@@ -10,11 +10,11 @@ export default function Navigation() {
   const currentPath = usePathname();
 
   const navigation = [
-    { name: 'Strona główna', href: '/' },
-    { name: 'O mieście', href: '/city' },
-    { name: 'Powiat', href: '/county' },
-    { name: 'Wydarzenia', href: '/events' },
-    { name: 'Kontakt', href: '/contact' },
+    { name: 'Strona główna', href: '/', enName: 'Home' },
+    { name: 'O mieście', href: '/city', enName: 'City' },
+    { name: 'Powiat', href: '/county', enName: 'County' },
+    { name: 'Wydarzenia', href: '/events', enName: 'Events' },
+    { name: 'Kontakt', href: '/contact', enName: 'Contact' },
   ];
 
   // Handle scroll event to add background on scroll
@@ -41,16 +41,17 @@ export default function Navigation() {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
-      isScrolled ? 'bg-primary shadow-md' : 'bg-primary/90'
-    } text-white`}>
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex items-center space-x-4">
-            <Link href="/" className="font-bold text-xl md:text-2xl hover:opacity-90 transition">
-              Radzyń Podlaski
-            </Link>
-          </div>
+    <header role="banner">
+      <nav className={`fixed top-0 left-0 right-0 z-30 transition-all duration-300 ${
+        isScrolled ? 'bg-primary shadow-md' : 'bg-primary/90'
+      } text-white`}>
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="font-bold text-xl md:text-2xl hover:opacity-90 transition">
+                Radzyń Podlaski
+              </Link>
+            </div>
 
           {/* Desktop navigation */}
           <div className="hidden md:flex space-x-8">
@@ -63,8 +64,10 @@ export default function Navigation() {
                     ? 'font-bold border-b-2 border-white' 
                     : 'hover:border-b-2 border-white/50'
                 } hover:text-gray-200 transition py-1`}
+                aria-label={item.enName}
               >
                 {item.name}
+                <span className="sr-only">{item.enName}</span>
               </Link>
             ))}
           </div>
@@ -75,6 +78,8 @@ export default function Navigation() {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white focus:outline-none p-2"
               aria-label={isMenuOpen ? "Zamknij menu" : "Otwórz menu"}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
             >
               <svg
                 className="h-6 w-6"
@@ -104,6 +109,7 @@ export default function Navigation() {
 
         {/* Mobile navigation - slide down animation */}
         <div 
+          id="mobile-menu"
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? 'max-h-60 opacity-100' : 'max-h-0 opacity-0'
           }`}
@@ -118,13 +124,16 @@ export default function Navigation() {
                     ? 'bg-white/20 font-bold' 
                     : 'hover:bg-white/10'
                 } transition-colors active:bg-white/30 touch-manipulation`}
+                aria-label={item.enName}
               >
                 {item.name}
+                <span className="sr-only">{item.enName}</span>
               </Link>
             ))}
           </div>
         </div>
       </div>
     </nav>
+    </header>
   );
 }
