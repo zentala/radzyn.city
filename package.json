@@ -15,13 +15,21 @@
     "test:setup": "node scripts/test-setup.js"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.8",
+    "@mui/material": "^6.4.8",
+    "@mui/material-nextjs": "^6.4.3",
+    "@types/leaflet": "^1.9.16",
     "axios": "^1.6.5",
     "cheerio": "^1.0.0-rc.12",
+    "leaflet": "^1.9.4",
     "next": "^14.1.0",
     "openai": "^4.28.0",
     "puppeteer": "^21.10.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-leaflet": "4.2.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.1",

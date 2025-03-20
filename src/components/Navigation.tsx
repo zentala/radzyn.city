@@ -23,6 +23,7 @@ export default function Navigation() {
     { name: 'Strona główna', href: '/', enName: 'Home' },
     { name: 'O mieście', href: '/city', enName: 'City' },
     { name: 'Powiat', href: '/county', enName: 'County' },
+    { name: 'Mapa', href: '/map', enName: 'Map' },
     { name: 'Wydarzenia', href: '/events', enName: 'Events' },
     { name: 'Kontakt', href: '/contact', enName: 'Contact' },
   ];

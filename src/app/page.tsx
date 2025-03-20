@@ -19,6 +19,10 @@ import Link from 'next/link';
 import Dashboard, { DashboardProvider, WidgetConfig } from '@/components/Dashboard';
 import DashboardWidget from '@/components/DashboardWidget';
 import EventCard from '@/components/EventCard';
+import dynamic from 'next/dynamic';
+
+// Dynamically import CityMapWidget to avoid SSR issues with Leaflet
+const CityMapWidget = dynamic(() => import('@/components/CityMapWidget'), { ssr: false });
 
 // Define example upcoming events
 const upcomingEvents = [
@@ -96,15 +100,15 @@ const dashboardWidgets: WidgetConfig[] = [
             <Card sx={{ height: '100%', backgroundColor: 'success.light', opacity: 0.8 }}>
               <CardActionArea 
                 component={Link} 
-                href="/county"
+                href="/map"
                 sx={{ height: '100%', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
               >
                 <MapIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
                 <Typography variant="h6" component="h3" sx={{ color: 'white' }}>
-                  Powiat
+                  Mapa miasta
                 </Typography>
                 <Typography variant="body2" color="white">
-                  Informacje o gminie
+                  Punkty zainteresowania
                 </Typography>
               </CardActionArea>
             </Card>
@@ -133,16 +137,22 @@ const dashboardWidgets: WidgetConfig[] = [
     order: 2
   },
   {
+    id: 'cityMap',
+    component: <CityMapWidget />,
+    size: 'medium',
+    order: 3
+  },
+  {
     id: 'news',
     component: <NewsFeed limit={3} showFeatured={true} dashboardMode={true} />,
     size: 'full',
-    order: 3
+    order: 4
   },
   {
     id: 'cityHighlights',
     component: <CityHighlights />,
     size: 'full',
-    order: 4
+    order: 5
   },
   {
     id: 'events',
@@ -165,7 +175,7 @@ const dashboardWidgets: WidgetConfig[] = [
       </DashboardWidget>
     ),
     size: 'full',
-    order: 5
+    order: 6
   }
 ];
 
