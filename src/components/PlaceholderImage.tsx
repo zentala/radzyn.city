@@ -52,37 +52,56 @@ export default function PlaceholderImage({
   const bgColor = generateColor(title);
   
   if (showPlaceholder) {
-    // Placeholder SVG-like design created with divs
+    // Check if we have specific SVG for this title (for public images)
+    // Convert title to a potential file name in the public directory
+    const safeTitle = title.toLowerCase().replace(/\s+/g, '-');
+    let specificSvgPath = '';
+    
+    if (title === 'Pałac Potockich') {
+      specificSvgPath = '/images/palac-potockich.svg';
+    } else if (title === 'Kościół Świętej Trójcy') {
+      specificSvgPath = '/images/kosciol.svg';
+    }
+    
+    // If we have a specific SVG, use it
+    if (specificSvgPath) {
+      return (
+        <div className={`relative overflow-hidden ${className}`}>
+          <Image
+            src={specificSvgPath}
+            alt={title}
+            width={finalWidth}
+            height={finalHeight}
+            className="object-cover w-full h-full rounded-md"
+          />
+        </div>
+      );
+    }
+    
+    // Otherwise, use SVG placeholder
     return (
-      <div 
-        className={`relative flex items-center justify-center overflow-hidden ${className}`}
-        style={{ 
-          width: finalWidth, 
-          height: finalHeight, 
-          backgroundColor: bgColor,
-          borderRadius: '0.375rem'
-        }}
-      >
-        <div className="absolute top-0 left-0 w-full h-full opacity-30">
-          {/* Grid pattern for background */}
-          <div className="grid grid-cols-4 grid-rows-3 h-full w-full">
-            {Array(12).fill(0).map((_, i) => (
-              <div key={i} className="border border-gray-300/20"></div>
-            ))}
-          </div>
-        </div>
-        
-        <div className="text-center z-10 px-4">
-          <span className="text-xl md:text-2xl font-medium text-gray-800">{title}</span>
-          <div className="text-sm text-gray-600 mt-2">Placeholder Image</div>
-        </div>
+      <div className={`relative flex items-center justify-center overflow-hidden ${className}`}>
+        <svg 
+          width={finalWidth} 
+          height={finalHeight} 
+          viewBox={`0 0 ${finalWidth} ${finalHeight}`}
+          className="w-full h-full"
+          style={{ backgroundColor: bgColor }}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect width="100%" height="100%" fill={bgColor} />
+          <rect x="10%" y="10%" width="80%" height="80%" fill="none" stroke="#ffffff" strokeWidth="2" strokeDasharray="10 5" />
+          <text x="50%" y="50%" fontFamily="Arial" fontSize="24" fill="#555" textAnchor="middle">{title}</text>
+        </svg>
       </div>
     );
   }
   
   // Render actual image if src is provided and there's no error
   return (
-    <div className={`relative overflow-hidden ${className}`} style={{ width: finalWidth, height: finalHeight }}>
+    <div className={`relative overflow-hidden ${className}`} 
+      style={{ width: typeof finalWidth === 'number' ? `${finalWidth}px` : finalWidth, height: typeof finalHeight === 'number' ? `${finalHeight}px` : finalHeight }}
+    >
       <Image
         src={src}
         alt={alt || title}

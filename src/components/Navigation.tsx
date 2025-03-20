@@ -84,9 +84,18 @@ export default function Navigation() {
                   aria-label={item.enName}
                 >
                   {item.name}
-                  <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+                  <Box 
+                    component="span"
+                    sx={{ 
+                      position: 'absolute', 
+                      width: 1, 
+                      height: 1, 
+                      overflow: 'hidden', 
+                      clip: 'rect(0 0 0 0)' 
+                    }}
+                  >
                     {item.enName}
-                  </span>
+                  </Box>
                 </Button>
               ))}
             </Box>
@@ -120,12 +129,8 @@ export default function Navigation() {
             top: '64px', 
             backgroundColor: 'primary.main',
             color: 'white',
-          },
-        }}
-        SlideProps={{
-          sx: {
             transition: 'transform 300ms ease-in-out'
-          }
+          },
         }}
       >
         <List sx={{ pt: 0 }}>
@@ -151,9 +156,18 @@ export default function Navigation() {
                     fontWeight: isActive(item.href) ? 'bold' : 'normal',
                   }}
                 />
-                <span style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>
+                <Box 
+                  component="span"
+                  sx={{ 
+                    position: 'absolute', 
+                    width: 1, 
+                    height: 1, 
+                    overflow: 'hidden', 
+                    clip: 'rect(0 0 0 0)' 
+                  }}
+                >
                   {item.enName}
-                </span>
+                </Box>
               </ListItemButton>
             </ListItem>
           ))}
