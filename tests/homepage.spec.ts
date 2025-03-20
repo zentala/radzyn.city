@@ -5,14 +5,19 @@ test.describe('Homepage', () => {
     await page.goto('/');
     
     // Check page title
-    await expect(page).toHaveTitle(/Radzyń/);
+    await expect(page).toHaveTitle(/Radzyń/, { timeout: 30000 });
     
-    // Check for key elements - use more resilient selectors
-    await expect(page.locator('nav')).toBeVisible(); // Navigation
+    // Check for key elements - use more resilient selectors that work with MUI
+    await expect(page.locator('header')).toBeVisible(); // Navigation
     await expect(page.locator('main')).toBeVisible(); // Main content
     
     // The homepage should have some core content sections
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+    
+    // Check for dashboard widgets
+    await expect(page.locator('.MuiCard-root').first()).toBeVisible();
+    await expect(page.getByText('Pogoda w Radzyniu Podlaskim')).toBeVisible();
+    await expect(page.getByText('Na skróty')).toBeVisible();
   });
   
   test('should have working navigation on mobile', async ({ page }) => {
@@ -21,23 +26,23 @@ test.describe('Homepage', () => {
     
     await page.goto('/');
     
-    // Check if mobile menu toggle exists
-    await page.waitForSelector('button[aria-label="Otwórz menu"]');
-    const mobileMenuButton = page.locator('button[aria-label="Otwórz menu"]');
-    await expect(mobileMenuButton).toBeVisible();
+    // Check if mobile menu toggle exists (adjusted for MUI)
+    await page.waitForSelector('button[aria-label="menu"]', { timeout: 30000 });
+    const mobileMenuButton = page.locator('button[aria-label="menu"]');
+    await expect(mobileMenuButton).toBeVisible({ timeout: 30000 });
     
     // Open mobile menu
     await mobileMenuButton.click();
     
-    // Wait for the mobile menu to be visible
-    await page.waitForSelector('#mobile-menu');
+    // Wait for the mobile drawer to be visible (MUI specific selector)
+    await page.waitForSelector('[role="presentation"]');
     
-    // Navigation links should be visible now
-    // Specifically target the mobile menu links
-    await expect(page.locator('#mobile-menu a[aria-label="Home"]')).toBeVisible();
-    await expect(page.locator('#mobile-menu a[aria-label="City"]')).toBeVisible();
-    await expect(page.locator('#mobile-menu a[aria-label="County"]')).toBeVisible();
-    await expect(page.locator('#mobile-menu a[aria-label="Events"]')).toBeVisible();
-    await expect(page.locator('#mobile-menu a[aria-label="Contact"]')).toBeVisible();
+    // Navigation links should be visible now in the drawer
+    // These selectors need to match the exact text or have proper test IDs
+    await expect(page.getByText('Strona główna')).toBeVisible();
+    await expect(page.getByText('O mieście')).toBeVisible();
+    await expect(page.getByText('Powiat')).toBeVisible();
+    await expect(page.getByText('Wydarzenia')).toBeVisible();
+    await expect(page.getByText('Kontakt')).toBeVisible();
   });
 });

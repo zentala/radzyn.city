@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { 
-  Card, CardContent, Typography, Box, Grid, Skeleton, Alert, Divider,
-  CircularProgress
+  Typography, Box, Grid, Alert, Divider,
+  CircularProgress, Link, Button
 } from '@mui/material';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import DashboardWidget from './DashboardWidget';
 
 interface WeatherData {
   main: {
@@ -39,55 +41,57 @@ export default function WeatherWidget() {
   const [error, setError] = useState('');
   const [useFallback, setUseFallback] = useState(false);
 
-  useEffect(() => {
-    const fetchWeather = async () => {
-      try {
-        // Check if API key exists, otherwise use fallback data for demo
-        const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
-        
-        if (!apiKey || apiKey === 'DEMO_KEY') {
-          // Use fallback data for demo purposes
-          console.log('Using fallback weather data for demo');
-          setUseFallback(true);
-          setLoading(false);
-          return;
-        }
-        
-        // Fetch current weather
-        const currentRes = await axios.get(
-          'https://api.openweathermap.org/data/2.5/weather', {
-            params: {
-              q: 'Radzyn Podlaski,pl',
-              units: 'metric',
-              appid: apiKey
-            }
-          }
-        );
-        setWeather(currentRes.data);
-        
-        // Fetch forecast for next days
-        const forecastRes = await axios.get(
-          'https://api.openweathermap.org/data/2.5/forecast', {
-            params: {
-              q: 'Radzyn Podlaski,pl',
-              units: 'metric',
-              appid: apiKey
-            }
-          }
-        );
-        
-        // Process forecast data to get one entry per day
-        const processedForecast = processForecastData(forecastRes.data.list);
-        setForecast(processedForecast);
-      } catch (err) {
-        console.error('Error fetching weather data:', err);
-        setError('Nie udało się pobrać danych pogodowych');
+  const fetchWeather = async () => {
+    try {
+      setLoading(true);
+      // Check if API key exists, otherwise use fallback data for demo
+      const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+      
+      if (!apiKey || apiKey === 'DEMO_KEY') {
+        // Use fallback data for demo purposes
+        console.log('Using fallback weather data for demo');
         setUseFallback(true);
-      } finally {
         setLoading(false);
+        return;
       }
-    };
+      
+      // Fetch current weather
+      const currentRes = await axios.get(
+        'https://api.openweathermap.org/data/2.5/weather', {
+          params: {
+            q: 'Radzyn Podlaski,pl',
+            units: 'metric',
+            appid: apiKey
+          }
+        }
+      );
+      setWeather(currentRes.data);
+      
+      // Fetch forecast for next days
+      const forecastRes = await axios.get(
+        'https://api.openweathermap.org/data/2.5/forecast', {
+          params: {
+            q: 'Radzyn Podlaski,pl',
+            units: 'metric',
+            appid: apiKey
+          }
+        }
+      );
+      
+      // Process forecast data to get one entry per day
+      const processedForecast = processForecastData(forecastRes.data.list);
+      setForecast(processedForecast);
+      setError('');
+    } catch (err) {
+      console.error('Error fetching weather data:', err);
+      setError('Nie udało się pobrać danych pogodowych');
+      setUseFallback(true);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchWeather();
   }, []);
   
@@ -168,165 +172,156 @@ export default function WeatherWidget() {
     }
   ];
 
-  if (loading) {
-    return (
-      <Card sx={{ p: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3 }}>
-          <CircularProgress />
-        </Box>
-        <CardContent>
-          <Skeleton variant="text" width="75%" height={30} />
-          <Box sx={{ display: 'flex', mt: 2, mb: 2 }}>
-            <Skeleton variant="circular" width={64} height={64} />
-            <Box sx={{ ml: 2 }}>
-              <Skeleton variant="text" width={80} height={40} />
-              <Skeleton variant="text" width={120} height={20} />
-            </Box>
-          </Box>
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid item xs={4}>
-              <Skeleton variant="rectangular" height={60} />
-            </Grid>
-            <Grid item xs={4}>
-              <Skeleton variant="rectangular" height={60} />
-            </Grid>
-            <Grid item xs={4}>
-              <Skeleton variant="rectangular" height={60} />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    );
-  }
-
   const currentWeatherData = useFallback ? mockCurrentWeather : weather;
   const forecastData = useFallback ? mockForecast : forecast;
 
   if (error && !useFallback) {
-    return <Alert severity="error" sx={{ p: 2 }}>{error}</Alert>;
+    return (
+      <DashboardWidget title="Pogoda w Radzyniu Podlaskim">
+        <Alert severity="error">{error}</Alert>
+      </DashboardWidget>
+    );
   }
-  
-  if (!currentWeatherData) return null;
+
+  const widgetContent = !currentWeatherData ? null : (
+    <>
+      {useFallback && (
+        <Alert severity="warning" sx={{ mb: 2 }} variant="outlined">
+          Tryb demonstracyjny - dane pogodowe są symulowane
+        </Alert>
+      )}
+      
+      {/* Current weather */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+        <Box 
+          sx={{ 
+            flexShrink: 0, 
+            backgroundColor: 'primary.light', 
+            borderRadius: '50%',
+            p: 0.5,
+            opacity: 0.2
+          }}
+        >
+          <img 
+            src={`https://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`}
+            alt={currentWeatherData.weather[0].description}
+            width={64}
+            height={64}
+          />
+        </Box>
+        <Box sx={{ ml: 2 }}>
+          <Typography variant="h4" component="p" sx={{ fontWeight: 'bold' }}>
+            {Math.round(currentWeatherData.main.temp)}°C
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
+            {currentWeatherData.weather[0].description}
+          </Typography>
+        </Box>
+      </Box>
+      
+      <Grid container spacing={1} sx={{ mt: 2 }}>
+        <Grid item xs={4}>
+          <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Odczuwalna
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+              {Math.round(currentWeatherData.main.feels_like)}°C
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Wilgotność
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+              {currentWeatherData.main.humidity}%
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
+            <Typography variant="body2" color="text.secondary">
+              Wiatr
+            </Typography>
+            <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+              {Math.round(currentWeatherData.wind.speed * 3.6)} km/h
+            </Typography>
+          </Box>
+        </Grid>
+      </Grid>
+      
+      {/* Forecast for next days */}
+      <Box sx={{ mt: 3 }}>
+        <Divider sx={{ my: 2 }} />
+        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'medium' }}>
+          Prognoza na kolejne dni
+        </Typography>
+        <Grid container spacing={1}>
+          {forecastData.map((day, index) => (
+            <Grid item xs={4} key={index}>
+              <Box sx={{ 
+                textAlign: 'center', 
+                backgroundColor: 'primary.light', 
+                p: 1.5, 
+                borderRadius: 1,
+                opacity: 0.2
+              }}>
+                <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                  {day.dayName}
+                </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <img 
+                    src={`https://openweathermap.org/img/wn/${day.icon}.png`}
+                    alt={day.description}
+                    width={40}
+                    height={40}
+                  />
+                </Box>
+                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                  {Math.round(day.temp)}°C
+                </Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ 
+                  display: 'block',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textTransform: 'capitalize'
+                }}>
+                  {day.description}
+                </Typography>
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    </>
+  );
+
+  const loadingContent = (
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3, flexGrow: 1 }}>
+      <CircularProgress />
+    </Box>
+  );
 
   return (
-    <Card>
-      <CardContent>
-        {useFallback && (
-          <Alert severity="warning" sx={{ mb: 2 }} variant="outlined">
-            Tryb demonstracyjny - dane pogodowe są symulowane
-          </Alert>
-        )}
-        
-        <Typography variant="h5" component="h3" gutterBottom>
-          Pogoda w Radzyniu Podlaskim
-        </Typography>
-        
-        {/* Current weather */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-          <Box 
-            sx={{ 
-              flexShrink: 0, 
-              backgroundColor: 'primary.light', 
-              borderRadius: '50%',
-              p: 0.5,
-              opacity: 0.2
-            }}
-          >
-            <img 
-              src={`https://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`}
-              alt={currentWeatherData.weather[0].description}
-              width={64}
-              height={64}
-            />
-          </Box>
-          <Box sx={{ ml: 2 }}>
-            <Typography variant="h4" component="p" sx={{ fontWeight: 'bold' }}>
-              {Math.round(currentWeatherData.main.temp)}°C
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ textTransform: 'capitalize' }}>
-              {currentWeatherData.weather[0].description}
-            </Typography>
-          </Box>
-        </Box>
-        
-        <Grid container spacing={1} sx={{ mt: 2 }}>
-          <Grid item xs={4}>
-            <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Odczuwalna
-              </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                {Math.round(currentWeatherData.main.feels_like)}°C
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={4}>
-            <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Wilgotność
-              </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                {currentWeatherData.main.humidity}%
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={4}>
-            <Box sx={{ backgroundColor: 'grey.100', p: 1.5, borderRadius: 1 }}>
-              <Typography variant="body2" color="text.secondary">
-                Wiatr
-              </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
-                {Math.round(currentWeatherData.wind.speed * 3.6)} km/h
-              </Typography>
-            </Box>
-          </Grid>
-        </Grid>
-        
-        {/* Forecast for next days */}
-        <Box sx={{ mt: 3 }}>
-          <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'medium' }}>
-            Prognoza na kolejne dni
-          </Typography>
-          <Grid container spacing={1}>
-            {forecastData.map((day, index) => (
-              <Grid item xs={4} key={index}>
-                <Box sx={{ 
-                  textAlign: 'center', 
-                  backgroundColor: 'primary.light', 
-                  p: 1.5, 
-                  borderRadius: 1,
-                  opacity: 0.2
-                }}>
-                  <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
-                    {day.dayName}
-                  </Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <img 
-                      src={`https://openweathermap.org/img/wn/${day.icon}.png`}
-                      alt={day.description}
-                      width={40}
-                      height={40}
-                    />
-                  </Box>
-                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                    {Math.round(day.temp)}°C
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary" sx={{ 
-                    display: 'block',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                    whiteSpace: 'nowrap',
-                    textTransform: 'capitalize'
-                  }}>
-                    {day.description}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </CardContent>
-    </Card>
+    <DashboardWidget 
+      title="Pogoda w Radzyniu Podlaskim"
+      loading={loading}
+      onRefresh={fetchWeather}
+      actions={
+        <Button 
+          size="small" 
+          endIcon={<ArrowForwardIcon />}
+          component={Link}
+          href="/pogoda"
+        >
+          Pełna prognoza
+        </Button>
+      }
+    >
+      {loading ? loadingContent : widgetContent}
+    </DashboardWidget>
   );
 }
