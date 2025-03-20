@@ -1,38 +1,25 @@
 import { NewsArticle, NewsArticleData, NewsCategory, NewsTag } from '../utils/types';
-
-// Mock database for categories and tags (this would be in a real database)
-const categories: Record<string, NewsCategory> = {
-  'miasto': {id: 'miasto', name: 'Miasto', slug: 'miasto', color: 'bg-blue-100 text-blue-800 border-blue-200'},
-  'kultura': {id: 'kultura', name: 'Kultura', slug: 'kultura', color: 'bg-purple-100 text-purple-800 border-purple-200'},
-  'sport': {id: 'sport', name: 'Sport', slug: 'sport', color: 'bg-green-100 text-green-800 border-green-200'},
-  'inwestycje': {id: 'inwestycje', name: 'Inwestycje', slug: 'inwestycje', color: 'bg-amber-100 text-amber-800 border-amber-200'},
-  'edukacja': {id: 'edukacja', name: 'Edukacja', slug: 'edukacja', color: 'bg-indigo-100 text-indigo-800 border-indigo-200'},
-};
-
-const tags: Record<string, NewsTag> = {
-  'miasto': {id: 'miasto', name: 'Miasto', slug: 'miasto'},
-  'inwestycje': {id: 'inwestycje', name: 'Inwestycje', slug: 'inwestycje'},
-  'koncert': {id: 'koncert', name: 'Koncert', slug: 'koncert'},
-  'sport': {id: 'sport', name: 'Sport', slug: 'sport'},
-  'edukacja': {id: 'edukacja', name: 'Edukacja', slug: 'edukacja'},
-  'kultura': {id: 'kultura', name: 'Kultura', slug: 'kultura'},
-};
-
-// This would be stored in a real database
-let newsArticlesDb: NewsArticleData[] = [];
+import * as db from '../utils/db';
 
 // Convert database article to full article with resolved relations
 const mapArticleWithRelations = (article: NewsArticleData): NewsArticle => {
   return {
     ...article,
-    category: categories[article.categoryId],
-    tags: article.tagIds.map(id => tags[id]).filter(Boolean)
+    category: db.getCategoryById(article.categoryId) || { 
+      id: 'unknown',
+      name: 'Nieznana kategoria',
+      slug: 'unknown',
+      color: 'grey.500'
+    },
+    tags: article.tagIds
+      .map(id => db.getTagById(id))
+      .filter((tag): tag is NewsTag => tag !== null)
   };
 };
 
 // Get all news articles
 export const getAllNewsArticles = async (): Promise<NewsArticle[]> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch('/api/news');
@@ -45,13 +32,13 @@ export const getAllNewsArticles = async (): Promise<NewsArticle[]> => {
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  return newsArticlesDb.map(mapArticleWithRelations);
+  // Fallback to database
+  return db.getArticles().map(mapArticleWithRelations);
 };
 
 // Get a specific news article by slug
 export const getNewsArticleBySlug = async (slug: string): Promise<NewsArticle | null> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch(`/api/news/${slug}`);
@@ -64,14 +51,14 @@ export const getNewsArticleBySlug = async (slug: string): Promise<NewsArticle | 
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  const article = newsArticlesDb.find(article => article.slug === slug);
+  // Fallback to database
+  const article = db.getArticleBySlug(slug);
   return article ? mapArticleWithRelations(article) : null;
 };
 
 // Get featured news articles
 export const getFeaturedNewsArticles = async (): Promise<NewsArticle[]> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch('/api/news?featured=true');
@@ -84,15 +71,13 @@ export const getFeaturedNewsArticles = async (): Promise<NewsArticle[]> => {
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  return newsArticlesDb
-    .filter(article => article.featured)
-    .map(mapArticleWithRelations);
+  // Fallback to database
+  return db.getFeaturedArticles().map(mapArticleWithRelations);
 };
 
 // Get news articles by category
 export const getNewsArticlesByCategory = async (categorySlug: string): Promise<NewsArticle[]> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch(`/api/news?category=${categorySlug}`);
@@ -105,18 +90,16 @@ export const getNewsArticlesByCategory = async (categorySlug: string): Promise<N
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  const categoryId = Object.values(categories).find(cat => cat.slug === categorySlug)?.id;
-  if (!categoryId) return [];
+  // Fallback to database
+  const category = db.getCategoryBySlug(categorySlug);
+  if (!category) return [];
   
-  return newsArticlesDb
-    .filter(article => article.categoryId === categoryId)
-    .map(mapArticleWithRelations);
+  return db.getArticlesByCategory(category.id).map(mapArticleWithRelations);
 };
 
 // Get news articles by tag
 export const getNewsArticlesByTag = async (tagSlug: string): Promise<NewsArticle[]> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch(`/api/news?tag=${tagSlug}`);
@@ -129,18 +112,16 @@ export const getNewsArticlesByTag = async (tagSlug: string): Promise<NewsArticle
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  const tagId = Object.values(tags).find(tag => tag.slug === tagSlug)?.id;
-  if (!tagId) return [];
+  // Fallback to database
+  const tag = db.getTagBySlug(tagSlug);
+  if (!tag) return [];
   
-  return newsArticlesDb
-    .filter(article => article.tagIds.includes(tagId))
-    .map(mapArticleWithRelations);
+  return db.getArticlesByTag(tag.id).map(mapArticleWithRelations);
 };
 
 // Get all categories
 export const getAllCategories = async (): Promise<NewsCategory[]> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch('/api/news/categories');
@@ -153,13 +134,13 @@ export const getAllCategories = async (): Promise<NewsCategory[]> => {
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  return Object.values(categories);
+  // Fallback to database
+  return db.getCategories();
 };
 
 // Get all tags
 export const getAllTags = async (): Promise<NewsTag[]> => {
-  // First try to fetch from API (for server-side rendering)
+  // Try to fetch from API first (client-side)
   if (typeof window !== 'undefined') {
     try {
       const response = await fetch('/api/news/tags');
@@ -172,38 +153,23 @@ export const getAllTags = async (): Promise<NewsTag[]> => {
     }
   }
   
-  // Fallback to in-memory database (for development/mock data)
-  return Object.values(tags);
+  // Fallback to database
+  return db.getTags();
 };
 
 // Add a new news article (this would typically be called by the scraper)
 export const addNewsArticle = async (article: Omit<NewsArticleData, 'id'>): Promise<NewsArticle> => {
-  const id = crypto.randomUUID();
-  const newArticle = {
-    ...article,
-    id
-  };
-  
-  newsArticlesDb.push(newArticle);
+  const newArticle = db.addArticle(article);
   return mapArticleWithRelations(newArticle);
 };
 
 // Update a news article
 export const updateNewsArticle = async (id: string, article: Partial<NewsArticleData>): Promise<NewsArticle | null> => {
-  const index = newsArticlesDb.findIndex(a => a.id === id);
-  if (index === -1) return null;
-  
-  newsArticlesDb[index] = {
-    ...newsArticlesDb[index],
-    ...article
-  };
-  
-  return mapArticleWithRelations(newsArticlesDb[index]);
+  const updated = db.updateArticle(id, article);
+  return updated ? mapArticleWithRelations(updated) : null;
 };
 
 // Delete a news article
 export const deleteNewsArticle = async (id: string): Promise<boolean> => {
-  const initialLength = newsArticlesDb.length;
-  newsArticlesDb = newsArticlesDb.filter(article => article.id !== id);
-  return newsArticlesDb.length < initialLength;
+  return db.deleteArticle(id);
 };
