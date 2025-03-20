@@ -1,11 +1,12 @@
 # Radzyń City Portal MVP - TODO List
 
 ## Priority 1: UI Framework Standardization
-- [ ] Replace all Tailwind CSS with MUI components [10]
-- [ ] Refactor all components to use MUI styling system exclusively [9]
+- [x] Replace Tailwind CSS with MUI components in several key pages [10]
+- [x] Refactor PlaceholderImage component to use MUI styling exclusively [9]
+- [x] Update News, City, County, and Contact pages to use MUI components [10]
+- [ ] Convert remaining pages from Tailwind to MUI styling system [9]
 - [ ] Remove Tailwind CSS dependencies from the project [8]
 - [ ] Implement consistent MUI theming throughout the application [9]
-- [ ] Update styling in all pages to follow MUI design patterns [10]
 - [ ] Convert all custom CSS to MUI's sx prop and styled components [8]
 
 ## Completed Features
