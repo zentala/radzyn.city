@@ -1,5 +1,5 @@
 import PlaceholderImage from './PlaceholderImage';
-import { Typography, Grid, Card, CardContent, Box } from '@mui/material';
+import { Typography, Grid, Card, CardContent, Box } from '@mui/joy';
 
 export default function CityHighlights() {
   const highlights = [
@@ -21,20 +21,20 @@ export default function CityHighlights() {
   ];
 
   return (
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         my: 4,
-        paddingX: 2, 
+        paddingX: 2,
         maxWidth: '1200px',
         marginX: 'auto'
       }}
     >
-      <Typography 
-        variant="h2" 
-        component="h2" 
+      <Typography
+        level="h2"
+        component="h2"
         id="odkryj-radzyn"
-        sx={{ 
-          mb: 3, 
+        sx={{
+          mb: 3,
           fontWeight: 'bold',
           fontSize: { xs: '1.75rem', md: '2rem' }
         }}
@@ -43,9 +43,9 @@ export default function CityHighlights() {
       </Typography>
       <Grid container spacing={3}>
         {highlights.map((item, index) => (
-          <Grid item xs={12} md={4} key={index}>
-            <Card 
-              sx={{ 
+          <Grid xs={12} md={4} key={index}>
+            <Card
+              sx={{
                 height: '100%',
                 overflow: 'hidden',
                 borderRadius: 2,
@@ -53,7 +53,7 @@ export default function CityHighlights() {
               }}
             >
               <Box sx={{ height: 192 }}>
-                <PlaceholderImage 
+                <PlaceholderImage
                   title={item.title}
                   src={item.imageUrl}
                   height={192}
@@ -62,21 +62,23 @@ export default function CityHighlights() {
                 />
               </Box>
               <CardContent>
-                <Typography 
-                  variant="h5" 
-                  component="h3" 
-                  gutterBottom
-                  sx={{ 
+                <Typography
+                  level="h4"
+                  component="h3"
+                  sx={{
+                    mb: 1,
                     fontWeight: 500,
                     fontSize: { xs: '1.25rem', md: '1.5rem' }
                   }}
                 >
                   {item.title}
                 </Typography>
-                <Typography 
-                  variant="body1" 
-                  color="text.secondary"
-                  sx={{ fontSize: { xs: '0.875rem', md: '1rem' } }}
+                <Typography
+                  level="body-md"
+                  sx={{
+                    color: 'text.secondary',
+                    fontSize: { xs: '0.875rem', md: '1rem' }
+                  }}
                 >
                   {item.description}
                 </Typography>

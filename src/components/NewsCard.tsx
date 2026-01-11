@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardMedia, 
-  Typography, 
-  Box, 
-  Chip, 
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Chip,
   Stack,
   Button
-} from '@mui/material';
+} from '@mui/joy';
+import { CardMedia } from '@mui/material';
 import Link from 'next/link';
 import PlaceholderImage from './PlaceholderImage';
 import { NewsCategory } from '@/utils/types';

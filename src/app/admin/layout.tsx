@@ -1,20 +1,19 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Box, 
-  Drawer, 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  List, 
-  Divider, 
-  ListItem, 
-  ListItemButton, 
-  ListItemIcon, 
-  ListItemText,
+import {
+  Box,
+  Drawer,
+  Sheet,
+  Stack,
+  Typography,
+  List,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemContent,
   IconButton
-} from '@mui/material';
+} from '@mui/joy';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -49,85 +48,94 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   ];
 
   const drawer = (
-    <div>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
+    <Box>
+      <Stack sx={{ p: 2 }}>
+        <Typography level="h4" component="div">
           Admin Panel
         </Typography>
-      </Toolbar>
+      </Stack>
       <Divider />
       <List>
         {menuItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton 
-              component={Link} 
+          <ListItem key={item.text}>
+            <ListItemButton
+              component={Link}
               href={item.href}
               selected={isActive(item.href)}
             >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
+              <Box sx={{ mr: 2, display: 'flex' }}>{item.icon}</Box>
+              <ListItemContent>{item.text}</ListItemContent>
             </ListItemButton>
           </ListItem>
         ))}
       </List>
       <Divider />
       <List>
-        <ListItem disablePadding>
+        <ListItem>
           <ListItemButton component={Link} href="/">
-            <ListItemText primary="Back to Site" />
+            <ListItemContent>Back to Site</ListItemContent>
           </ListItemButton>
         </ListItem>
       </List>
-    </div>
+    </Box>
   );
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      <AppBar
-        position="fixed"
+      <Sheet
+        variant="solid"
+        color="primary"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          position: 'fixed',
+          top: 0,
+          left: { sm: drawerWidth },
+          right: 0,
+          zIndex: 1000,
         }}
       >
-        <Toolbar>
+        <Stack
+          direction="row"
+          alignItems="center"
+          sx={{ p: 2 }}
+        >
           <IconButton
-            color="inherit"
+            color="neutral"
             aria-label="open drawer"
-            edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { sm: 'none' }, color: 'white' }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography level="h4" component="div" sx={{ color: 'white' }}>
             Radzyń City Portal Admin
           </Typography>
-        </Toolbar>
-      </AppBar>
+        </Stack>
+      </Sheet>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
       >
         <Drawer
-          variant="temporary"
           open={mobileOpen}
           onClose={handleDrawerToggle}
-          ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-content': { boxSizing: 'border-box', width: drawerWidth },
           }}
         >
           {drawer}
         </Drawer>
         <Drawer
-          variant="permanent"
+          variant="plain"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+            '& .MuiDrawer-content': {
+              boxSizing: 'border-box',
+              width: drawerWidth,
+              position: 'fixed',
+              height: '100vh',
+            },
           }}
-          open
         >
           {drawer}
         </Drawer>
@@ -137,12 +145,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         sx={{
           flexGrow: 1,
           p: 0,
+          pt: '64px',
           width: { sm: `calc(100% - ${drawerWidth}px)` },
-          backgroundColor: '#f5f5f5',
+          backgroundColor: 'background.level1',
           minHeight: '100vh',
         }}
       >
-        <Toolbar />
         {children}
       </Box>
     </Box>

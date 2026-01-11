@@ -2,26 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  Box, 
-  Typography, 
-  Grid, 
-  Chip, 
+import {
+  Box,
+  Typography,
+  Grid,
+  Chip,
   Stack,
   Divider,
-  Paper,
+  Sheet,
+  Card,
   Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   Button,
-  Rating,
   List,
   ListItem,
-  ListItemText,
+  ListItemContent,
   IconButton
-} from '@mui/material';
+} from '@mui/joy';
+import { Rating } from '@mui/material';
 import { locations, CATEGORY_COLORS } from '@/utils/locationData';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -48,7 +45,7 @@ export default function PlaceDetailPage({ params }: { params: { id: string } }) 
   if (!place) {
     return (
       <Box sx={{ textAlign: 'center', py: 8 }}>
-        <Typography variant="h6">Ładowanie...</Typography>
+        <Typography level="h4">Ładowanie...</Typography>
       </Box>
     );
   }
@@ -66,16 +63,16 @@ export default function PlaceDetailPage({ params }: { params: { id: string } }) 
   
   return (
     <Box>
-      <Button 
-        startIcon={<ArrowBackIcon />} 
-        variant="text" 
+      <Button
+        startDecorator={<ArrowBackIcon />}
+        variant="plain"
         onClick={() => router.push('/places')}
         sx={{ mb: 2 }}
       >
         Powrót do listy
       </Button>
-      
-      <Paper elevation={1} sx={{ mb: 4, overflow: 'hidden' }}>
+
+      <Card sx={{ mb: 4, overflow: 'hidden' }}>
         <Box sx={{ 
           height: 300, 
           position: 'relative', 
@@ -118,226 +115,218 @@ export default function PlaceDetailPage({ params }: { params: { id: string } }) 
             width: '100%',
             color: 'white'
           }}>
-            <Chip 
-              label={place.category} 
-              sx={{ 
+            <Chip
+              sx={{
                 bgcolor: CATEGORY_COLORS[place.category] || CATEGORY_COLORS.default,
                 color: 'white',
                 mb: 2
-              }} 
-            />
-            <Typography variant="h3" component="h1" gutterBottom>
+              }}
+            >
+              {place.category}
+            </Chip>
+            <Typography level="h2" component="h1" sx={{ mb: 2 }}>
               {place.name}
             </Typography>
             {place.rating && (
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <Rating value={place.rating} precision={0.1} readOnly />
-                <Typography variant="body1" sx={{ ml: 1, fontWeight: 'bold' }}>
+                <Typography level="body-md" sx={{ ml: 1, fontWeight: 'bold' }}>
                   {place.rating.toFixed(1)}
                 </Typography>
               </Box>
             )}
           </Box>
         </Box>
-      </Paper>
+      </Card>
       
       <Grid container spacing={4}>
-        <Grid item xs={12} md={8}>
-          <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
-            <Typography variant="h5" component="h2" gutterBottom>
+        <Grid xs={12} md={8}>
+          <Card sx={{ p: 3, mb: 4 }}>
+            <Typography level="h3" component="h2" sx={{ mb: 2 }}>
               O miejscu
             </Typography>
-            <Typography variant="body1" paragraph>
+            <Typography level="body-md" sx={{ mb: 2 }}>
               {place.description}
             </Typography>
-            
+
             {place.amenities && place.amenities.length > 0 && (
               <Box sx={{ mt: 3 }}>
-                <Typography variant="h6" gutterBottom>
+                <Typography level="h4" sx={{ mb: 2 }}>
                   Udogodnienia
                 </Typography>
                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                   {place.amenities.map((amenity, index) => (
-                    <Chip 
-                      key={index} 
-                      label={amenity} 
-                      variant="outlined" 
-                      sx={{ mb: 1 }} 
-                    />
+                    <Chip
+                      key={index}
+                      variant="outlined"
+                      sx={{ mb: 1 }}
+                    >
+                      {amenity}
+                    </Chip>
                   ))}
                 </Stack>
               </Box>
             )}
-          </Paper>
+          </Card>
           
           {place.reviews && place.reviews.length > 0 && (
-            <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
-              <Typography variant="h5" component="h2" gutterBottom>
+            <Card sx={{ p: 3, mb: 4 }}>
+              <Typography level="h3" component="h2" sx={{ mb: 2 }}>
                 Opinie
               </Typography>
-              
+
               <List>
                 {place.reviews.map((review) => (
                   <Box key={review.id}>
-                    <ListItem alignItems="flex-start" sx={{ px: 0 }}>
-                      <ListItemText
-                        primary={
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Typography variant="subtitle1">
-                              {review.author}
-                            </Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <Rating value={review.rating} precision={0.5} readOnly size="small" />
-                              <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
-                                {review.date}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        }
-                        secondary={
-                          <Typography
-                            variant="body2"
-                            color="text.primary"
-                            sx={{ mt: 1 }}
-                          >
-                            {review.comment}
+                    <ListItem sx={{ px: 0, alignItems: 'flex-start' }}>
+                      <ListItemContent>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                          <Typography level="title-md">
+                            {review.author}
                           </Typography>
-                        }
-                      />
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Rating value={review.rating} precision={0.5} readOnly size="small" />
+                            <Typography level="body-sm" sx={{ ml: 1, color: 'text.secondary' }}>
+                              {review.date}
+                            </Typography>
+                          </Box>
+                        </Box>
+                        <Typography level="body-sm" sx={{ mt: 1 }}>
+                          {review.comment}
+                        </Typography>
+                      </ListItemContent>
                     </ListItem>
                     <Divider sx={{ my: 2 }} />
                   </Box>
                 ))}
               </List>
-            </Paper>
+            </Card>
           )}
           
-          <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
-            <Typography variant="h5" component="h2" gutterBottom>
+          <Card sx={{ p: 3, mb: 4 }}>
+            <Typography level="h3" component="h2" sx={{ mb: 2 }}>
               Lokalizacja
             </Typography>
             <Box sx={{ height: 350, mt: 2 }}>
-              <Map 
-                locations={[place]} 
-                center={place.position} 
-                zoom={16} 
-                height="100%" 
+              <Map
+                locations={[place]}
+                center={place.position}
+                zoom={16}
+                height="100%"
               />
             </Box>
-          </Paper>
+          </Card>
         </Grid>
-        
-        <Grid item xs={12} md={4}>
-          <Paper elevation={1} sx={{ p: 3, mb: 4 }}>
-            <Typography variant="h5" component="h2" gutterBottom>
+
+        <Grid xs={12} md={4}>
+          <Card sx={{ p: 3, mb: 4 }}>
+            <Typography level="h3" component="h2" sx={{ mb: 2 }}>
               Informacje kontaktowe
             </Typography>
             
             <List sx={{ p: 0 }}>
               {place.address && (
                 <ListItem sx={{ px: 0 }}>
-                  <IconButton size="small" sx={{ mr: 1, bgcolor: 'action.hover' }}>
-                    <LocationOnIcon fontSize="small" />
+                  <IconButton size="sm" sx={{ mr: 1 }}>
+                    <LocationOnIcon />
                   </IconButton>
-                  <ListItemText 
-                    primary="Adres" 
-                    secondary={place.address} 
-                  />
+                  <ListItemContent>
+                    <Typography level="title-sm">Adres</Typography>
+                    <Typography level="body-sm">{place.address}</Typography>
+                  </ListItemContent>
                 </ListItem>
               )}
-              
+
               {place.phone && (
                 <ListItem sx={{ px: 0 }}>
-                  <IconButton size="small" sx={{ mr: 1, bgcolor: 'action.hover' }}>
-                    <PhoneIcon fontSize="small" />
+                  <IconButton size="sm" sx={{ mr: 1 }}>
+                    <PhoneIcon />
                   </IconButton>
-                  <ListItemText 
-                    primary="Telefon" 
-                    secondary={
-                      <a 
-                        href={`tel:${place.phone}`} 
+                  <ListItemContent>
+                    <Typography level="title-sm">Telefon</Typography>
+                    <Typography level="body-sm">
+                      <a
+                        href={`tel:${place.phone}`}
                         style={{ color: 'inherit', textDecoration: 'none' }}
                       >
                         {place.phone}
                       </a>
-                    } 
-                  />
+                    </Typography>
+                  </ListItemContent>
                 </ListItem>
               )}
-              
+
               {place.email && (
                 <ListItem sx={{ px: 0 }}>
-                  <IconButton size="small" sx={{ mr: 1, bgcolor: 'action.hover' }}>
-                    <EmailIcon fontSize="small" />
+                  <IconButton size="sm" sx={{ mr: 1 }}>
+                    <EmailIcon />
                   </IconButton>
-                  <ListItemText 
-                    primary="Email" 
-                    secondary={
-                      <a 
-                        href={`mailto:${place.email}`} 
+                  <ListItemContent>
+                    <Typography level="title-sm">Email</Typography>
+                    <Typography level="body-sm">
+                      <a
+                        href={`mailto:${place.email}`}
                         style={{ color: 'inherit', textDecoration: 'none' }}
                       >
                         {place.email}
                       </a>
-                    } 
-                  />
+                    </Typography>
+                  </ListItemContent>
                 </ListItem>
               )}
-              
+
               {place.website && (
                 <ListItem sx={{ px: 0 }}>
-                  <IconButton size="small" sx={{ mr: 1, bgcolor: 'action.hover' }}>
-                    <LanguageIcon fontSize="small" />
+                  <IconButton size="sm" sx={{ mr: 1 }}>
+                    <LanguageIcon />
                   </IconButton>
-                  <ListItemText 
-                    primary="Strona WWW" 
-                    secondary={
-                      <a 
-                        href={place.website} 
-                        target="_blank" 
+                  <ListItemContent>
+                    <Typography level="title-sm">Strona WWW</Typography>
+                    <Typography level="body-sm">
+                      <a
+                        href={place.website}
+                        target="_blank"
                         rel="noopener noreferrer"
                         style={{ color: 'inherit', textDecoration: 'none' }}
                       >
                         {place.website.replace('https://', '')}
                       </a>
-                    } 
-                  />
+                    </Typography>
+                  </ListItemContent>
                 </ListItem>
               )}
             </List>
-          </Paper>
+          </Card>
           
           {place.openingHours && (
-            <Paper elevation={1} sx={{ p: 3 }}>
+            <Card sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                 <AccessTimeIcon sx={{ mr: 1 }} />
-                <Typography variant="h5" component="h2">
+                <Typography level="h3" component="h2">
                   Godziny otwarcia
                 </Typography>
               </Box>
-              
-              <TableContainer component={Box}>
-                <Table size="small">
-                  <TableBody>
-                    {Object.entries(daysInPolish).map(([day, dayPl]) => {
-                      if (place.openingHours[day]) {
-                        return (
-                          <TableRow key={day}>
-                            <TableCell component="th" scope="row" sx={{ fontWeight: 500, py: 1 }}>
-                              {dayPl}
-                            </TableCell>
-                            <TableCell align="right" sx={{ py: 1 }}>
-                              {place.openingHours[day]}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      }
-                      return null;
-                    })}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Paper>
+
+              <Table size="sm">
+                <tbody>
+                  {Object.entries(daysInPolish).map(([day, dayPl]) => {
+                    if (place.openingHours[day]) {
+                      return (
+                        <tr key={day}>
+                          <td style={{ fontWeight: 500, paddingTop: '8px', paddingBottom: '8px' }}>
+                            {dayPl}
+                          </td>
+                          <td style={{ textAlign: 'right', paddingTop: '8px', paddingBottom: '8px' }}>
+                            {place.openingHours[day]}
+                          </td>
+                        </tr>
+                      );
+                    }
+                    return null;
+                  })}
+                </tbody>
+              </Table>
+            </Card>
           )}
         </Grid>
       </Grid>

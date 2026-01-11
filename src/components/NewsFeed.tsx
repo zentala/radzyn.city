@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { 
-  Typography, 
-  Box, 
-  Grid, 
-  Button, 
-  Alert, 
+import {
+  Typography,
+  Box,
+  Grid,
+  Button,
+  Alert,
   Skeleton,
   Container
-} from '@mui/material';
+} from '@mui/joy';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewsCard from './NewsCard';

@@ -1,20 +1,20 @@
 "use client";
 
 import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardMedia, 
-  Typography, 
-  Box, 
-  Button, 
+import {
+  Card,
+  CardContent,
+  Typography,
+  Box,
+  Button,
   Chip,
   Menu,
   MenuItem,
-  ListItemIcon,
-  ListItemText,
+  ListItemDecorator,
+  ListItemContent,
   Divider
-} from '@mui/material';
+} from '@mui/joy';
+import { CardMedia } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -277,10 +277,10 @@ export default function EventCard({ title, date, location, description, category
                 rel="noopener noreferrer"
                 onClick={handleMenuClose}
               >
-                <ListItemIcon>
+                <ListItemDecorator>
                   <GoogleIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Google Calendar</ListItemText>
+                </ListItemDecorator>
+                <ListItemContent>Google Calendar</ListItemContent>
               </MenuItem>
               <MenuItem 
                 onClick={() => {
@@ -288,10 +288,10 @@ export default function EventCard({ title, date, location, description, category
                   alert('Pobieranie pliku .ics zostanie zaimplementowane w przyszłej wersji');
                 }}
               >
-                <ListItemIcon>
+                <ListItemDecorator>
                   <DownloadIcon fontSize="small" />
-                </ListItemIcon>
-                <ListItemText>Pobierz plik .ics</ListItemText>
+                </ListItemDecorator>
+                <ListItemContent>Pobierz plik .ics</ListItemContent>
               </MenuItem>
             </Menu>
           </Box>

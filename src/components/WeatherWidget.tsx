@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
+import {
   Typography, Box, Grid, Alert, Divider,
-  CircularProgress, Button, Chip, Paper,
+  CircularProgress, Button, Chip, Sheet,
   Stack
-} from '@mui/material';
+} from '@mui/joy';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Link from 'next/link';
 import DashboardWidget from './DashboardWidget';

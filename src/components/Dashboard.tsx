@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { Box, Grid, useTheme, useMediaQuery, Typography, Container } from '@mui/material';
+import { Box, Grid, Typography, Container } from '@mui/joy';
 
 // Define widget sizes
 export type WidgetSize = 'small' | 'medium' | 'large' | 'full';
@@ -28,7 +28,7 @@ interface DashboardContextType {
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
 
 // Dashboard provider component
-export function DashboardProvider({ children, initialWidgets = [] }: { 
+export function DashboardProvider({ children, initialWidgets = [] }: {
   children: ReactNode;
   initialWidgets?: WidgetConfig[];
 }) {
@@ -36,8 +36,8 @@ export function DashboardProvider({ children, initialWidgets = [] }: {
 
   // Update a specific widget
   const updateWidget = (id: string, config: Partial<WidgetConfig>) => {
-    setWidgets(prevWidgets => 
-      prevWidgets.map(widget => 
+    setWidgets(prevWidgets =>
+      prevWidgets.map(widget =>
         widget.id === id ? { ...widget, ...config } : widget
       )
     );
@@ -101,8 +101,6 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ widgets, title, description }: DashboardProps) {
-  const theme = useTheme();
-  
   // Filter visible widgets and sort by order
   const visibleWidgets = widgets
     .filter(widget => widget.visible !== false)
@@ -111,20 +109,20 @@ export default function Dashboard({ widgets, title, description }: DashboardProp
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {title && (
-        <Typography variant="h4" component="h2" gutterBottom fontWeight="bold">
+        <Typography level="h2" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
           {title}
         </Typography>
       )}
-      
+
       {description && (
-        <Typography variant="body1" color="text.secondary" paragraph sx={{ mb: 4 }}>
+        <Typography level="body-md" sx={{ color: 'text.secondary', mb: 4 }}>
           {description}
         </Typography>
       )}
-      
+
       <Grid container spacing={3}>
         {visibleWidgets.map((widget) => (
-          <Grid key={widget.id} item {...getSizeProps(widget.size)}>
+          <Grid key={widget.id} {...getSizeProps(widget.size)}>
             <Box sx={{ height: '100%' }}>
               {widget.component}
             </Box>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/joy';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { locations, CATEGORY_COLORS } from '@/utils/locationData';
@@ -106,11 +106,11 @@ export default function CityMapWidget({ widgetSize = 'medium' }: CityMapWidgetPr
                   backgroundColor: CATEGORY_COLORS[selectedLocation.category] || CATEGORY_COLORS.default 
                 }} 
               />
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+              <Typography level="body-sm" sx={{ fontWeight: 600 }}>
                 {selectedLocation.name}
               </Typography>
             </Box>
-            <Typography variant="caption" color="text.secondary">
+            <Typography level="body-xs" sx={{ color: 'text.secondary' }}>
               {selectedLocation.category}
             </Typography>
           </Box>

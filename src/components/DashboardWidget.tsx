@@ -1,18 +1,17 @@
 'use client';
 
 import React, { ReactNode } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardHeader, 
-  CardActions,
+import {
+  Card,
+  CardContent,
   IconButton,
   Tooltip,
   Skeleton,
   Box,
   Typography,
-  Divider
-} from '@mui/material';
+  Divider,
+  Stack
+} from '@mui/joy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
@@ -42,62 +41,66 @@ export default function DashboardWidget({
   noHeaderDivider = false
 }: DashboardWidgetProps) {
   return (
-    <Card 
-      sx={{ 
-        height: height, 
-        display: 'flex', 
+    <Card
+      sx={{
+        height: height,
+        display: 'flex',
         flexDirection: 'column',
         transition: 'box-shadow 0.3s, transform 0.3s',
         '&:hover': {
-          boxShadow: 3,
+          boxShadow: 'md',
           transform: 'translateY(-4px)'
         }
       }}
     >
       {title && (
         <>
-          <CardHeader
-            title={
-              <Typography variant="h6" component="h3" fontWeight="medium">
-                {title}
-              </Typography>
-            }
-            subheader={subtitle}
-            action={
-              headerAction || (
-                <Box>
-                  {onRefresh && (
-                    <Tooltip title="Odśwież">
-                      <IconButton 
-                        size="small" 
-                        onClick={onRefresh}
-                        disabled={loading}
-                      >
-                        <RefreshIcon fontSize="small" />
+          <Box sx={{ p: 2, pb: noHeaderDivider ? 2 : 0 }}>
+            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
+              <Box>
+                <Typography level="h4" component="h3" sx={{ fontWeight: 'medium' }}>
+                  {title}
+                </Typography>
+                {subtitle && (
+                  <Typography level="body-sm" sx={{ color: 'text.secondary', mt: 0.5 }}>
+                    {subtitle}
+                  </Typography>
+                )}
+              </Box>
+              <Box>
+                {headerAction || (
+                  <Stack direction="row" spacing={0.5}>
+                    {onRefresh && (
+                      <Tooltip title="Odśwież">
+                        <IconButton
+                          size="sm"
+                          onClick={onRefresh}
+                          disabled={loading}
+                        >
+                          <RefreshIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    <Tooltip title="Więcej opcji">
+                      <IconButton size="sm">
+                        <MoreVertIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
-                  )}
-                  <Tooltip title="Więcej opcji">
-                    <IconButton size="small">
-                      <MoreVertIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-              )
-            }
-            sx={{ pb: noHeaderDivider ? 1 : 0 }}
-          />
+                  </Stack>
+                )}
+              </Box>
+            </Stack>
+          </Box>
           {!noHeaderDivider && <Divider />}
         </>
       )}
-      
-      <CardContent 
-        sx={{ 
-          flexGrow: 1, 
-          display: 'flex', 
+
+      <CardContent
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
           flexDirection: 'column',
-          p: noPadding ? 0 : undefined,
-          '&:last-child': { pb: noPadding ? 0 : undefined }
+          p: noPadding ? 0 : 2,
         }}
       >
         {loading ? (
@@ -111,13 +114,13 @@ export default function DashboardWidget({
           children
         )}
       </CardContent>
-      
+
       {actions && (
         <>
           <Divider />
-          <CardActions sx={{ justifyContent: 'flex-end' }}>
+          <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
             {actions}
-          </CardActions>
+          </Box>
         </>
       )}
     </Card>
