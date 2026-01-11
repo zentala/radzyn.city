@@ -14,7 +14,6 @@ import {
   Input,
   Stack,
   Select,
-  Rating,
 } from '@mui/joy';
 import { locations, CATEGORY_COLORS } from '@/utils/locationData';
 import PlaceholderImage from '@/components/PlaceholderImage';
@@ -70,8 +69,10 @@ function PlaceCard({ place }) {
 
         {place.rating && (
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Rating value={place.rating} precision={0.1} readOnly size="sm" />
-            <Typography level="body-sm" sx={{ ml: 1 }}>
+            <Typography level="body-sm" sx={{ color: 'warning.500' }}>
+              {'⭐'.repeat(Math.floor(place.rating))}
+            </Typography>
+            <Typography level="body-sm" sx={{ ml: 0.5, color: 'text.secondary' }}>
               {place.rating.toFixed(1)}
             </Typography>
           </Box>
