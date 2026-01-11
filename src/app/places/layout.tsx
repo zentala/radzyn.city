@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/joy';
 
 export default function PlacesLayout({
   children,
@@ -9,10 +9,10 @@ export default function PlacesLayout({
   return (
     <Container maxWidth="lg" sx={{ my: 4 }}>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h3" component="h1" sx={{ mb: 2 }}>
+        <Typography level="h3" component="h1" sx={{ mb: 2 }}>
           Miejsca w Radzyniu
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography level="body-md" sx={{ color: 'text.secondary' }}>
           Odkryj lokalne atrakcje, firmy, instytucje i punkty usługowe w mieście.
         </Typography>
       </Box>

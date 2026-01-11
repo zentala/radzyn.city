@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { Skeleton, Box } from '@mui/material';
+import { Skeleton, Box } from '@mui/joy';
 
 interface PlaceholderImageProps {
   title: string;
