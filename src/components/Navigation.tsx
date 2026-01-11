@@ -53,7 +53,7 @@ export function Navigation() {
           right: 0,
           zIndex: 1100,
           transition: 'all 300ms ease-in-out',
-          bgcolor: scrolled ? 'primary.500' : 'rgba(25, 118, 210, 0.9)',
+          bgcolor: scrolled ? 'primary.solidBg' : 'rgba(37, 69, 107, 0.9)',
           boxShadow: scrolled ? 'md' : 'none',
         }}
       >
@@ -163,7 +163,7 @@ export function Navigation() {
           content: {
             sx: {
               top: 64,
-              bgcolor: 'primary.500',
+              bgcolor: 'primary.solidBg',
               color: 'white',
               boxShadow: 'md',
             },

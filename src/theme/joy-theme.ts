@@ -17,6 +17,9 @@ const colorSchemes = {
         300: '#8FA9CB',
         400: '#6B8CB9',
         500: '#25456B', // Main primary
+        solidBg: '#25456B',
+        solidHoverBg: '#1E3856',
+        solidActiveBg: '#172B42',
         600: '#1E3856',
         700: '#172B42',
         800: '#101F2E',
@@ -113,6 +116,118 @@ const colorSchemes = {
         secondary: '#5A5A5A',
         tertiary: '#7D7668',
         icon: '#4A4539',
+      },
+    },
+  },
+  dark: {
+    palette: {
+      // Primary Colors - Lighter Navy for dark mode
+      primary: {
+        50: '#0A141F',
+        100: '#101F2E',
+        200: '#172B42',
+        300: '#1E3856',
+        400: '#25456B',
+        500: '#6B8CB9', // Main primary for dark mode
+        solidBg: '#6B8CB9',
+        solidHoverBg: '#8FA9CB',
+        solidActiveBg: '#B5C6DD',
+        600: '#8FA9CB',
+        700: '#B5C6DD',
+        800: '#D4DEEB',
+        900: '#E8EDF5',
+      },
+      // Secondary Colors - Brighter Gold for dark mode
+      secondary: {
+        50: '#422A19',
+        100: '#614624',
+        200: '#80622F',
+        300: '#9F7F3A',
+        400: '#BE9C55',
+        500: '#F3AE47', // Main secondary for dark mode
+        600: '#F6C271',
+        700: '#F9D69B',
+        800: '#FCE9C5',
+        900: '#FDF6E8',
+      },
+      // Neutral Colors
+      neutral: {
+        0: '#000000',
+        50: '#1A1A1A',
+        100: '#2A2A2A',
+        200: '#3A3A3A',
+        300: '#4A4539',
+        400: '#635C4F',
+        500: '#7D7668',
+        600: '#9A9385',
+        700: '#B8B2A3',
+        800: '#D5CFC2',
+        900: '#E5E0D5',
+        1000: '#FFFFFF',
+      },
+      // Semantic Colors adjusted for dark mode
+      success: {
+        50: '#1B5E20',
+        100: '#2E7D32',
+        200: '#388E3C',
+        300: '#43A047',
+        400: '#556B4F',
+        500: '#81C784', // Main success
+        600: '#A5D6A7',
+        700: '#C8E6C9',
+        800: '#E8F5E9',
+        900: '#F1F8E9',
+      },
+      warning: {
+        50: '#E65100',
+        100: '#FF6F00',
+        200: '#FF8F00',
+        300: '#FFA000',
+        400: '#B2734F',
+        500: '#FFD54F', // Main warning
+        600: '#FFE082',
+        700: '#FFECB3',
+        800: '#FFF8E1',
+        900: '#FFFDE7',
+      },
+      error: {
+        50: '#B71C1C',
+        100: '#C62828',
+        200: '#D32F2F',
+        300: '#E53935',
+        400: '#8B3A41',
+        500: '#EF5350', // Main error
+        600: '#E57373',
+        700: '#EF9A9A',
+        800: '#FFCDD2',
+        900: '#FFEBEE',
+      },
+      info: {
+        50: '#0D47A1',
+        100: '#1565C0',
+        200: '#1976D2',
+        300: '#1E88E5',
+        400: '#5D7895',
+        500: '#64B5F6', // Main info
+        600: '#90CAF9',
+        700: '#BBDEFB',
+        800: '#E3F2FD',
+        900: '#E8F4FD',
+      },
+      // Background Colors
+      background: {
+        body: '#0A0A0A',
+        surface: '#1A1A1A',
+        level1: '#2A2A2A',
+        level2: '#3A3A3A',
+        level3: '#4A4539',
+      },
+      // Text Colors
+      text: {
+        primary: '#E5E0D5',
+        secondary: '#B8B2A3',
+        tertiary: '#9A9385',
+        icon: '#D5CFC2',
       },
     },
   },
