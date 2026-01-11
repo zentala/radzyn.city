@@ -24,6 +24,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import EventIcon from '@mui/icons-material/Event';
 import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { Button } from '../foundation/Button';
+import { ThemeSwitcher } from '../ThemeSwitcher';
 
 export interface NavigationItem {
   name: string;
@@ -110,7 +111,7 @@ export function Navigation({
       <Sheet
         className="MuiAppBar-root"
         variant="plain"
-        sx={{
+        sx={(theme) => ({
           position: 'fixed',
           top: 0,
           left: 0,
@@ -118,13 +119,17 @@ export function Navigation({
           zIndex: 1000,
           transition: 'all 300ms ease-in-out',
           boxShadow: trigger ? '0 1px 3px rgba(0, 0, 0, 0.05)' : 'none',
-          bgcolor: 'rgba(255, 255, 255, 0.85)',
+          bgcolor: theme.palette.mode === 'dark'
+            ? 'rgba(26, 26, 26, 0.85)'
+            : 'rgba(255, 255, 255, 0.85)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           borderRadius: 0,
           borderBottom: '1px solid',
-          borderColor: 'rgba(0, 0, 0, 0.08)',
-        }}
+          borderColor: theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.08)'
+            : 'rgba(0, 0, 0, 0.08)',
+        })}
       >
         <Stack
           direction="row"
@@ -144,7 +149,7 @@ export function Navigation({
               href={logoHref}
               level="h4"
               sx={{
-                color: '#1a1a1a',
+                color: 'text.primary',
                 fontWeight: 'bold',
                 textDecoration: 'none',
                 '&:hover': {
@@ -160,6 +165,7 @@ export function Navigation({
           <Stack
             direction="row"
             spacing={0.5}
+            alignItems="center"
             sx={{ display: { xs: 'none', md: 'flex' } }}
           >
             {items.map((item) => (
@@ -170,40 +176,58 @@ export function Navigation({
                 href={item.href}
                 color="neutral"
                 startDecorator={getNavIcon(item.href)}
-                sx={{
-                  color: '#2c3e50',
+                sx={(theme) => ({
+                  color: 'text.primary',
                   px: 1.5,
                   py: 0.75,
                   borderRadius: 'md',
                   fontWeight: isActive(item.href) ? '600' : '500',
-                  bgcolor: isActive(item.href) ? 'rgba(0, 0, 0, 0.06)' : 'transparent',
+                  bgcolor: isActive(item.href)
+                    ? theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.08)'
+                      : 'rgba(0, 0, 0, 0.06)'
+                    : 'transparent',
                   '&:hover': {
-                    bgcolor: 'rgba(0, 0, 0, 0.04)',
-                    color: '#1a1a1a',
+                    bgcolor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.06)'
+                      : 'rgba(0, 0, 0, 0.04)',
                   },
-                }}
+                })}
                 aria-label={item.enName}
               >
                 {item.name}
               </Button>
             ))}
+
+            {/* Theme switcher */}
+            <Box sx={{ ml: 1 }}>
+              <ThemeSwitcher />
+            </Box>
           </Stack>
 
-          {/* Mobile menu button */}
-          {showMobileMenu && (
-            <IconButton
-              variant="plain"
-              color="neutral"
-              aria-label="menu"
-              data-testid="mobile-menu-button"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              sx={{ display: { xs: 'flex', md: 'none' }, color: '#1a1a1a' }}
-            >
-              {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
-            </IconButton>
-          )}
+          {/* Mobile: Theme switcher + menu button */}
+          <Stack
+            direction="row"
+            spacing={1}
+            alignItems="center"
+            sx={{ display: { xs: 'flex', md: 'none' } }}
+          >
+            <ThemeSwitcher />
+            {showMobileMenu && (
+              <IconButton
+                variant="plain"
+                color="neutral"
+                aria-label="menu"
+                data-testid="mobile-menu-button"
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-menu"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                sx={{ color: 'text.primary' }}
+              >
+                {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+              </IconButton>
+            )}
+          </Stack>
         </Stack>
       </Sheet>
 
@@ -216,7 +240,7 @@ export function Navigation({
           id="mobile-menu"
           role="presentation"
           variant="plain"
-          sx={{
+          sx={(theme) => ({
             position: 'fixed',
             top: 64,
             left: 0,
@@ -227,11 +251,13 @@ export function Navigation({
             transition: 'transform 300ms ease-in-out',
             display: { xs: 'block', md: 'none' },
             overflow: 'auto',
-            bgcolor: 'rgba(255, 255, 255, 0.95)',
+            bgcolor: theme.palette.mode === 'dark'
+              ? 'rgba(26, 26, 26, 0.95)'
+              : 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             borderRadius: 0,
-          }}
+          })}
         >
           <List sx={{ py: 2 }}>
             {items.map((item) => (
@@ -240,17 +266,21 @@ export function Navigation({
                   component={Link}
                   href={item.href}
                   selected={isActive(item.href)}
-                  sx={{
+                  sx={(theme) => ({
                     py: 1.5,
                     borderRadius: 'md',
                     mx: 2,
                     '&.Mui-selected': {
-                      bgcolor: 'rgba(0, 0, 0, 0.06)',
+                      bgcolor: theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.08)'
+                        : 'rgba(0, 0, 0, 0.06)',
                     },
                     '&:hover': {
-                      bgcolor: 'rgba(0, 0, 0, 0.04)',
+                      bgcolor: theme.palette.mode === 'dark'
+                        ? 'rgba(255, 255, 255, 0.06)'
+                        : 'rgba(0, 0, 0, 0.04)',
                     },
-                  }}
+                  })}
                   aria-label={item.enName}
                 >
                   <ListItemContent>
@@ -260,7 +290,7 @@ export function Navigation({
                         level="body-lg"
                         sx={{
                           fontWeight: isActive(item.href) ? '600' : 'normal',
-                          color: '#2c3e50',
+                          color: 'text.primary',
                         }}
                       >
                         {item.name}
