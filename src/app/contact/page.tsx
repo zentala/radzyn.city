@@ -2,23 +2,22 @@
 
 import ContactForm from '@/components/ContactForm';
 import PlaceholderImage from '@/components/PlaceholderImage';
-import { 
-  Container, 
-  Typography, 
-  Grid, 
-  Box, 
-  Paper, 
-  Card, 
+import {
+  Typography,
+  Grid,
+  Box,
+  Sheet,
+  Card,
   CardContent,
-  Stack
-} from '@mui/material';
+  Stack,
+} from '@mui/joy';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
 export default function ContactPage() {
-  
+
   const contactInfo = [
     {
       name: 'Urząd Miasta Radzyń Podlaski',
@@ -44,79 +43,79 @@ export default function ContactPage() {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
-      <Typography variant="h2" component="h1" sx={{ mb: 6, fontWeight: 'bold' }}>
+    <Box sx={{ py: 8, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+      <Typography level="h1" sx={{ mb: 6, fontWeight: 'bold' }}>
         Kontakt
       </Typography>
-      
+
       <Box component="section" sx={{ mb: 8 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
+          <Grid xs={12} md={6}>
+            <Typography level="h2" sx={{ mb: 3, fontWeight: 600 }}>
               Dane kontaktowe
             </Typography>
-            
+
             <Stack spacing={3}>
               {contactInfo.map((info, index) => (
-                <Card key={index} sx={{ boxShadow: 2, borderRadius: 2 }}>
+                <Card key={index} variant="outlined" sx={{ boxShadow: 'md', borderRadius: 'md' }}>
                   <CardContent>
-                    <Typography variant="h6" component="h3" sx={{ mb: 2, fontWeight: 600 }}>
+                    <Typography level="h3" sx={{ mb: 2, fontWeight: 600 }}>
                       {info.name}
                     </Typography>
-                    
+
                     <Stack spacing={2}>
                       <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <LocationOnIcon 
-                          sx={{ 
-                            color: 'primary.main', 
+                        <LocationOnIcon
+                          sx={{
+                            color: 'primary.500',
                             mr: 1,
                             mt: 0.3,
                             fontSize: '1.25rem'
-                          }} 
+                          }}
                         />
-                        <Typography variant="body2">
+                        <Typography level="body-sm">
                           {info.address}
                         </Typography>
                       </Box>
-                      
+
                       <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <PhoneIcon 
-                          sx={{ 
-                            color: 'primary.main', 
+                        <PhoneIcon
+                          sx={{
+                            color: 'primary.500',
                             mr: 1,
                             mt: 0.3,
                             fontSize: '1.25rem'
-                          }} 
+                          }}
                         />
-                        <Typography variant="body2">
+                        <Typography level="body-sm">
                           {info.phone}
                         </Typography>
                       </Box>
-                      
+
                       <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <EmailIcon 
-                          sx={{ 
-                            color: 'primary.main', 
+                        <EmailIcon
+                          sx={{
+                            color: 'primary.500',
                             mr: 1,
                             mt: 0.3,
                             fontSize: '1.25rem'
-                          }} 
+                          }}
                         />
-                        <Typography variant="body2">
+                        <Typography level="body-sm">
                           {info.email}
                         </Typography>
                       </Box>
-                      
+
                       <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
-                        <AccessTimeIcon 
-                          sx={{ 
-                            color: 'primary.main', 
+                        <AccessTimeIcon
+                          sx={{
+                            color: 'primary.500',
                             mr: 1,
                             mt: 0.3,
                             fontSize: '1.25rem'
-                          }} 
+                          }}
                         />
-                        <Typography variant="body2">
+                        <Typography level="body-sm">
                           {info.hours}
                         </Typography>
                       </Box>
@@ -127,22 +126,22 @@ export default function ContactPage() {
             </Stack>
           </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
+          <Grid xs={12} md={6}>
+            <Typography level="h2" sx={{ mb: 3, fontWeight: 600 }}>
               Formularz kontaktowy
             </Typography>
             <ContactForm />
 
             <Box sx={{ mt: 6 }}>
-              <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
+              <Typography level="h2" sx={{ mb: 3, fontWeight: 600 }}>
                 Mapa
               </Typography>
-              <Box sx={{ 
-                height: 320, 
-                borderRadius: 2,
+              <Box sx={{
+                height: 320,
+                borderRadius: 'md',
                 overflow: 'hidden'
               }}>
-                <PlaceholderImage 
+                <PlaceholderImage
                   title="Mapa Radzynia Podlaskiego"
                   height={320}
                   aspectRatio="landscape"
@@ -153,6 +152,6 @@ export default function ContactPage() {
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </Box>
   );
 }

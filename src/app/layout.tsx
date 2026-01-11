@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
-import Navigation from '@/components/Navigation';
+import { Navigation } from '@/components/layout/Navigation';
+import { Footer } from '@/components/layout/Footer';
 import './globals.css';
 import ThemeRegistry from '@/components/ThemeRegistry';
-import { Box, Container, Stack, Link as MuiLink } from '@mui/material';
+import { Box, Stack } from '@mui/joy';
 
 export const metadata: Metadata = {
   title: {
@@ -46,40 +47,7 @@ export default function RootLayout({
           <Box component="main" sx={{ pt: 8 }}>
             {children}
           </Box>
-          <Box 
-            component="footer" 
-            sx={{ 
-              bgcolor: 'grey.900', 
-              color: 'common.white', 
-              py: 3, 
-              mt: 6 
-            }}
-          >
-            <Container maxWidth="lg">
-              <Stack 
-                direction="column"
-                justifyContent="space-between"
-                alignItems="center"
-                width="100%"
-              >
-                <Box sx={{ typography: 'body2' }}>
-                  © {new Date().getFullYear()} Radzyń Podlaski. Wszelkie prawa zastrzeżone.
-                </Box>
-                <Stack 
-                  direction="row" 
-                  spacing={2}
-                  sx={{ mt: 2 }}
-                >
-                  <MuiLink href="#" color="inherit" underline="hover">
-                    Polityka prywatności
-                  </MuiLink>
-                  <MuiLink href="#" color="inherit" underline="hover">
-                    Mapa strony
-                  </MuiLink>
-                </Stack>
-              </Stack>
-            </Container>
-          </Box>
+          <Footer />
         </ThemeRegistry>
       </body>
     </html>

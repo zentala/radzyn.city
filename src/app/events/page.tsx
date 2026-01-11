@@ -1,23 +1,18 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  Grid, 
-  Paper, 
-  TextField, 
-  Select, 
-  MenuItem, 
-  InputLabel, 
-  FormControl, 
-  Button, 
-  Chip, 
-  Divider, 
+import {
+  Typography,
+  Box,
+  Grid,
+  Sheet,
+  Input,
+  Select,
+  Button,
+  Chip,
+  Divider,
   Stack,
-  InputAdornment
-} from '@mui/material';
+} from '@mui/joy';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import NoEventsIcon from '@mui/icons-material/FolderOff';
@@ -109,16 +104,16 @@ export default function EventsPage() {
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>(events);
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   // Apply filters
   useEffect(() => {
     let filtered = [...events];
-    
+
     // Filter by category
     if (selectedCategory) {
       filtered = filtered.filter(event => event.category === selectedCategory);
     }
-    
+
     // Filter by month
     if (selectedMonth) {
       filtered = filtered.filter(event => {
@@ -126,25 +121,25 @@ export default function EventsPage() {
         return monthStr === selectedMonth;
       });
     }
-    
+
     // Filter by search query
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(event => 
-        event.title.toLowerCase().includes(query) || 
+      filtered = filtered.filter(event =>
+        event.title.toLowerCase().includes(query) ||
         event.description.toLowerCase().includes(query) ||
         event.location.toLowerCase().includes(query)
       );
     }
-    
+
     setFilteredEvents(filtered);
   }, [selectedCategory, selectedMonth, searchQuery, events]);
-  
+
   // Format category for display
   const formatCategory = (category: string) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
-  
+
   // Format month for display
   const formatMonth = (month: string) => {
     const monthNames: Record<string, string> = {
@@ -161,12 +156,12 @@ export default function EventsPage() {
       'listopada': 'Listopad',
       'grudnia': 'Grudzień'
     };
-    
+
     return monthNames[month] || month;
   };
 
   // Get category color for chips
-  const getCategoryColor = (category: string): "primary" | "secondary" | "success" | "warning" | "error" | "info" | "default" => {
+  const getCategoryColor = (category: string): "primary" | "secondary" | "success" | "danger" | "neutral" | "warning" | "info" => {
     switch (category.toLowerCase()) {
       case 'kulturalne':
         return 'secondary';
@@ -177,105 +172,88 @@ export default function EventsPage() {
       case 'biznesowe':
         return 'warning';
       default:
-        return 'default';
+        return 'neutral';
     }
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4, pt: 10 }}>
-      <Typography variant="h3" component="h1" gutterBottom fontWeight="bold" sx={{ mb: 4 }}>
+    <Box sx={{ py: 4, pt: 10, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+      <Typography level="h2" sx={{ mb: 4, fontWeight: 'bold' }}>
         Wydarzenia w Radzyniu Podlaskim i Powiecie
       </Typography>
-      
+
       <Box component="section" sx={{ mb: 6 }}>
-        <Typography variant="h6" paragraph>
-          Poniżej znajduje się kalendarz nadchodzących wydarzeń w Radzyniu Podlaskim i powiecie radzyńskim. 
+        <Typography level="h4" sx={{ mb: 2 }}>
+          Poniżej znajduje się kalendarz nadchodzących wydarzeń w Radzyniu Podlaskim i powiecie radzyńskim.
           Zapraszamy do aktywnego uczestnictwa w życiu kulturalnym, sportowym i społecznym naszego regionu.
         </Typography>
 
         {/* Filters Section */}
-        <Paper elevation={2} sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-          <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
+        <Sheet variant="outlined" sx={{ p: 3, mb: 4, borderRadius: 'md' }}>
+          <Typography level="title-md" sx={{ mb: 2, fontWeight: 'bold' }}>
             Filtruj wydarzenia
           </Typography>
-          
+
           <Grid container spacing={3} sx={{ mb: 2 }}>
             {/* Search input */}
-            <Grid item xs={12} md={4}>
-              <TextField
+            <Grid xs={12} md={4}>
+              <Input
                 id="search"
-                label="Szukaj"
                 placeholder="Szukaj wydarzenia..."
                 fullWidth
-                variant="outlined"
-                size="small"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon color="action" />
-                    </InputAdornment>
-                  ),
-                }}
+                startDecorator={<SearchIcon />}
               />
             </Grid>
-            
+
             {/* Category select */}
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="category-label">Kategoria</InputLabel>
-                <Select
-                  labelId="category-label"
-                  id="category"
-                  value={selectedCategory || ''}
-                  label="Kategoria"
-                  onChange={(e) => setSelectedCategory(e.target.value || null)}
-                >
-                  <MenuItem value="">Wszystkie kategorie</MenuItem>
-                  {allCategories.map(category => (
-                    <MenuItem key={category} value={category}>
-                      {formatCategory(category)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <Grid xs={12} md={4}>
+              <Select
+                id="category"
+                value={selectedCategory || ''}
+                placeholder="Wszystkie kategorie"
+                onChange={(_, value) => setSelectedCategory(value as string | null)}
+              >
+                <option value="">Wszystkie kategorie</option>
+                {allCategories.map(category => (
+                  <option key={category} value={category}>
+                    {formatCategory(category)}
+                  </option>
+                ))}
+              </Select>
             </Grid>
-            
+
             {/* Month select */}
-            <Grid item xs={12} md={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="month-label">Miesiąc</InputLabel>
-                <Select
-                  labelId="month-label"
-                  id="month"
-                  value={selectedMonth || ''}
-                  label="Miesiąc"
-                  onChange={(e) => setSelectedMonth(e.target.value || null)}
-                >
-                  <MenuItem value="">Wszystkie miesiące</MenuItem>
-                  {allMonths.map(month => (
-                    <MenuItem key={month} value={month}>
-                      {formatMonth(month)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <Grid xs={12} md={4}>
+              <Select
+                id="month"
+                value={selectedMonth || ''}
+                placeholder="Wszystkie miesiące"
+                onChange={(_, value) => setSelectedMonth(value as string | null)}
+              >
+                <option value="">Wszystkie miesiące</option>
+                {allMonths.map(month => (
+                  <option key={month} value={month}>
+                    {formatMonth(month)}
+                  </option>
+                ))}
+              </Select>
             </Grid>
           </Grid>
-          
+
           {/* Active filters display and clear button */}
           {(selectedCategory || selectedMonth || searchQuery) && (
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, pt: 2, borderTop: 1, borderColor: 'divider' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, pt: 2, borderTop: '1px solid', borderColor: 'divider' }}>
               <Box sx={{ flexGrow: 1 }}>
-                <Typography variant="body2" color="text.secondary" sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
-                  <Box component="span" sx={{ fontWeight: 'medium' }}>
+                <Typography level="body-sm" sx={{ color: 'text.secondary', display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
+                  <Box component="span" sx={{ fontWeight: 'bold' }}>
                     Aktywne filtry:
                   </Box>
                   {selectedCategory && (
                     <Chip
                       label={formatCategory(selectedCategory)}
-                      size="small"
+                      size="sm"
                       color={getCategoryColor(selectedCategory)}
                       variant="outlined"
                     />
@@ -283,7 +261,7 @@ export default function EventsPage() {
                   {selectedMonth && (
                     <Chip
                       label={formatMonth(selectedMonth)}
-                      size="small"
+                      size="sm"
                       color="primary"
                       variant="outlined"
                     />
@@ -291,35 +269,34 @@ export default function EventsPage() {
                   {searchQuery && (
                     <Chip
                       label={`Wyszukiwanie: "${searchQuery}"`}
-                      size="small"
-                      color="default"
+                      size="sm"
+                      color="neutral"
                       variant="outlined"
                     />
                   )}
                 </Typography>
               </Box>
               <Button
-                variant="text"
-                size="small"
-                color="inherit"
+                variant="plain"
+                size="sm"
                 onClick={() => {
                   setSelectedCategory(null);
                   setSelectedMonth(null);
                   setSearchQuery('');
                 }}
-                sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
+                sx={{ color: 'text.secondary', '&:hover': { color: 'primary.500' } }}
               >
                 Wyczyść filtry
               </Button>
             </Box>
           )}
-        </Paper>
+        </Sheet>
 
         {/* Results section */}
         {filteredEvents.length > 0 ? (
           <Grid container spacing={3}>
             {filteredEvents.map((event, index) => (
-              <Grid item xs={12} sm={6} lg={4} key={index}>
+              <Grid xs={12} sm={6} lg={4} key={index}>
                 <EventCard
                   title={event.title}
                   date={event.date}
@@ -332,37 +309,36 @@ export default function EventsPage() {
             ))}
           </Grid>
         ) : (
-          <Paper sx={{ textAlign: 'center', py: 5, px: 2, borderRadius: 2, bgcolor: 'background.paper' }}>
-            <NoEventsIcon sx={{ fontSize: 60, color: 'text.disabled', mb: 2 }} />
-            <Typography variant="h6" color="text.primary" gutterBottom>
+          <Sheet variant="outlined" sx={{ textAlign: 'center', py: 5, px: 2, borderRadius: 'md', bgcolor: 'background.surface' }}>
+            <NoEventsIcon sx={{ fontSize: 60, color: 'text.tertiary', mb: 2 }} />
+            <Typography level="h4" sx={{ mb: 1 }}>
               Nie znaleziono wydarzeń
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            <Typography level="body-md" sx={{ color: 'text.secondary' }}>
               Zmień kryteria filtrowania, aby zobaczyć więcej wydarzeń.
             </Typography>
-          </Paper>
+          </Sheet>
         )}
       </Box>
 
       <Box component="section">
-        <Typography variant="h5" component="h2" gutterBottom fontWeight="bold">
+        <Typography level="h3" sx={{ mb: 2, fontWeight: 'bold' }}>
           Organizujesz wydarzenie?
         </Typography>
-        <Paper elevation={2} sx={{ p: 3, borderRadius: 2 }}>
-          <Typography variant="body1" paragraph>
+        <Sheet variant="outlined" sx={{ p: 3, borderRadius: 'md' }}>
+          <Typography level="body-lg" sx={{ mb: 2 }}>
             Jeśli organizujesz wydarzenie w Radzyniu Podlaskim lub powiecie radzyńskim i chcesz, aby pojawiło się w naszym kalendarzu,
             skontaktuj się z nami. Pomożemy Ci promować Twoje wydarzenie wśród mieszkańców regionu.
           </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            startIcon={<AddIcon />}
-            sx={{ textTransform: 'none' }}
+          <Button
+            variant="solid"
+            color="primary"
+            startDecorator={<AddIcon />}
           >
             Zgłoś wydarzenie
           </Button>
-        </Paper>
+        </Sheet>
       </Box>
-    </Container>
+    </Box>
   );
 }

@@ -1,173 +1,151 @@
-'use client';
+import PlaceholderImage from '@/components/PlaceholderImage';
+import { PageContainer } from '@/components/layout/PageContainer';
+import { Section } from '@/components/layout/Section';
+import { Typography } from '@/components/foundation/Typography';
+import { Card } from '@/components/foundation/Card';
+import { Grid } from '@mui/joy';
 
-import { 
-  Container, 
-  Typography, 
-  Grid, 
-  Box, 
-  Paper, 
-  Card, 
-  CardContent,
-  List,
-  ListItem,
-  ListItemText
-} from '@mui/material';
+export const metadata = {
+  title: 'Powiat Radzyński - Informacje',
+  description: 'Informacje o powiecie radzyńskim, gminach, atrakcjach i turystyce.',
+};
 
 export default function CountyPage() {
-  
-  const countyDistricts = [
+  const gminy = [
+    { name: 'Radzyń Podlaski', description: 'Miasto powiatowe, siedziba władz powiatu' },
+    { name: 'Biała Podlaska', description: 'Gmina wiejska z bogatą historią' },
+    { name: 'Czemierniki', description: 'Gmina z zabytkowym pałacem' },
+    { name: 'Drelów', description: 'Gmina wiejska w północnej części powiatu' },
+    { name: 'Kąkolewnica', description: 'Gmina z malowniczymi krajobrazami' },
+    { name: 'Komarówka Podlaska', description: 'Gmina z tradycjami rolniczymi' },
+    { name: 'Parczew', description: 'Gmina sąsiadująca z miastem Parczew' },
+    { name: 'Ulan-Majorat', description: 'Gmina z ciekawą historią' },
+    { name: 'Wohyń', description: 'Gmina w południowej części powiatu' },
+  ];
+
+  const atrakcje = [
     {
-      name: 'Gmina Radzyń Podlaski',
-      description: 'Gmina wiejska otaczająca miasto Radzyń Podlaski.',
-      population: 'ok. 8 000',
-      attractions: 'Kościół pw. św. Anny w Ustrzeszy, rezerwat przyrody "Czapliniec"',
+      title: 'Pałac Potockich',
+      location: 'Radzyń Podlaski',
+      description: 'Barokowy pałac z XVIII wieku, zabytek klasy zerowej',
     },
     {
-      name: 'Gmina Borki',
-      description: 'Gmina położona w południowej części powiatu radzyńskiego.',
-      population: 'ok. 6 000',
-      attractions: 'Zespół pałacowo-parkowy w Woli Osowińskiej, Muzeum Regionalne w Woli Osowińskiej',
+      title: 'Pałac w Czemiernikach',
+      location: 'Czemierniki',
+      description: 'Renesansowy pałac z XVI wieku, otoczony parkiem',
     },
     {
-      name: 'Gmina Czemierniki',
-      description: 'Gmina o charakterze rolniczym z bogatą historią.',
-      population: 'ok. 4 500',
-      attractions: 'Zespół pałacowy w Czemiernikach, Kościół pw. św. Stanisława',
-    },
-    {
-      name: 'Gmina Kąkolewnica',
-      description: 'Gmina położona w północno-wschodniej części powiatu.',
-      population: 'ok. 8 000',
-      attractions: 'Rezerwat przyrody "Kania", zabytki architektury drewnianej',
-    },
-    {
-      name: 'Gmina Komarówka Podlaska',
-      description: 'Gmina o charakterze rolniczym z bogatymi tradycjami.',
-      population: 'ok. 4 500',
-      attractions: 'Muzeum Ziemi Komarowskiej, Kościół pw. Najświętszego Serca Jezusowego',
-    },
-    {
-      name: 'Gmina Ulan-Majorat',
-      description: 'Gmina położona w zachodniej części powiatu.',
-      population: 'ok. 6 000',
-      attractions: 'Zespół dworsko-parkowy w Serokomli, rezerwat przyrody "Topór"',
-    },
-    {
-      name: 'Gmina Wohyń',
-      description: 'Gmina położona we wschodniej części powiatu.',
-      population: 'ok. 7 000',
-      attractions: 'Kościół pw. św. Anny w Wohyniu, zespół dworsko-parkowy w Bezwoli',
+      title: 'Kościół Świętej Trójcy',
+      location: 'Radzyń Podlaski',
+      description: 'Zabytkowy kościół z XVII wieku',
     },
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
-      <Typography variant="h2" component="h1" sx={{ mb: 6, fontWeight: 'bold' }}>
+    <PageContainer>
+      <Typography level="h1" sx={{ mb: 6 }}>
         Powiat Radzyński
       </Typography>
       
-      <Box component="section" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
-          O Powiecie
-        </Typography>
+      <Section title="Informacje ogólne" sx={{ mb: 8 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="body1" paragraph>
-              Powiat radzyński to jednostka administracyjna położona w północnej części województwa lubelskiego. 
-              Zajmuje powierzchnię około 965 km² i zamieszkuje go blisko 60 000 mieszkańców.
+          <Grid xs={12} md={6}>
+            <Typography level="body-lg" sx={{ mb: 2 }}>
+              Powiat radzyński to jednostka podziału administracyjnego w województwie lubelskim, 
+              obejmująca obszar 965 km². Siedzibą powiatu jest miasto Radzyń Podlaski.
             </Typography>
-            <Typography variant="body1" paragraph>
-              W skład powiatu wchodzi miasto Radzyń Podlaski, będące siedzibą władz powiatowych, oraz siedem gmin wiejskich. 
-              Region ma charakter głównie rolniczy, z licznymi obszarami przyrodniczymi wartymi odwiedzenia.
+            <Typography level="body-lg" sx={{ mb: 2 }}>
+              Powiat graniczy z powiatami: parczewskim, lubartowskim, łukowskim, bialskim i 
+              włodawskim. Jest to region o charakterze rolniczym z bogatą historią i tradycjami.
             </Typography>
-            <Typography variant="body1">
-              Powiat radzyński łączy bogate dziedzictwo kulturowe z potencjałem gospodarczym i turystycznym, 
-              oferując zarówno mieszkańcom jak i turystom wiele możliwości rekreacji i wypoczynku.
+            <Typography level="body-lg">
+              Ludność powiatu wynosi około 60 tysięcy mieszkańców, z czego większość zamieszkuje 
+              na terenach wiejskich. Gospodarka opiera się głównie na rolnictwie, przetwórstwie 
+              spożywczym i usługach.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ 
-              height: 256, 
-              bgcolor: 'grey.200', 
-              borderRadius: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'grey.500',
-              typography: 'h6'
-            }}>
-              [Mapa powiatu radzyńskiego]
-            </Box>
+          <Grid xs={12} md={6}>
+            <div style={{ height: 256 }}>
+              <PlaceholderImage 
+                title="Powiat Radzyński"
+                height={256}
+                aspectRatio="landscape"
+                sx={{ width: '100%', height: '100%', borderRadius: 'var(--joy-radius-md)' }}
+              />
+            </div>
           </Grid>
         </Grid>
-      </Box>
+      </Section>
 
-      <Box component="section" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
-          Gminy Powiatu Radzyńskiego
-        </Typography>
-        <Grid container spacing={3}>
-          {countyDistricts.map((district, index) => (
-            <Grid item xs={12} md={6} key={index}>
-              <Card sx={{ height: '100%', boxShadow: 2, borderRadius: 2 }}>
-                <CardContent>
-                  <Typography variant="h6" component="h3" sx={{ mb: 1, fontWeight: 600 }}>
-                    {district.name}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                    {district.description}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mb: 1 }}>
-                    <Box component="span" sx={{ fontWeight: 500, mr: 1 }}>Liczba mieszkańców:</Box>
-                    {district.population}
-                  </Typography>
-                  <Typography variant="body2">
-                    <Box component="span" sx={{ fontWeight: 500, mr: 1 }}>Atrakcje:</Box>
-                    {district.attractions}
-                  </Typography>
-                </CardContent>
+      <Section title="Gminy powiatu" sx={{ mb: 8 }}>
+        <Grid container spacing={2}>
+          {gminy.map((gmina, index) => (
+            <Grid xs={12} sm={6} md={4} key={index}>
+              <Card variant="outlined" sx={{ p: 2 }}>
+                <Typography level="title-md" sx={{ mb: 0.5 }}>
+                  {gmina.name}
+                </Typography>
+                <Typography level="body-sm" textColor="text.secondary">
+                  {gmina.description}
+                </Typography>
               </Card>
             </Grid>
           ))}
         </Grid>
-      </Box>
+      </Section>
 
-      <Box component="section" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
-          Turystyka w Powiecie
+      <Section title="Atrakcje turystyczne" sx={{ mb: 8 }}>
+        <Grid container spacing={3}>
+          {atrakcje.map((atrakcja, index) => (
+            <Grid xs={12} sm={6} md={4} key={index}>
+              <Card 
+                variant="outlined"
+                sx={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                }}
+              >
+                <div style={{ height: 192 }}>
+                  <PlaceholderImage 
+                    title={atrakcja.title}
+                    height={192}
+                    aspectRatio="landscape"
+                    sx={{ width: '100%', height: '100%' }}
+                  />
+                </div>
+                <div style={{ padding: 'var(--joy-spacing-md)' }}>
+                  <Typography level="title-md" sx={{ mb: 0.5 }}>
+                    {atrakcja.title}
+                  </Typography>
+                  <Typography level="body-sm" textColor="primary" sx={{ mb: 1 }}>
+                    {atrakcja.location}
+                  </Typography>
+                  <Typography level="body-sm" textColor="text.secondary">
+                    {atrakcja.description}
+                  </Typography>
+                </div>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Section>
+
+      <Section title="Turystyka i rekreacja">
+        <Typography level="body-lg" sx={{ mb: 2 }}>
+          Powiat radzyński oferuje wiele możliwości spędzenia czasu wolnego. Malownicze krajobrazy, 
+          liczne zabytki i czyste środowisko sprzyjają rozwojowi turystyki.
         </Typography>
-        <Typography variant="body1" paragraph>
-          Powiat radzyński oferuje wiele atrakcji dla miłośników turystyki aktywnej, kulturowej i przyrodniczej. 
-          Region słynie z malowniczych krajobrazów, zabytków architektury oraz gościnności mieszkańców.
+        <Typography level="body-lg" sx={{ mb: 2 }}>
+          W regionie znajdują się szlaki turystyczne, ścieżki rowerowe i miejsca do wędkowania. 
+          Czyste powietrze i spokój przyciągają turystów szukających odpoczynku od miejskiego zgiełku.
         </Typography>
-        <Paper 
-          sx={{ 
-            p: 3, 
-            borderRadius: 2, 
-            bgcolor: 'primary.50',
-            border: '1px solid',
-            borderColor: 'primary.100'
-          }}
-        >
-          <Typography variant="h6" component="h3" sx={{ mb: 2, fontWeight: 600 }}>
-            Szlaki turystyczne
-          </Typography>
-          <List sx={{ pl: 2 }}>
-            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
-              <ListItemText primary="Szlak Ziemi Radzyńskiej - prowadzi przez najciekawsze zabytki i atrakcje przyrodnicze powiatu" />
-            </ListItem>
-            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
-              <ListItemText primary="Szlak Rezerwatów Przyrody - łączy najcenniejsze obszary chronione regionu" />
-            </ListItem>
-            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
-              <ListItemText primary="Rowerowy Szlak Doliny Tyśmienicy - idealna trasa dla miłośników dwóch kółek" />
-            </ListItem>
-            <ListItem sx={{ display: 'list-item', py: 0.5 }}>
-              <ListItemText primary="Szlak Dworów i Pałaców - prezentuje bogactwo architektury rezydencjonalnej regionu" />
-            </ListItem>
-          </List>
-        </Paper>
-      </Box>
-    </Container>
+        <Typography level="body-lg">
+          Lokalna kuchnia, oparta na tradycyjnych recepturach i świeżych produktach z lokalnych gospodarstw, 
+          jest dodatkową atrakcją dla odwiedzających region.
+        </Typography>
+      </Section>
+    </PageContainer>
   );
 }

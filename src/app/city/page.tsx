@@ -1,13 +1,9 @@
 import PlaceholderImage from '@/components/PlaceholderImage';
-import { 
-  Container, 
-  Typography, 
-  Grid, 
-  Box, 
-  Card, 
-  CardContent, 
-  CardMedia 
-} from '@mui/material';
+import { PageContainer } from '@/components/layout/PageContainer';
+import { Section } from '@/components/layout/Section';
+import { Typography } from '@/components/foundation/Typography';
+import { Card } from '@/components/foundation/Card';
+import { Grid } from '@mui/joy';
 
 export const metadata = {
   title: 'O Mieście - Radzyń Podlaski',
@@ -31,89 +27,81 @@ export default function CityPage() {
   ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 8 }}>
-      <Typography variant="h2" component="h1" sx={{ mb: 6, fontWeight: 'bold' }}>
+    <PageContainer>
+      <Typography level="h1" sx={{ mb: 6 }}>
         O Mieście Radzyń Podlaski
       </Typography>
       
-      <Box component="section" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
-          Historia
-        </Typography>
+      <Section title="Historia" sx={{ mb: 8 }}>
         <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="body1" paragraph>
+          <Grid xs={12} md={6}>
+            <Typography level="body-lg" sx={{ mb: 2 }}>
               Radzyń Podlaski to miasto o bogatej historii sięgającej XIV wieku. Pierwsze wzmianki o miejscowości pochodzą z 1468 roku. 
               Przez wieki miasto znajdowało się pod wpływem różnych rodów szlacheckich, w tym Mniszchów i Potockich.
             </Typography>
-            <Typography variant="body1">
+            <Typography level="body-lg">
               Szczególny rozkwit miasta nastąpił w XVIII wieku za czasów Eustachego Potockiego, który zlecił budowę wspaniałego 
               barokowego pałacu, będącego dziś główną atrakcją turystyczną miasta.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ height: 256 }}>
+          <Grid xs={12} md={6}>
+            <div style={{ height: 256 }}>
               <PlaceholderImage 
                 title="Historia Radzynia Podlaskiego"
                 height={256}
                 aspectRatio="landscape"
-                sx={{ width: '100%', height: '100%', borderRadius: 2 }}
+                sx={{ width: '100%', height: '100%', borderRadius: 'var(--joy-radius-md)' }}
               />
-            </Box>
+            </div>
           </Grid>
         </Grid>
-      </Box>
+      </Section>
 
-      <Box component="section" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
-          Położenie i geografia
-        </Typography>
-        <Typography variant="body1" paragraph>
+      <Section title="Położenie i geografia" sx={{ mb: 8 }}>
+        <Typography level="body-lg" sx={{ mb: 2 }}>
           Radzyń Podlaski położony jest w północnej części województwa lubelskiego, na Równinie Łukowskiej, będącej częścią Niziny 
           Południowopodlaskiej. Przez miasto przepływa rzeka Białka, dopływ Tyśmienicy.
         </Typography>
-        <Typography variant="body1">
+        <Typography level="body-lg">
           Miasto zajmuje powierzchnię około 19 km² i jest otoczone malowniczymi terenami rolniczymi i leśnymi, 
           charakterystycznymi dla Podlasia.
         </Typography>
-      </Box>
+      </Section>
 
-      <Box component="section" sx={{ mb: 8 }}>
-        <Typography variant="h4" component="h2" sx={{ mb: 3, fontWeight: 600 }}>
-          Atrakcje turystyczne
-        </Typography>
+      <Section title="Atrakcje turystyczne" sx={{ mb: 8 }}>
         <Grid container spacing={3}>
           {attractions.map((attraction, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card sx={{ 
-                height: '100%', 
-                display: 'flex', 
-                flexDirection: 'column',
-                overflow: 'hidden',
-                borderRadius: 2,
-                boxShadow: 2
-              }}>
-                <Box sx={{ height: 192 }}>
+            <Grid xs={12} sm={6} md={4} key={index}>
+              <Card 
+                variant="outlined"
+                sx={{ 
+                  height: '100%', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                }}
+              >
+                <div style={{ height: 192 }}>
                   <PlaceholderImage 
                     title={attraction.title}
                     height={192}
                     aspectRatio="landscape"
                     sx={{ width: '100%', height: '100%' }}
                   />
-                </Box>
-                <CardContent>
-                  <Typography variant="h6" component="h3" sx={{ mb: 1, fontWeight: 600 }}>
+                </div>
+                <div style={{ padding: 'var(--joy-spacing-md)' }}>
+                  <Typography level="title-md" sx={{ mb: 1 }}>
                     {attraction.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography level="body-sm" textColor="text.secondary">
                     {attraction.description}
                   </Typography>
-                </CardContent>
+                </div>
               </Card>
             </Grid>
           ))}
         </Grid>
-      </Box>
-    </Container>
+      </Section>
+    </PageContainer>
   );
 }

@@ -1,32 +1,24 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Container, 
-  Typography, 
-  Box, 
-  Paper, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow,
+import {
+  Typography,
+  Box,
+  Sheet,
+  Table,
   Button,
   Alert,
   CircularProgress,
   Grid,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  TextField,
-  FormControlLabel,
+  Modal,
+  ModalDialog,
+  ModalClose,
+  Input,
+  FormLabel,
   Switch,
-  Snackbar
-} from '@mui/material';
+  Snackbar,
+} from '@mui/joy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -68,15 +60,15 @@ export default function ScraperAdminPage() {
   const handleRunScraper = async (sourceName: string) => {
     try {
       setRunningScrapers(prev => new Set(prev).add(sourceName));
-      
+
       const res = await fetch(`/api/scrape?source=${encodeURIComponent(sourceName)}`);
-      
+
       if (!res.ok) {
         throw new Error(`Failed to run scraper: ${res.statusText}`);
       }
-      
+
       const data = await res.json();
-      
+
       setSnackbarMessage(`Successfully ran scraper for ${sourceName}`);
       setSnackbarOpen(true);
     } catch (err) {
@@ -132,12 +124,12 @@ export default function ScraperAdminPage() {
         setSnackbarOpen(true);
         return;
       }
-      
+
       updateScraperConfig(selectedConfig);
-      
+
       setDialogOpen(false);
       loadScraperConfigs();
-      
+
       setSnackbarMessage('Scraper configuration saved successfully');
       setSnackbarOpen(true);
     } catch (err) {
@@ -151,13 +143,13 @@ export default function ScraperAdminPage() {
   const handleConfirmDelete = () => {
     try {
       const result = removeScraperConfig(selectedConfig.sourceName);
-      
+
       if (result) {
         setSnackbarMessage(`Scraper configuration for "${selectedConfig.sourceName}" deleted`);
       } else {
         setSnackbarMessage(`Could not find scraper configuration for "${selectedConfig.sourceName}"`);
       }
-      
+
       setDeleteDialogOpen(false);
       loadScraperConfigs();
       setSnackbarOpen(true);
@@ -169,195 +161,201 @@ export default function ScraperAdminPage() {
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Box sx={{ py: 4, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+        <Typography level="h2">
           News Scraper Configuration
         </Typography>
-        
+
         <Box>
-          <Button 
-            variant="outlined" 
-            startIcon={<RefreshIcon />}
+          <Button
+            variant="outlined"
+            startDecorator={<RefreshIcon />}
             onClick={loadScraperConfigs}
             sx={{ mr: 2 }}
           >
             Refresh
           </Button>
-          
-          <Button 
-            variant="contained" 
-            startIcon={<AddIcon />}
+
+          <Button
+            variant="solid"
+            startDecorator={<AddIcon />}
             onClick={handleCreate}
           >
             Add New Source
           </Button>
         </Box>
       </Box>
-      
+
       {error && (
-        <Alert severity="error" sx={{ mb: 3 }}>
+        <Alert color="danger" sx={{ mb: 3 }}>
           {error}
         </Alert>
       )}
-      
+
       {loading ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
           <CircularProgress />
         </Box>
       ) : (
-        <TableContainer component={Paper} elevation={2}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Source Name</TableCell>
-                <TableCell>URL</TableCell>
-                <TableCell>Interval (mins)</TableCell>
-                <TableCell>Settings</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+        <Sheet variant="outlined" sx={{ boxShadow: 'md' }}>
+          <Table
+            stripe="odd"
+            hoverRow
+            sx={{
+              '& thead th': {
+                bgcolor: 'background.level1',
+                fontWeight: 'bold',
+              },
+            }}
+          >
+            <thead>
+              <tr>
+                <th>Source Name</th>
+                <th>URL</th>
+                <th>Interval (mins)</th>
+                <th>Settings</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
               {scraperConfigs.map((config) => (
-                <TableRow key={config.sourceName}>
-                  <TableCell>
-                    <Typography variant="subtitle2">{config.sourceName}</Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body2" component="div" sx={{ 
-                      maxWidth: 250, 
-                      overflow: 'hidden', 
-                      textOverflow: 'ellipsis' 
+                <tr key={config.sourceName}>
+                  <td>
+                    <Typography level="body-sm">{config.sourceName}</Typography>
+                  </td>
+                  <td>
+                    <Typography level="body-sm" sx={{
+                      maxWidth: 250,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
                     }}>
                       {config.sourceUrl}
                     </Typography>
-                  </TableCell>
-                  <TableCell>{config.scrapeInterval}</TableCell>
-                  <TableCell>
+                  </td>
+                  <td>{config.scrapeInterval}</td>
+                  <td>
                     <Box sx={{ display: 'flex', gap: 1 }}>
                       {config.usePuppeteer && (
-                        <Chip size="small" label="Puppeteer" color="primary" variant="outlined" />
+                        <Chip size="sm" label="Puppeteer" color="primary" variant="outlined" />
                       )}
                       {config.followLinks && (
-                        <Chip size="small" label="Follow Links" color="info" variant="outlined" />
+                        <Chip size="sm" label="Follow Links" color="info" variant="outlined" />
                       )}
                     </Box>
-                  </TableCell>
-                  <TableCell>
+                  </td>
+                  <td>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      <Button 
-                        size="small" 
-                        variant="outlined" 
+                      <Button
+                        size="sm"
+                        variant="outlined"
                         color="primary"
-                        startIcon={runningScrapers.has(config.sourceName) ? <CircularProgress size={14} /> : <PlayArrowIcon />}
+                        startDecorator={runningScrapers.has(config.sourceName) ? <CircularProgress size="sm" /> : <PlayArrowIcon />}
                         onClick={() => handleRunScraper(config.sourceName)}
                         disabled={runningScrapers.has(config.sourceName)}
                       >
                         Run
                       </Button>
-                      <Button 
-                        size="small" 
-                        variant="outlined" 
-                        startIcon={<EditIcon />}
+                      <Button
+                        size="sm"
+                        variant="outlined"
+                        startDecorator={<EditIcon />}
                         onClick={() => handleEdit(config)}
                       >
                         Edit
                       </Button>
-                      <Button 
-                        size="small" 
-                        variant="outlined" 
-                        color="error"
-                        startIcon={<DeleteIcon />}
+                      <Button
+                        size="sm"
+                        variant="outlined"
+                        color="danger"
+                        startDecorator={<DeleteIcon />}
                         onClick={() => handleDelete(config)}
                       >
                         Delete
                       </Button>
                     </Box>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               ))}
               {scraperConfigs.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 3 }}>
-                    <Typography color="text.secondary">
+                <tr>
+                  <td colSpan={5} style={{ textAlign: 'center', padding: '1rem' }}>
+                    <Typography level="body-md" sx={{ color: 'text.secondary' }}>
                       No scraper configurations found
                     </Typography>
-                    <Button 
-                      variant="text" 
-                      startIcon={<AddIcon />} 
+                    <Button
+                      variant="plain"
+                      startDecorator={<AddIcon />}
                       onClick={handleCreate}
                       sx={{ mt: 1 }}
                     >
                       Add your first source
                     </Button>
-                  </TableCell>
-                </TableRow>
+                  </td>
+                </tr>
               )}
-            </TableBody>
+            </tbody>
           </Table>
-        </TableContainer>
+        </Sheet>
       )}
-      
+
       {/* Edit/Create Dialog */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>
-          {selectedConfig?.sourceName ? `Edit Scraper: ${selectedConfig.sourceName}` : 'Add New Scraper Source'}
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={3} sx={{ mt: 0 }}>
-            <Grid item xs={12} md={6}>
-              <TextField
+      <Modal open={dialogOpen} onClose={() => setDialogOpen(false)}>
+        <ModalDialog>
+          <Typography level="h3" sx={{ mb: 2 }}>
+            {selectedConfig?.sourceName ? `Edit Scraper: ${selectedConfig.sourceName}` : 'Add New Scraper Source'}
+          </Typography>
+          <Grid container spacing={3}>
+            <Grid xs={12} md={6}>
+              <Input
                 label="Source Name"
                 value={selectedConfig?.sourceName || ''}
                 onChange={(e) => setSelectedConfig({...selectedConfig, sourceName: e.target.value})}
                 fullWidth
-                margin="normal"
                 required
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Source URL"
                 value={selectedConfig?.sourceUrl || ''}
                 onChange={(e) => setSelectedConfig({...selectedConfig, sourceUrl: e.target.value})}
                 fullWidth
-                margin="normal"
                 required
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Scrape Interval (minutes)"
                 value={selectedConfig?.scrapeInterval || 60}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   scrapeInterval: parseInt(e.target.value) || 60
                 })}
                 fullWidth
-                margin="normal"
                 type="number"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid xs={12} md={6}>
               <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-                <FormControlLabel
+                <FormLabel
                   control={
                     <Switch
                       checked={selectedConfig?.usePuppeteer || false}
                       onChange={(e) => setSelectedConfig({
-                        ...selectedConfig, 
+                        ...selectedConfig,
                         usePuppeteer: e.target.checked
                       })}
                     />
                   }
                   label="Use Puppeteer"
                 />
-                <FormControlLabel
+                <FormLabel
                   control={
                     <Switch
                       checked={selectedConfig?.followLinks || false}
                       onChange={(e) => setSelectedConfig({
-                        ...selectedConfig, 
+                        ...selectedConfig,
                         followLinks: e.target.checked
                       })}
                     />
@@ -366,127 +364,126 @@ export default function ScraperAdminPage() {
                 />
               </Box>
             </Grid>
-            
-            <Grid item xs={12}>
-              <Typography variant="h6" gutterBottom>
+
+            <Grid xs={12}>
+              <Typography level="title-md" sx={{ mb: 2 }}>
                 CSS Selectors
               </Typography>
             </Grid>
-            
-            <Grid item xs={12} md={6}>
-              <TextField
+
+            <Grid xs={12} md={6}>
+              <Input
                 label="Articles Selector"
                 value={selectedConfig?.selectors?.articles || ''}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   selectors: {...selectedConfig?.selectors, articles: e.target.value}
                 })}
                 fullWidth
-                margin="normal"
                 required
                 helperText="CSS selector for article elements (e.g., '.news-item')"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Title Selector"
                 value={selectedConfig?.selectors?.title || ''}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   selectors: {...selectedConfig?.selectors, title: e.target.value}
                 })}
                 fullWidth
-                margin="normal"
                 required
                 helperText="CSS selector for article title (e.g., '.news-title')"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Content Selector"
                 value={selectedConfig?.selectors?.content || ''}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   selectors: {...selectedConfig?.selectors, content: e.target.value}
                 })}
                 fullWidth
-                margin="normal"
                 required
                 helperText="CSS selector for article content (e.g., '.news-content')"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Date Selector"
                 value={selectedConfig?.selectors?.date || ''}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   selectors: {...selectedConfig?.selectors, date: e.target.value}
                 })}
                 fullWidth
-                margin="normal"
                 required
                 helperText="CSS selector for article date (e.g., '.news-date')"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Image Selector"
                 value={selectedConfig?.selectors?.image || ''}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   selectors: {...selectedConfig?.selectors, image: e.target.value}
                 })}
                 fullWidth
-                margin="normal"
                 helperText="CSS selector for article image (e.g., '.news-image img')"
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
+            <Grid xs={12} md={6}>
+              <Input
                 label="Link Selector"
                 value={selectedConfig?.selectors?.link || ''}
                 onChange={(e) => setSelectedConfig({
-                  ...selectedConfig, 
+                  ...selectedConfig,
                   selectors: {...selectedConfig?.selectors, link: e.target.value}
                 })}
                 fullWidth
-                margin="normal"
                 helperText="CSS selector for article link (e.g., '.news-title a')"
               />
             </Grid>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleSave} variant="contained">Save</Button>
-        </DialogActions>
-      </Dialog>
-      
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
+            <Button variant="plain" onClick={() => setDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleSave} variant="solid">Save</Button>
+          </Box>
+        </ModalDialog>
+      </Modal>
+
       {/* Delete Confirmation Dialog */}
-      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Are you sure you want to delete the scraper configuration for &quot;{selectedConfig?.sourceName}&quot;?
+      <Modal open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <ModalDialog>
+          <Typography level="h3" sx={{ mb: 2 }}>
+            Confirm Deletion
+          </Typography>
+          <Typography level="body-md" sx={{ mb: 2 }}>
+            Are you sure you want to delete the scraper configuration for "{selectedConfig?.sourceName}"?
             This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleConfirmDelete} color="error" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
-      
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
+            <Button variant="plain" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirmDelete} color="danger" variant="solid">
+              Delete
+            </Button>
+          </Box>
+        </ModalDialog>
+      </Modal>
+
       {/* Snackbar for notifications */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={5000}
         onClose={() => setSnackbarOpen(false)}
-        message={snackbarMessage}
-      />
-    </Container>
+        color="success"
+        variant="soft"
+      >
+        {snackbarMessage}
+      </Snackbar>
+    </Box>
   );
 }

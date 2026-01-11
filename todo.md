@@ -1,4 +1,65 @@
-# Radzyń City Portal MVP - TODO List
+# Radzyń City Portal - TODO List
+
+## 📋 Joy UI Migration Plan
+**Complete migration documentation:** [`plans/joy-ui-migrate-task.md`](plans/joy-ui-migrate-task.md)
+
+### Phase 1: Foundation (Week 1-2) ✅
+- [x] Install Joy UI dependencies (@mui/joy)
+- [x] Create Joy UI theme configuration (src/theme/joy-theme.ts)
+- [x] Create design token utilities (src/utils/design-tokens.ts)
+- [x] Update ThemeRegistry to use Joy UI CssVarsProvider
+- [x] Clean up globals.css (remove Tailwind directives)
+- [x] Create base layout components (PageContainer, Section)
+- [x] Create foundation components (Button, Typography, Card, Icon)
+- [x] Set up component directory structure
+- [x] Create mock data files (news, events, places, weather)
+- [ ] Test theme configuration
+
+### Phase 2: Core Components (Week 3-4)
+- [ ] Migrate Button component
+- [ ] Migrate Input/TextField components
+- [ ] Migrate Card components
+- [ ] Migrate Chip component
+- [ ] Migrate Alert component
+- [ ] Migrate Skeleton component
+
+### Phase 3: Navigation & Layout (Week 5-6)
+- [ ] Migrate Navigation component
+- [ ] Create responsive layouts
+- [ ] Implement footer component
+- [ ] Update layout.tsx
+
+### Phase 4: Page Migration - Public (Week 7-9)
+- [ ] Migrate homepage
+- [ ] Migrate news pages
+- [ ] Migrate events pages
+- [ ] Migrate places pages
+- [ ] Migrate contact page
+
+### Phase 5: Page Migration - Admin (Week 10-11)
+- [ ] Migrate admin dashboard
+- [ ] Migrate admin scraper page
+- [ ] Implement admin-specific components
+
+### Phase 6: Advanced Components (Week 12)
+- [ ] Implement Priority 2-3 components
+- [ ] Add interactive components
+- [ ] Implement form components
+
+### Phase 7: Testing & Polish (Week 13)
+- [ ] Test all pages
+- [ ] Fix bugs
+- [ ] Optimize performance
+- [ ] Ensure responsive design
+
+### Phase 8: Documentation & Handoff (Week 14)
+- [ ] Update documentation
+- [ ] Create component library docs
+- [ ] Final review
+
+---
+
+## Previous TODO Items (Legacy)
 
 ## Priority 1: UI Framework Standardization
 - [x] Replace Tailwind CSS with MUI components in several key pages [10]
@@ -6,8 +67,8 @@
 - [x] Update News, City, County, and Contact pages to use MUI components [10]
 - [x] Convert Events page from Tailwind to MUI styling system [9]
 - [ ] Convert remaining pages from Tailwind to MUI styling system [9]
-- [ ] Remove Tailwind CSS dependencies from the project [8]
-- [ ] Implement consistent MUI theming throughout the application [9]
+- [ ] Remove Tailwind CSS dependencies from project [8]
+- [ ] Implement consistent MUI theming throughout application [9]
 - [ ] Convert all custom CSS to MUI's sx prop and styled components [8]
 
 ## Completed Features
@@ -26,7 +87,7 @@
 
 ### Performance Optimization
 - [ ] Set up basic performance monitoring [5]
-- [ ] Implement code-splitting to reduce initial load time [6] 
+- [ ] Implement code-splitting to reduce initial load time [6]
 - [ ] Add service worker for offline capabilities [7]
 - [x] Optimize image loading with MUI Skeleton placeholders [4]
 
