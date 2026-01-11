@@ -136,18 +136,15 @@ export default function WeatherWidget() {
         <Grid container spacing={1}>
           {forecast.map((day, index) => (
             <Grid item xs={4} key={index}>
-              <Paper
-                elevation={0}
-                sx={{ 
-                  p: 1.5, 
+              <Sheet
+                variant="outlined"
+                sx={{
+                  p: 1.5,
                   textAlign: 'center',
-                  backgroundColor: 'background.paper',
-                  border: '1px solid',
-                  borderColor: 'divider',
                   borderRadius: 2,
                   transition: 'all 0.2s',
                   '&:hover': {
-                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                    boxShadow: 'sm',
                     transform: 'translateY(-2px)'
                   }
                 }}
@@ -190,7 +187,7 @@ export default function WeatherWidget() {
                 >
                   {day.description}
                 </Typography>
-              </Paper>
+              </Sheet>
             </Grid>
           ))}
         </Grid>

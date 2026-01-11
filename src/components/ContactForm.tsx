@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, FormEvent } from 'react';
-import { 
-  TextField, Button, Box, Paper, Typography, Stack, 
-  Alert, CircularProgress, FormHelperText, FormControl
-} from '@mui/material';
+import {
+  Input, Textarea, Button, Box, Sheet, Typography, Stack,
+  Alert, CircularProgress, FormHelperText, FormControl, FormLabel
+} from '@mui/joy';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 interface FormData {
@@ -143,132 +143,152 @@ export default function ContactForm() {
   
   if (formStatus === 'success') {
     return (
-      <Paper elevation={2} sx={{ p: 4, borderRadius: 2 }}>
+      <Sheet
+        variant="outlined"
+        sx={{
+          p: 4,
+          borderRadius: 'md',
+          boxShadow: 'sm',
+          bgcolor: 'background.surface'
+        }}
+      >
         <Box sx={{ textAlign: 'center', py: 4 }}>
-          <Box 
-            sx={{ 
-              width: 64, 
-              height: 64, 
-              mx: 'auto', 
+          <Box
+            sx={{
+              width: 64,
+              height: 64,
+              mx: 'auto',
               mb: 2,
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              borderRadius: '50%', 
-              bgcolor: 'success.light' 
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+              bgcolor: 'success.100',
+              color: 'success.600'
             }}
           >
-            <CheckCircleIcon sx={{ fontSize: 40, color: 'success.main' }} />
+            <CheckCircleIcon sx={{ fontSize: 40 }} />
           </Box>
-          <Typography variant="h5" fontWeight="medium" gutterBottom>
+          <Typography level="h2" sx={{ mb: 1, fontWeight: 'lg' }}>
             Dziękujemy za Twoją wiadomość!
           </Typography>
-          <Typography variant="body1" color="text.secondary" mb={3}>
+          <Typography level="body-lg" sx={{ color: 'text.secondary', mb: 3 }}>
             Twoja wiadomość została wysłana. Odpowiemy najszybciej jak to możliwe.
           </Typography>
-          <Button 
-            variant="contained" 
+          <Button
+            size="lg"
+            variant="solid"
             color="primary"
             onClick={() => setFormStatus('idle')}
+            sx={{ px: 4, py: 1.5 }}
           >
             Wyślij kolejną wiadomość
           </Button>
         </Box>
-      </Paper>
+      </Sheet>
     );
   }
   
   return (
-    <Paper elevation={2} sx={{ p: 4, borderRadius: 2 }}>
+    <Sheet
+      variant="outlined"
+      sx={{
+        p: 4,
+        borderRadius: 'md',
+        boxShadow: 'sm',
+        bgcolor: 'background.surface'
+      }}
+    >
       <form onSubmit={handleSubmit} noValidate>
-        <Stack spacing={3}>
-          <FormControl fullWidth>
-            <TextField
+        <Stack spacing={2.5}>
+          <FormControl error={Boolean(touched.name && errors.name)}>
+            <FormLabel required>Imię i nazwisko</FormLabel>
+            <Input
               id="name"
-              label="Imię i nazwisko"
+              size="lg"
               value={formData.name}
               onChange={(e) => handleChange('name', e.target.value)}
               onBlur={(e) => handleBlur('name', e.target.value)}
-              error={Boolean(touched.name && errors.name)}
-              helperText={touched.name && errors.name}
-              required
-              fullWidth
             />
+            {touched.name && errors.name && (
+              <FormHelperText>{errors.name}</FormHelperText>
+            )}
           </FormControl>
-          
-          <FormControl fullWidth>
-            <TextField
+
+          <FormControl error={Boolean(touched.email && errors.email)}>
+            <FormLabel required>Adres e-mail</FormLabel>
+            <Input
               id="email"
-              label="Adres e-mail"
               type="email"
+              size="lg"
               value={formData.email}
               onChange={(e) => handleChange('email', e.target.value)}
               onBlur={(e) => handleBlur('email', e.target.value)}
-              error={Boolean(touched.email && errors.email)}
-              helperText={touched.email && errors.email}
-              required
-              fullWidth
             />
+            {touched.email && errors.email && (
+              <FormHelperText>{errors.email}</FormHelperText>
+            )}
           </FormControl>
-          
-          <FormControl fullWidth>
-            <TextField
+
+          <FormControl error={Boolean(touched.subject && errors.subject)}>
+            <FormLabel required>Temat</FormLabel>
+            <Input
               id="subject"
-              label="Temat"
+              size="lg"
               value={formData.subject}
               onChange={(e) => handleChange('subject', e.target.value)}
               onBlur={(e) => handleBlur('subject', e.target.value)}
-              error={Boolean(touched.subject && errors.subject)}
-              helperText={touched.subject && errors.subject}
-              required
-              fullWidth
             />
+            {touched.subject && errors.subject && (
+              <FormHelperText>{errors.subject}</FormHelperText>
+            )}
           </FormControl>
-          
-          <FormControl fullWidth>
-            <TextField
+
+          <FormControl error={Boolean(touched.message && errors.message)}>
+            <FormLabel required>Wiadomość</FormLabel>
+            <Textarea
               id="message"
-              label="Wiadomość"
-              multiline
-              rows={5}
+              size="lg"
               value={formData.message}
               onChange={(e) => handleChange('message', e.target.value)}
               onBlur={(e) => handleBlur('message', e.target.value)}
-              error={Boolean(touched.message && errors.message)}
-              helperText={touched.message && errors.message}
-              required
-              fullWidth
+              minRows={5}
             />
+            {touched.message && errors.message && (
+              <FormHelperText>{errors.message}</FormHelperText>
+            )}
           </FormControl>
-          
-          <Box>
+
+          <Box sx={{ pt: 1 }}>
             <Button
               type="submit"
-              variant="contained"
+              size="lg"
+              variant="solid"
               color="primary"
               disabled={isSubmitting}
-              startIcon={isSubmitting ? <CircularProgress size={20} /> : null}
+              startDecorator={isSubmitting ? <CircularProgress size="sm" /> : null}
+              sx={{ px: 4, py: 1.5, fontWeight: 'lg' }}
             >
               {isSubmitting ? 'Wysyłanie...' : 'Wyślij wiadomość'}
             </Button>
           </Box>
-          
+
           <Box sx={{ mt: 2 }}>
-            <FormHelperText>
+            <Typography level="body-sm" sx={{ color: 'text.secondary' }}>
               Pola oznaczone gwiazdką (*) są wymagane.
-            </FormHelperText>
-            <FormHelperText sx={{ mt: 0.5 }}>
+            </Typography>
+            <Typography level="body-sm" sx={{ color: 'text.secondary', mt: 0.5 }}>
               Twoje dane osobowe będą przetwarzane zgodnie z naszą polityką prywatności.
-            </FormHelperText>
+            </Typography>
           </Box>
-          
+
           {formStatus === 'error' && (
-            <Alert severity="error" sx={{ mt: 2 }}>
+            <Alert color="danger" sx={{ mt: 2 }}>
               Przepraszamy, wystąpił błąd podczas wysyłania wiadomości. Prosimy spróbować ponownie później.
             </Alert>
           )}
         </Stack>
       </form>
-    </Paper>
+    </Sheet>
   );
 }
