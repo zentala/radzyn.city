@@ -44,6 +44,7 @@ export function Navigation() {
   return (
     <Box component="header" role="banner">
       <Box
+        component="div"
         className="MuiAppBar-root"
         sx={{
           position: 'fixed',
