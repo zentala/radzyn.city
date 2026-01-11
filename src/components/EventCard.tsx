@@ -14,7 +14,6 @@ import {
   ListItemContent,
   Divider
 } from '@mui/joy';
-import { CardMedia } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -165,10 +164,7 @@ export default function EventCard({ title, date, location, description, category
       }}
     >
       <Box sx={{ position: 'relative' }}>
-        <CardMedia
-          component="div"
-          sx={{ height: 180 }}
-        >
+        <Box sx={{ height: 180, overflow: 'hidden' }}>
           <PlaceholderImage
             title={title}
             src={imageUrl}
@@ -176,9 +172,9 @@ export default function EventCard({ title, date, location, description, category
             height={180}
             aspectRatio="landscape"
           />
-        </CardMedia>
+        </Box>
         <Box sx={{ position: 'absolute', top: 12, left: 12 }}>
-          <Chip 
+          <Chip
             label={category.charAt(0).toUpperCase() + category.slice(1)}
             color={categoryColor as any}
             size="small"

@@ -10,7 +10,6 @@ import {
   Stack,
   Button
 } from '@mui/joy';
-import { CardMedia } from '@mui/material';
 import Link from 'next/link';
 import PlaceholderImage from './PlaceholderImage';
 import { NewsCategory } from '@/utils/types';
@@ -111,10 +110,7 @@ export default function NewsCard({
       }}
     >
       <Box sx={{ position: 'relative' }}>
-        <CardMedia
-          component="div"
-          sx={{ height: 180 }}
-        >
+        <Box sx={{ height: 180, overflow: 'hidden' }}>
           <PlaceholderImage
             title={title}
             src={imageUrl}
@@ -122,9 +118,9 @@ export default function NewsCard({
             height={180}
             aspectRatio="landscape"
           />
-        </CardMedia>
+        </Box>
         <Box sx={{ position: 'absolute', top: 12, left: 12 }}>
-          <Chip 
+          <Chip
             label={categoryInfo.name}
             color={categoryInfo.color as any}
             size="small"
