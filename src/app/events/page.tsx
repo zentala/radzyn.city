@@ -133,7 +133,8 @@ export default function EventsPage() {
     }
 
     setFilteredEvents(filtered);
-  }, [selectedCategory, selectedMonth, searchQuery, events]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCategory, selectedMonth, searchQuery]);
 
   // Format category for display
   const formatCategory = (category: string) => {

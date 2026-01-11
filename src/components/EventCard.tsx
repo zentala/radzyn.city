@@ -206,11 +206,10 @@ export default function EventCard({ title, date, location, description, category
           </Typography>
         </Box>
         
-        <Typography 
-          variant="body2" 
-          color="text.secondary" 
-          paragraph 
-          sx={{ 
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
             mb: 3,
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -232,7 +231,7 @@ export default function EventCard({ title, date, location, description, category
               color="primary"
               size="small"
               onClick={handleMenuClick}
-              startIcon={<CalendarTodayIcon />}
+              startDecorator={<CalendarTodayIcon />}
               aria-controls={isMenuOpen ? 'calendar-menu' : undefined}
               aria-haspopup="true"
               aria-expanded={isMenuOpen ? 'true' : undefined}
