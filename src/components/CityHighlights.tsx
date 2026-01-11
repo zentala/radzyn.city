@@ -22,6 +22,7 @@ export default function CityHighlights() {
 
   return (
     <Box
+      className="city-highlights-section"
       sx={{
         my: 4,
         paddingX: 2,
@@ -45,6 +46,7 @@ export default function CityHighlights() {
         {highlights.map((item, index) => (
           <Grid xs={12} md={4} key={index}>
             <Card
+              className="city-highlight-card"
               sx={{
                 height: '100%',
                 overflow: 'hidden',

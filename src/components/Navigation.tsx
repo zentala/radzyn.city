@@ -3,21 +3,26 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  AppBar, Toolbar, Typography, Button, IconButton, Box, Drawer, 
-  List, ListItem, ListItemButton, ListItemText, useScrollTrigger,
-  Container
-} from '@mui/material';
+import {
+  Box, Typography, Button, IconButton, Drawer, Sheet,
+  List, ListItem, ListItemButton, ListItemContent
+} from '@mui/joy';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 
-export default function Navigation() {
+export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const currentPath = usePathname();
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 10,
-  });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navigation = [
     { name: 'Strona główna', href: '/', enName: 'Home' },
@@ -38,62 +43,83 @@ export default function Navigation() {
 
   return (
     <Box component="header" role="banner">
-      <AppBar 
-        position="fixed" 
-        sx={{ 
+      <Sheet
+        className="MuiAppBar-root"
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1100,
           transition: 'all 300ms ease-in-out',
-          backgroundColor: trigger ? 'primary.main' : 'rgba(25, 118, 210, 0.9)',
-          boxShadow: trigger ? 2 : 0,
+          bgcolor: scrolled ? 'primary.500' : 'rgba(25, 118, 210, 0.9)',
+          boxShadow: scrolled ? 'md' : 'none',
         }}
       >
-        <Container maxWidth="lg">
-          <Toolbar sx={{ justifyContent: 'space-between', py: 0.5 }}>
-            <Typography 
-              variant="h6" 
-              component={Link} 
+        <Box
+          sx={{
+            maxWidth: 'lg',
+            mx: 'auto',
+            width: '100%',
+            px: { xs: 2, md: 3 },
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              py: 1,
+              minHeight: 64,
+            }}
+          >
+            <Typography
+              component={Link}
               href="/"
-              sx={{ 
-                textDecoration: 'none', 
+              level="h4"
+              sx={{
+                textDecoration: 'none',
                 color: 'white',
                 fontWeight: 'bold',
                 '&:hover': {
-                  opacity: 0.9
-                }
+                  opacity: 0.9,
+                },
               }}
             >
               Radzyń Podlaski
             </Typography>
 
             {/* Desktop navigation */}
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
               {navigation.map((item) => (
                 <Button
                   key={item.name}
                   component={Link}
                   href={item.href}
+                  variant="plain"
                   sx={{
                     color: 'white',
-                    mx: 1, 
+                    px: 2,
                     py: 1,
-                    borderBottom: isActive(item.href) ? '2px solid white' : 'none',
+                    borderBottom: isActive(item.href) ? '2px solid white' : '2px solid transparent',
                     borderRadius: 0,
-                    fontWeight: isActive(item.href) ? 'bold' : 'regular',
+                    fontWeight: isActive(item.href) ? 'lg' : 'md',
                     '&:hover': {
                       borderBottom: '2px solid rgba(255, 255, 255, 0.5)',
-                      backgroundColor: 'transparent'
-                    }
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    },
                   }}
                   aria-label={item.enName}
                 >
                   {item.name}
-                  <Box 
+                  <Box
                     component="span"
-                    sx={{ 
-                      position: 'absolute', 
-                      width: 1, 
-                      height: 1, 
-                      overflow: 'hidden', 
-                      clip: 'rect(0 0 0 0)' 
+                    sx={{
+                      position: 'absolute',
+                      width: 1,
+                      height: 1,
+                      overflow: 'hidden',
+                      clip: 'rect(0 0 0 0)',
                     }}
                   >
                     {item.enName}
@@ -104,21 +130,27 @@ export default function Navigation() {
 
             {/* Mobile menu button */}
             <IconButton
-              size="large"
-              edge="end"
-              color="inherit"
-              aria-label="menu"
+              size="lg"
+              variant="plain"
+              color="neutral"
               data-testid="mobile-menu-button"
+              aria-label="menu"
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              sx={{ display: { xs: 'flex', md: 'none' } }}
+              sx={{
+                display: { xs: 'flex', md: 'none' },
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
-          </Toolbar>
-        </Container>
-      </AppBar>
+          </Box>
+        </Box>
+      </Sheet>
 
       {/* Mobile navigation drawer */}
       <Drawer
@@ -126,47 +158,57 @@ export default function Navigation() {
         anchor="top"
         open={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
-        sx={{
-          display: { xs: 'block', md: 'none' },
-          '& .MuiDrawer-paper': { 
-            top: '64px', 
-            backgroundColor: 'primary.main',
-            color: 'white',
-            transition: 'transform 300ms ease-in-out'
+        slotProps={{
+          content: {
+            sx: {
+              top: 64,
+              bgcolor: 'primary.500',
+              color: 'white',
+              boxShadow: 'md',
+            },
           },
         }}
+        sx={{
+          display: { xs: 'block', md: 'none' },
+        }}
       >
-        <List sx={{ pt: 0 }}>
+        <List sx={{ pt: 0, '--List-padding': '0px' }}>
           {navigation.map((item) => (
-            <ListItem key={item.name} disablePadding>
+            <ListItem key={item.name}>
               <ListItemButton
                 component={Link}
                 href={item.href}
                 sx={{
                   textAlign: 'center',
-                  py: 1.5,
-                  backgroundColor: isActive(item.href) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
-                  fontWeight: isActive(item.href) ? 'bold' : 'normal',
+                  py: 2,
+                  bgcolor: isActive(item.href) ? 'rgba(255, 255, 255, 0.2)' : 'transparent',
+                  fontWeight: isActive(item.href) ? 'lg' : 'md',
+                  color: 'white',
                   '&:hover': {
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)'
-                  }
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                  },
                 }}
                 aria-label={item.enName}
               >
-                <ListItemText 
-                  primary={item.name} 
-                  primaryTypographyProps={{ 
-                    fontWeight: isActive(item.href) ? 'bold' : 'normal',
-                  }}
-                />
-                <Box 
+                <ListItemContent>
+                  <Typography
+                    level="body-lg"
+                    sx={{
+                      color: 'white',
+                      fontWeight: isActive(item.href) ? 'lg' : 'md',
+                    }}
+                  >
+                    {item.name}
+                  </Typography>
+                </ListItemContent>
+                <Box
                   component="span"
-                  sx={{ 
-                    position: 'absolute', 
-                    width: 1, 
-                    height: 1, 
-                    overflow: 'hidden', 
-                    clip: 'rect(0 0 0 0)' 
+                  sx={{
+                    position: 'absolute',
+                    width: 1,
+                    height: 1,
+                    overflow: 'hidden',
+                    clip: 'rect(0 0 0 0)',
                   }}
                 >
                   {item.enName}
@@ -179,3 +221,5 @@ export default function Navigation() {
     </Box>
   );
 }
+
+export default Navigation;
