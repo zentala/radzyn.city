@@ -16,6 +16,13 @@ import {
 } from '@mui/joy';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
+import HomeIcon from '@mui/icons-material/Home';
+import LocationCityIcon from '@mui/icons-material/LocationCity';
+import PublicIcon from '@mui/icons-material/Public';
+import MapIcon from '@mui/icons-material/Map';
+import PlaceIcon from '@mui/icons-material/Place';
+import EventIcon from '@mui/icons-material/Event';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { Button } from '../foundation/Button';
 
 export interface NavigationItem {
@@ -40,6 +47,29 @@ const defaultNavigationItems: NavigationItem[] = [
   { name: 'Wydarzenia', href: '/events', enName: 'Events' },
   { name: 'Kontakt', href: '/contact', enName: 'Contact' },
 ];
+
+// Helper function to get icon for navigation item
+const getNavIcon = (href: string) => {
+  const iconProps = { fontSize: 'small' as const, sx: { mr: 0.5 } };
+  switch (href) {
+    case '/':
+      return <HomeIcon {...iconProps} />;
+    case '/city':
+      return <LocationCityIcon {...iconProps} />;
+    case '/county':
+      return <PublicIcon {...iconProps} />;
+    case '/map':
+      return <MapIcon {...iconProps} />;
+    case '/places':
+      return <PlaceIcon {...iconProps} />;
+    case '/events':
+      return <EventIcon {...iconProps} />;
+    case '/contact':
+      return <ContactMailIcon {...iconProps} />;
+    default:
+      return null;
+  }
+};
 
 /**
  * Navigation - Joy UI-based navigation component with header and mobile menu
@@ -79,8 +109,8 @@ export function Navigation({
       {/* Header */}
       <Sheet
         className="MuiAppBar-root"
-        variant="solid"
-        color="primary"
+        variant="soft"
+        color="neutral"
         sx={{
           position: 'fixed',
           top: 0,
@@ -88,8 +118,10 @@ export function Navigation({
           right: 0,
           zIndex: 1000,
           transition: 'all 300ms ease-in-out',
-          boxShadow: trigger ? 'md' : 'none',
-          bgcolor: trigger ? 'primary.500' : 'rgba(37, 69, 107, 0.9)',
+          boxShadow: trigger ? 'md' : 'sm',
+          bgcolor: 'rgba(255, 255, 255, 0.8)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)', // Safari support
         }}
       >
         <Stack
@@ -110,11 +142,11 @@ export function Navigation({
               href={logoHref}
               level="h4"
               sx={{
-                color: 'white',
+                color: 'text.primary',
                 fontWeight: 'bold',
                 textDecoration: 'none',
                 '&:hover': {
-                  opacity: 0.9,
+                  opacity: 0.7,
                 },
               }}
             >
@@ -125,32 +157,26 @@ export function Navigation({
           {/* Desktop navigation */}
           <Stack
             direction="row"
-            spacing={1}
+            spacing={0.5}
             sx={{ display: { xs: 'none', md: 'flex' } }}
           >
             {items.map((item) => (
               <Button
                 key={item.name}
-                variant="plain"
+                variant={isActive(item.href) ? 'soft' : 'plain'}
                 component={Link}
                 href={item.href}
                 color="neutral"
+                startDecorator={getNavIcon(item.href)}
                 sx={{
-                  color: 'white',
-                  position: 'relative',
-                  fontWeight: isActive(item.href) ? 'bold' : 'regular',
-                  '&::after': {
-                    content: '""',
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: '2px',
-                    bgcolor: isActive(item.href) ? 'white' : 'transparent',
-                    transition: 'all 200ms ease-in-out',
-                  },
-                  '&:hover::after': {
-                    bgcolor: 'rgba(255, 255, 255, 0.5)',
+                  color: 'text.primary',
+                  px: 1.5,
+                  py: 0.75,
+                  borderRadius: 'md',
+                  fontWeight: isActive(item.href) ? '600' : '500',
+                  bgcolor: isActive(item.href) ? 'neutral.softBg' : 'transparent',
+                  '&:hover': {
+                    bgcolor: 'neutral.softHoverBg',
                   },
                 }}
                 aria-label={item.enName}
@@ -170,7 +196,7 @@ export function Navigation({
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              sx={{ display: { xs: 'flex', md: 'none' }, color: 'white' }}
+              sx={{ display: { xs: 'flex', md: 'none' }, color: 'text.primary' }}
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
@@ -186,8 +212,8 @@ export function Navigation({
         <Sheet
           id="mobile-menu"
           role="presentation"
-          variant="solid"
-          color="primary"
+          variant="soft"
+          color="neutral"
           sx={{
             position: 'fixed',
             top: 64,
@@ -199,6 +225,9 @@ export function Navigation({
             transition: 'transform 300ms ease-in-out',
             display: { xs: 'block', md: 'none' },
             overflow: 'auto',
+            bgcolor: 'rgba(255, 255, 255, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
           }}
         >
           <List sx={{ py: 2 }}>
@@ -213,24 +242,27 @@ export function Navigation({
                     borderRadius: 'md',
                     mx: 2,
                     '&.Mui-selected': {
-                      bgcolor: 'rgba(255, 255, 255, 0.2)',
+                      bgcolor: 'neutral.softBg',
                     },
                     '&:hover': {
-                      bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      bgcolor: 'neutral.softHoverBg',
                     },
                   }}
                   aria-label={item.enName}
                 >
                   <ListItemContent>
-                    <Typography
-                      level="body-lg"
-                      sx={{
-                        fontWeight: isActive(item.href) ? 'bold' : 'normal',
-                        color: 'white',
-                      }}
-                    >
-                      {item.name}
-                    </Typography>
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                      {getNavIcon(item.href)}
+                      <Typography
+                        level="body-lg"
+                        sx={{
+                          fontWeight: isActive(item.href) ? '600' : 'normal',
+                          color: 'text.primary',
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                    </Stack>
                   </ListItemContent>
                 </ListItemButton>
               </ListItem>

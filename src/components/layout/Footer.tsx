@@ -67,13 +67,15 @@ export function Footer({
 }: FooterProps) {
   return (
     <Sheet
-      variant="solid"
+      variant="soft"
       color="neutral"
       sx={{
-        bgcolor: 'background.level3',
+        bgcolor: '#f5f5f7', // Apple-style light grey
         mt: 'auto',
-        borderRadius: 0, // No rounding for full-width footer
+        borderRadius: 0,
         width: '100%',
+        borderTop: '1px solid',
+        borderColor: 'divider',
       }}
     >
       <Box
@@ -108,7 +110,7 @@ export function Footer({
               <Typography level="title-md" sx={{ mb: 2, fontWeight: 'bold' }}>
                 {section.title}
               </Typography>
-              <Stack spacing={1}>
+              <Stack spacing={0.5}>
                 {section.links.map((link) => (
                   <Button
                     key={link.name}
@@ -118,11 +120,14 @@ export function Footer({
                     color="neutral"
                     sx={{
                       justifyContent: 'flex-start',
-                      p: 0,
+                      px: 1,
+                      py: 0.5,
+                      minHeight: 36,
                       color: 'text.secondary',
+                      fontWeight: 500,
                       '&:hover': {
                         color: 'primary.500',
-                        bgcolor: 'transparent',
+                        bgcolor: 'neutral.softHoverBg',
                       },
                     }}
                   >
