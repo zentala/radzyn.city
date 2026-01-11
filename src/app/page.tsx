@@ -65,17 +65,19 @@ const dashboardWidgets: WidgetConfig[] = [
             <Card
               component={Link}
               href="/city"
+              variant="solid"
+              color="primary"
               sx={{
                 height: '100%',
-                bgcolor: 'primary.400',
-                opacity: 0.8,
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 textDecoration: 'none',
+                transition: 'all 0.2s ease',
                 '&:hover': {
-                  opacity: 1,
+                  transform: 'translateY(-4px)',
+                  boxShadow: 'lg',
                 }
               }}
             >
@@ -92,17 +94,19 @@ const dashboardWidgets: WidgetConfig[] = [
             <Card
               component={Link}
               href="/events"
+              variant="solid"
+              color="warning"
               sx={{
                 height: '100%',
-                bgcolor: 'secondary.400',
-                opacity: 0.8,
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 textDecoration: 'none',
+                transition: 'all 0.2s ease',
                 '&:hover': {
-                  opacity: 1,
+                  transform: 'translateY(-4px)',
+                  boxShadow: 'lg',
                 }
               }}
             >
@@ -119,17 +123,19 @@ const dashboardWidgets: WidgetConfig[] = [
             <Card
               component={Link}
               href="/map"
+              variant="solid"
+              color="success"
               sx={{
                 height: '100%',
-                bgcolor: 'success.400',
-                opacity: 0.8,
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 textDecoration: 'none',
+                transition: 'all 0.2s ease',
                 '&:hover': {
-                  opacity: 1,
+                  transform: 'translateY(-4px)',
+                  boxShadow: 'lg',
                 }
               }}
             >
@@ -146,17 +152,19 @@ const dashboardWidgets: WidgetConfig[] = [
             <Card
               component={Link}
               href="/contact"
+              variant="solid"
+              color="neutral"
               sx={{
                 height: '100%',
-                bgcolor: 'warning.400',
-                opacity: 0.8,
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 textDecoration: 'none',
+                transition: 'all 0.2s ease',
                 '&:hover': {
-                  opacity: 1,
+                  transform: 'translateY(-4px)',
+                  boxShadow: 'lg',
                 }
               }}
             >
