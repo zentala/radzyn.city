@@ -46,14 +46,15 @@ const defaultSections: FooterSection[] = [
       { name: 'Kontakt', href: '/contact' },
     ],
   },
-  {
-    title: 'Informacje',
-    links: [
-      { name: 'O portalu', href: '/about' },
-      { name: 'Polityka prywatności', href: '/privacy' },
-      { name: 'Regulamin', href: '/terms' },
-    ],
-  },
+  // Temporarily hidden until pages are created
+  // {
+  //   title: 'Informacje',
+  //   links: [
+  //     { name: 'O portalu', href: '/about' },
+  //     { name: 'Polityka prywatności', href: '/privacy' },
+  //     { name: 'Regulamin', href: '/terms' },
+  //   ],
+  // },
 ];
 
 /**
