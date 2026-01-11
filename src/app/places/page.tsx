@@ -14,6 +14,7 @@ import {
   Input,
   Stack,
   Select,
+  Option,
 } from '@mui/joy';
 import { locations, CATEGORY_COLORS } from '@/utils/locationData';
 import PlaceholderImage from '@/components/PlaceholderImage';
@@ -173,9 +174,9 @@ export default function PlacesPage() {
               placeholder="Kategoria"
             >
               {categories.map((category) => (
-                <option key={category} value={category}>
+                <Option key={category} value={category}>
                   {category === 'all' ? 'Wszystkie kategorie' : category}
-                </option>
+                </Option>
               ))}
             </Select>
           </Grid>
