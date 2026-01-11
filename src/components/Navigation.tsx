@@ -43,7 +43,7 @@ export function Navigation() {
 
   return (
     <Box component="header" role="banner">
-      <Sheet
+      <Box
         className="MuiAppBar-root"
         sx={{
           position: 'fixed',
@@ -150,7 +150,7 @@ export function Navigation() {
             </IconButton>
           </Box>
         </Box>
-      </Sheet>
+      </Box>
 
       {/* Mobile navigation drawer */}
       <Drawer
