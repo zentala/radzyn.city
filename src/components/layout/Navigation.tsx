@@ -78,6 +78,7 @@ export function Navigation({
     <Box component="header" role="banner">
       {/* Header */}
       <Sheet
+        className="MuiAppBar-root"
         variant="solid"
         color="primary"
         sx={{
@@ -184,6 +185,7 @@ export function Navigation({
       {showMobileMenu && (
         <Sheet
           id="mobile-menu"
+          role="presentation"
           variant="solid"
           color="primary"
           sx={{
