@@ -78,7 +78,7 @@ export function Footer({
         width: '100%',
         borderTop: '1px solid',
         borderColor: theme.palette.mode === 'dark'
-          ? 'rgba(255, 255, 255, 0.06)' // Subtle border in dark mode
+          ? 'rgba(255, 255, 255, 0.015)' // Much more subtle border in dark mode
           : 'divider',
       })}
     >

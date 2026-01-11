@@ -25,36 +25,36 @@ const colorSchemes = {
         800: '#101F2E',
         900: '#0A141F',
       },
-      // Secondary Colors - Gold
+      // Secondary Colors - Gold (Hero Accent)
       secondary: {
         50: '#FDF6E8',
         100: '#FCE9C5',
         200: '#F9D69B',
         300: '#F6C271',
         400: '#F3AE47',
-        500: '#BE9C55', // Main secondary
-        solidBg: '#BE9C55',
-        solidHoverBg: '#9F7F3A',
-        solidActiveBg: '#80622F',
+        500: '#C9A25A', // Main gold - refined and elegant
+        solidBg: '#C9A25A',
+        solidHoverBg: '#A68240',
+        solidActiveBg: '#876628',
         solidColor: '#FFFFFF',
-        600: '#9F7F3A',
-        700: '#80622F',
-        800: '#614624',
-        900: '#422A19',
+        600: '#A68240',
+        700: '#876628',
+        800: '#6B4E1A',
+        900: '#4D370F',
       },
-      // Neutral Colors
+      // Neutral Colors - Apple-inspired cool grays
       neutral: {
         0: '#FFFFFF',
-        50: '#F9F7F2',
-        100: '#F2EFE8',
-        200: '#E5E0D5',
-        300: '#D5CFC2',
-        400: '#B8B2A3',
-        500: '#9A9385',
-        600: '#7D7668',
-        700: '#635C4F',
-        800: '#4A4539',
-        900: '#2A2A2A',
+        50: '#FAFAFA',
+        100: '#F5F5F5',
+        200: '#EBEBEB',
+        300: '#D6D6D6',
+        400: '#A1A1A1',
+        500: '#737373',
+        600: '#525252',
+        700: '#404040',
+        800: '#262626',
+        900: '#171717',
         1000: '#000000',
       },
       // Semantic Colors
@@ -122,13 +122,13 @@ const colorSchemes = {
         800: '#1565C0',
         900: '#0D47A1',
       },
-      // Background Colors
+      // Background Colors - Apple-style clean backgrounds
       background: {
-        body: '#F9F7F2',
+        body: '#FAFAFA',
         surface: '#FFFFFF',
-        level1: '#F2EFE8',
-        level2: '#E5E0D5',
-        level3: '#D5CFC2',
+        level1: '#F5F5F5',
+        level2: '#EBEBEB',
+        level3: '#D6D6D6',
       },
       // Text Colors
       text: {
@@ -158,36 +158,36 @@ const colorSchemes = {
         800: '#D4DEEB',
         900: '#E8EDF5',
       },
-      // Secondary Colors - Brighter Gold for dark mode
+      // Secondary Colors - Brighter Gold for dark mode (Hero Accent)
       secondary: {
         50: '#422A19',
         100: '#614624',
         200: '#80622F',
         300: '#9F7F3A',
         400: '#BE9C55',
-        500: '#F3AE47', // Main secondary for dark mode
-        solidBg: '#F3AE47',
+        500: '#E4B862', // Main gold - glowing and luminous for dark backgrounds
+        solidBg: '#E4B862',
         solidHoverBg: '#F6C271',
         solidActiveBg: '#F9D69B',
-        solidColor: '#2A2A2A', // Dark text on bright gold
+        solidColor: '#1A1A1A', // Dark text on bright gold
         600: '#F6C271',
         700: '#F9D69B',
         800: '#FCE9C5',
         900: '#FDF6E8',
       },
-      // Neutral Colors
+      // Neutral Colors - Apple-inspired dark mode grays
       neutral: {
         0: '#000000',
-        50: '#1A1A1A',
-        100: '#2A2A2A',
-        200: '#3A3A3A',
-        300: '#4A4539',
-        400: '#635C4F',
-        500: '#7D7668',
-        600: '#9A9385',
-        700: '#B8B2A3',
-        800: '#D5CFC2',
-        900: '#E5E0D5',
+        50: '#0D0D0D',
+        100: '#1A1A1A',
+        200: '#242424',
+        300: '#2E2E2E',
+        400: '#404040',
+        500: '#737373',
+        600: '#A1A1A1',
+        700: '#D6D6D6',
+        800: '#EBEBEB',
+        900: '#F5F5F5',
         1000: '#FFFFFF',
       },
       // Semantic Colors adjusted for dark mode
@@ -255,13 +255,13 @@ const colorSchemes = {
         800: '#E3F2FD',
         900: '#E8F4FD',
       },
-      // Background Colors
+      // Background Colors - Apple-style dark backgrounds
       background: {
-        body: '#0A0A0A',
+        body: '#0D0D0D',
         surface: '#1A1A1A',
-        level1: '#2A2A2A',
-        level2: '#3A3A3A',
-        level3: '#4A4539',
+        level1: '#242424',
+        level2: '#2E2E2E',
+        level3: '#404040',
       },
       // Text Colors
       text: {
@@ -274,82 +274,93 @@ const colorSchemes = {
   },
 };
 
-// Typography Scale
+// Typography Scale - Hybrid Apple-Baroque
 const typography = {
   fontFamily: {
-    display: '"Playfair Display", "Georgia", serif',
-    body: '"Source Sans Pro", "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    mono: '"Fira Code", "JetBrains Mono", monospace',
+    display: '"Playfair Display", Georgia, serif', // Baroque elegance for headings
+    body: '"Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif', // Apple-style clarity
+    mono: '"SF Mono", Monaco, "Cascadia Code", "Courier New", monospace',
   },
-  // Heading Levels
+  // Heading Levels - Baroque Playfair Display with Apple spacing
   h1: {
     fontSize: '3rem',
     fontWeight: 600,
-    lineHeight: 1.2,
-    letterSpacing: '-0.01em',
+    lineHeight: 1.1, // Tighter Apple-style
+    letterSpacing: '-0.02em',
   },
   h2: {
     fontSize: '2.25rem',
     fontWeight: 600,
-    lineHeight: 1.3,
-    letterSpacing: '-0.005em',
+    lineHeight: 1.2, // Tighter Apple-style
+    letterSpacing: '-0.01em',
   },
   h3: {
     fontSize: '1.75rem',
     fontWeight: 600,
-    lineHeight: 1.3,
+    lineHeight: 1.2,
+    letterSpacing: '-0.005em',
   },
   h4: {
     fontSize: '1.5rem',
     fontWeight: 600,
-    lineHeight: 1.4,
+    lineHeight: 1.3,
+    letterSpacing: '0',
   },
   h5: {
     fontSize: '1.25rem',
     fontWeight: 600,
-    lineHeight: 1.4,
+    lineHeight: 1.3,
+    letterSpacing: '0',
   },
   h6: {
     fontSize: '1rem',
     fontWeight: 600,
     lineHeight: 1.4,
+    letterSpacing: '0',
   },
-  // Body Text
+  // Body Text - Apple-style Inter with optimal readability
   'body-lg': {
     fontSize: '1.125rem',
     fontWeight: 400,
-    lineHeight: 1.6,
+    lineHeight: 1.5, // Apple-preferred line height
+    letterSpacing: '0',
   },
   'body-md': {
     fontSize: '1rem',
     fontWeight: 400,
-    lineHeight: 1.6,
+    lineHeight: 1.5,
+    letterSpacing: '0',
   },
   'body-sm': {
     fontSize: '0.875rem',
     fontWeight: 400,
-    lineHeight: 1.6,
+    lineHeight: 1.5,
+    letterSpacing: '0',
   },
   'body-xs': {
     fontSize: '0.75rem',
     fontWeight: 400,
     lineHeight: 1.5,
+    letterSpacing: '0',
   },
-  // Title Text
+  // Title Text - Inter Medium for emphasis
   'title-lg': {
     fontSize: '1.125rem',
     fontWeight: 500,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
+    letterSpacing: '-0.01em', // Slight negative for larger sizes
   },
   'title-md': {
     fontSize: '1rem',
     fontWeight: 500,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
+    letterSpacing: '0',
   },
   'title-sm': {
     fontSize: '0.875rem',
     fontWeight: 500,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
+    letterSpacing: '0',
   },
   // Display Text
   display: {
@@ -360,16 +371,16 @@ const typography = {
   },
 };
 
-// Shadow System
+// Shadow System - Apple-inspired subtle depth
 const shadows = {
-  xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-  sm: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-  md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
-  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
-  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-  '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-  inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
   none: 'none',
+  xs: '0 1px 2px 0 rgba(0, 0, 0, 0.03)',
+  sm: '0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02)',
+  md: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03)',
+  lg: '0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.04)',
+  xl: '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+  '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.15)', // Modal/dialog shadows
+  inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.04)',
 };
 
 // Border Radius
@@ -398,43 +409,105 @@ const components = {
   },
   JoyButton: {
     styleOverrides: {
-      root: {
-        borderRadius: '6px',
+      root: ({ theme }: any) => ({
+        borderRadius: '8px', // Apple-style rounded
         fontWeight: 500,
         textTransform: 'none',
-        letterSpacing: '0.02em',
-        transition: 'all 0.2s ease',
-      },
+        letterSpacing: '0',
+        transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)', // Apple easing
+        fontFamily: 'var(--joy-fontFamily-body)', // Use Inter
+
+        // Gold as primary solid button!
+        '&.MuiButton-variantSolid.MuiButton-colorPrimary': {
+          bgcolor: theme.palette.secondary[500], // Gold!
+          color: theme.palette.mode === 'dark'
+            ? theme.palette.neutral[900]
+            : '#FFFFFF',
+          '&:hover': {
+            bgcolor: theme.palette.secondary[600],
+          },
+        },
+
+        // Soft variant - subtle backgrounds
+        '&.MuiButton-variantSoft': {
+          bgcolor: theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.06)'
+            : 'rgba(0, 0, 0, 0.04)',
+        },
+      }),
     },
   },
   JoyCard: {
     styleOverrides: {
-      root: {
-        borderRadius: '8px',
-        boxShadow: '0 2px 10px rgba(42, 42, 42, 0.05)',
+      root: ({ theme }: any) => ({
+        borderRadius: '12px', // More rounded (Apple-style)
+
+        // Light mode: subtle shadow, Dark mode: border
+        boxShadow: theme.palette.mode === 'light'
+          ? '0 1px 3px rgba(0, 0, 0, 0.04)'
+          : 'none',
+
+        border: theme.palette.mode === 'dark'
+          ? '1px solid rgba(255, 255, 255, 0.02)'
+          : '1px solid rgba(0, 0, 0, 0.08)',
+
         overflow: 'hidden',
-        transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Apple easing
+
         '&:hover': {
-          boxShadow: '0 6px 16px rgba(42, 42, 42, 0.08)',
-          transform: 'translateY(-3px)',
+          // Light mode: subtle elevation
+          boxShadow: theme.palette.mode === 'light'
+            ? '0 4px 12px rgba(0, 0, 0, 0.08)'
+            : 'none',
+
+          // Dark mode: subtle border brightening
+          borderColor: theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.04)'
+            : 'rgba(0, 0, 0, 0.12)',
+
+          transform: 'translateY(-2px)', // Subtle lift
         },
-      },
+      }),
     },
   },
   JoyInput: {
     styleOverrides: {
-      root: {
-        borderRadius: '6px',
-        transition: 'all 0.2s ease',
-      },
+      root: ({ theme }: any) => ({
+        borderRadius: '8px', // Apple-style
+        transition: 'all 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+        borderColor: theme.palette.mode === 'dark'
+          ? 'rgba(255, 255, 255, 0.08)' // More visible for interaction
+          : 'rgba(0, 0, 0, 0.12)',
+
+        '&:hover': {
+          borderColor: theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.12)'
+            : 'rgba(0, 0, 0, 0.16)',
+        },
+
+        '&:focus-within': {
+          borderColor: theme.palette.secondary[500], // Gold focus ring!
+          boxShadow: `0 0 0 3px ${theme.palette.mode === 'dark'
+            ? 'rgba(228, 184, 98, 0.15)' // Gold glow in dark
+            : 'rgba(201, 162, 90, 0.15)'}`, // Gold glow in light
+        },
+      }),
     },
   },
   JoyChip: {
     styleOverrides: {
-      root: {
-        borderRadius: '6px',
+      root: ({ theme }: any) => ({
+        borderRadius: '6px', // Slightly rounded
         fontWeight: 500,
-      },
+        fontSize: '0.875rem',
+
+        // Soft variant should be very subtle
+        '&.MuiChip-variantSoft': {
+          bgcolor: theme.palette.mode === 'dark'
+            ? 'rgba(255, 255, 255, 0.04)'
+            : 'rgba(0, 0, 0, 0.04)',
+        },
+      }),
     },
   },
   JoyTypography: {
@@ -464,6 +537,19 @@ const components = {
   JoySheet: {
     defaultProps: {
       variant: 'outlined',
+    },
+    styleOverrides: {
+      root: ({ theme }: any) => ({
+        borderColor: theme.palette.mode === 'dark'
+          ? 'rgba(255, 255, 255, 0.02)' // Much more subtle
+          : 'rgba(0, 0, 0, 0.08)',
+
+        // Remove border entirely for plain variant sheets in dark mode
+        '&.MuiSheet-variantPlain': {
+          border: 'none',
+          borderColor: 'transparent',
+        },
+      }),
     },
   },
 };
