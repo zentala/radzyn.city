@@ -71,14 +71,14 @@ export function Footer({
       color="neutral"
       sx={(theme) => ({
         bgcolor: theme.palette.mode === 'dark'
-          ? 'rgba(20, 20, 20, 0.8)' // Dark grey with slight transparency
+          ? 'background.level1' // Subtle difference from body background in dark mode
           : '#f5f5f7', // Apple-style light grey
         mt: 'auto',
         borderRadius: 0,
         width: '100%',
         borderTop: '1px solid',
         borderColor: theme.palette.mode === 'dark'
-          ? 'rgba(255, 255, 255, 0.08)' // Subtle border in dark mode
+          ? 'rgba(255, 255, 255, 0.06)' // Subtle border in dark mode
           : 'divider',
       })}
     >

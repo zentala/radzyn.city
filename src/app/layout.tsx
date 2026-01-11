@@ -58,11 +58,26 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeRegistry>
-          <Navigation />
-          <Box component="main">
-            {children}
+          <Box
+            sx={{
+              minHeight: '100vh',
+              display: 'flex',
+              flexDirection: 'column',
+              bgcolor: 'background.body',
+            }}
+          >
+            <Navigation />
+            <Box
+              component="main"
+              sx={{
+                flex: 1,
+                bgcolor: 'background.body',
+              }}
+            >
+              {children}
+            </Box>
+            <Footer />
           </Box>
-          <Footer />
         </ThemeRegistry>
       </body>
     </html>
