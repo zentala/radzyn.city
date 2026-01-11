@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Container, Typography } from '@mui/joy';
+import { Box, Typography } from '@mui/joy';
 
 export default function PlacesLayout({
   children,
@@ -7,7 +7,7 @@ export default function PlacesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Container maxWidth="lg" sx={{ my: 4 }}>
+    <Box sx={{ maxWidth: 'lg', mx: 'auto', my: 4, px: { xs: 2, md: 3 } }}>
       <Box sx={{ mb: 4 }}>
         <Typography level="h3" component="h1" sx={{ mb: 2 }}>
           Miejsca w Radzyniu
@@ -17,6 +17,6 @@ export default function PlacesLayout({
         </Typography>
       </Box>
       {children}
-    </Container>
+    </Box>
   );
 }

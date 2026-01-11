@@ -38,9 +38,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pl">
-      <head>
-        <title>Radzyń Podlaski - Oficjalny Portal Miasta i Powiatu</title>
-      </head>
       <body>
         <ThemeRegistry>
           <Navigation />

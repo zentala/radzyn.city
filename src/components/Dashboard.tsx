@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
-import { Box, Grid, Typography, Container } from '@mui/joy';
+import { Box, Grid, Typography } from '@mui/joy';
 
 // Define widget sizes
 export type WidgetSize = 'small' | 'medium' | 'large' | 'full';
@@ -107,7 +107,7 @@ export default function Dashboard({ widgets, title, description }: DashboardProp
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <Container maxWidth="xl" sx={{ py: 4 }}>
+    <Box sx={{ maxWidth: 'xl', mx: 'auto', py: 4, px: { xs: 2, md: 3 } }}>
       {title && (
         <Typography level="h2" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
           {title}
@@ -129,6 +129,6 @@ export default function Dashboard({ widgets, title, description }: DashboardProp
           </Grid>
         ))}
       </Grid>
-    </Container>
+    </Box>
   );
 }

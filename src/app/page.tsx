@@ -8,7 +8,6 @@ import {
   Grid,
   Card,
   CardOverflow,
-  CardActionArea,
   Chip,
 } from '@mui/joy';
 import HomeIcon from '@mui/icons-material/Home';
@@ -63,71 +62,111 @@ const dashboardWidgets: WidgetConfig[] = [
       <DashboardWidget title="Na skróty">
         <Grid container spacing={2}>
           <Grid xs={6}>
-            <Card sx={{ height: '100%', bgcolor: 'primary.400', opacity: 0.8 }}>
-              <CardActionArea
-                component={Link}
-                href="/city"
-                sx={{ height: '100%', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-              >
-                <HomeIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-                <Typography level="h3" sx={{ color: 'white' }}>
-                  O mieście
-                </Typography>
-                <Typography level="body-sm" sx={{ color: 'white' }}>
-                  Historia i atrakcje
-                </Typography>
-              </CardActionArea>
+            <Card
+              component={Link}
+              href="/city"
+              sx={{
+                height: '100%',
+                bgcolor: 'primary.400',
+                opacity: 0.8,
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textDecoration: 'none',
+                '&:hover': {
+                  opacity: 1,
+                }
+              }}
+            >
+              <HomeIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
+              <Typography level="h3" sx={{ color: 'white' }}>
+                O mieście
+              </Typography>
+              <Typography level="body-sm" sx={{ color: 'white' }}>
+                Historia i atrakcje
+              </Typography>
             </Card>
           </Grid>
           <Grid xs={6}>
-            <Card sx={{ height: '100%', bgcolor: 'secondary.400', opacity: 0.8 }}>
-              <CardActionArea
-                component={Link}
-                href="/events"
-                sx={{ height: '100%', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-              >
-                <EventIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-                <Typography level="h3" sx={{ color: 'white' }}>
-                  Wydarzenia
-                </Typography>
-                <Typography level="body-sm" sx={{ color: 'white' }}>
-                  Kalendarz imprez
-                </Typography>
-              </CardActionArea>
+            <Card
+              component={Link}
+              href="/events"
+              sx={{
+                height: '100%',
+                bgcolor: 'secondary.400',
+                opacity: 0.8,
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textDecoration: 'none',
+                '&:hover': {
+                  opacity: 1,
+                }
+              }}
+            >
+              <EventIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
+              <Typography level="h3" sx={{ color: 'white' }}>
+                Wydarzenia
+              </Typography>
+              <Typography level="body-sm" sx={{ color: 'white' }}>
+                Kalendarz imprez
+              </Typography>
             </Card>
           </Grid>
           <Grid xs={6}>
-            <Card sx={{ height: '100%', bgcolor: 'success.400', opacity: 0.8 }}>
-              <CardActionArea
-                component={Link}
-                href="/map"
-                sx={{ height: '100%', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-              >
-                <MapIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-                <Typography level="h3" sx={{ color: 'white' }}>
-                  Mapa miasta
-                </Typography>
-                <Typography level="body-sm" sx={{ color: 'white' }}>
-                  Punkty zainteresowania
-                </Typography>
-              </CardActionArea>
+            <Card
+              component={Link}
+              href="/map"
+              sx={{
+                height: '100%',
+                bgcolor: 'success.400',
+                opacity: 0.8,
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textDecoration: 'none',
+                '&:hover': {
+                  opacity: 1,
+                }
+              }}
+            >
+              <MapIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
+              <Typography level="h3" sx={{ color: 'white' }}>
+                Mapa miasta
+              </Typography>
+              <Typography level="body-sm" sx={{ color: 'white' }}>
+                Punkty zainteresowania
+              </Typography>
             </Card>
           </Grid>
           <Grid xs={6}>
-            <Card sx={{ height: '100%', bgcolor: 'warning.400', opacity: 0.8 }}>
-              <CardActionArea
-                component={Link}
-                href="/contact"
-                sx={{ height: '100%', p: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-              >
-                <PhoneIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-                <Typography level="h3" sx={{ color: 'white' }}>
-                  Kontakt
-                </Typography>
-                <Typography level="body-sm" sx={{ color: 'white' }}>
-                  Dane kontaktowe
-                </Typography>
-              </CardActionArea>
+            <Card
+              component={Link}
+              href="/contact"
+              sx={{
+                height: '100%',
+                bgcolor: 'warning.400',
+                opacity: 0.8,
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textDecoration: 'none',
+                '&:hover': {
+                  opacity: 1,
+                }
+              }}
+            >
+              <PhoneIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
+              <Typography level="h3" sx={{ color: 'white' }}>
+                Kontakt
+              </Typography>
+              <Typography level="body-sm" sx={{ color: 'white' }}>
+                Dane kontaktowe
+              </Typography>
             </Card>
           </Grid>
         </Grid>
