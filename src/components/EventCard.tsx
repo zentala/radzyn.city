@@ -225,16 +225,7 @@ export default function EventCard({ title, date, location, description, category
         
         <Divider sx={{ mt: 'auto', mb: 2 }} />
         
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Button 
-            variant="text" 
-            color="primary" 
-            size="small"
-            sx={{ fontSize: '0.85rem' }}
-          >
-            Więcej szczegółów
-          </Button>
-          
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <Box>
             <Button
               variant="outlined"

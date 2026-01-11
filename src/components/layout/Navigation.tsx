@@ -127,7 +127,7 @@ export function Navigation({
           borderRadius: 0,
           borderBottom: '1px solid',
           borderColor: theme.palette.mode === 'dark'
-            ? 'rgba(255, 255, 255, 0.08)'
+            ? 'rgba(255, 255, 255, 0.06)' // More subtle in dark mode
             : 'rgba(0, 0, 0, 0.08)',
         })}
       >
