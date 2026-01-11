@@ -6,8 +6,8 @@ const path = require('path');
 // Check if the server is already running
 async function isServerRunning() {
   return new Promise((resolve) => {
-    const req = http.get('http://localhost:3000', (res) => {
-      console.log('Server is already running at http://localhost:3000');
+    const req = http.get('http://localhost:3800', (res) => {
+      console.log('Server is already running at http://localhost:3800');
       resolve(true);
     });
     
@@ -31,7 +31,7 @@ async function waitForServer(timeout = 60000) {
   while (Date.now() - startTime < timeout) {
     try {
       const isRunning = await new Promise((resolve) => {
-        const req = http.get('http://localhost:3000', (res) => {
+        const req = http.get('http://localhost:3800', (res) => {
           resolve(true);
         });
         
@@ -69,9 +69,9 @@ async function startServer() {
     }
 
     console.log('Starting development server...');
-    
+
     // Start Next.js development server
-    const serverProcess = spawn('npx', ['next', 'dev'], {
+    const serverProcess = spawn('npx', ['next', 'dev', '-p', '3800'], {
       detached: true, // Run in background
       stdio: 'ignore',
       shell: true,
