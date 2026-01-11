@@ -109,8 +109,7 @@ export function Navigation({
       {/* Header */}
       <Sheet
         className="MuiAppBar-root"
-        variant="soft"
-        color="neutral"
+        variant="plain"
         sx={{
           position: 'fixed',
           top: 0,
@@ -118,10 +117,13 @@ export function Navigation({
           right: 0,
           zIndex: 1000,
           transition: 'all 300ms ease-in-out',
-          boxShadow: trigger ? 'md' : 'sm',
-          bgcolor: 'rgba(255, 255, 255, 0.8)',
+          boxShadow: trigger ? '0 1px 3px rgba(0, 0, 0, 0.05)' : 'none',
+          bgcolor: 'rgba(255, 255, 255, 0.85)',
           backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)', // Safari support
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: 0,
+          borderBottom: '1px solid',
+          borderColor: 'rgba(0, 0, 0, 0.08)',
         }}
       >
         <Stack
@@ -142,7 +144,7 @@ export function Navigation({
               href={logoHref}
               level="h4"
               sx={{
-                color: 'text.primary',
+                color: '#1a1a1a',
                 fontWeight: 'bold',
                 textDecoration: 'none',
                 '&:hover': {
@@ -169,14 +171,15 @@ export function Navigation({
                 color="neutral"
                 startDecorator={getNavIcon(item.href)}
                 sx={{
-                  color: 'text.primary',
+                  color: '#2c3e50',
                   px: 1.5,
                   py: 0.75,
                   borderRadius: 'md',
                   fontWeight: isActive(item.href) ? '600' : '500',
-                  bgcolor: isActive(item.href) ? 'neutral.softBg' : 'transparent',
+                  bgcolor: isActive(item.href) ? 'rgba(0, 0, 0, 0.06)' : 'transparent',
                   '&:hover': {
-                    bgcolor: 'neutral.softHoverBg',
+                    bgcolor: 'rgba(0, 0, 0, 0.04)',
+                    color: '#1a1a1a',
                   },
                 }}
                 aria-label={item.enName}
@@ -196,7 +199,7 @@ export function Navigation({
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              sx={{ display: { xs: 'flex', md: 'none' }, color: 'text.primary' }}
+              sx={{ display: { xs: 'flex', md: 'none' }, color: '#1a1a1a' }}
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </IconButton>
@@ -212,8 +215,7 @@ export function Navigation({
         <Sheet
           id="mobile-menu"
           role="presentation"
-          variant="soft"
-          color="neutral"
+          variant="plain"
           sx={{
             position: 'fixed',
             top: 64,
@@ -228,6 +230,7 @@ export function Navigation({
             bgcolor: 'rgba(255, 255, 255, 0.95)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
+            borderRadius: 0,
           }}
         >
           <List sx={{ py: 2 }}>
@@ -242,10 +245,10 @@ export function Navigation({
                     borderRadius: 'md',
                     mx: 2,
                     '&.Mui-selected': {
-                      bgcolor: 'neutral.softBg',
+                      bgcolor: 'rgba(0, 0, 0, 0.06)',
                     },
                     '&:hover': {
-                      bgcolor: 'neutral.softHoverBg',
+                      bgcolor: 'rgba(0, 0, 0, 0.04)',
                     },
                   }}
                   aria-label={item.enName}
@@ -257,7 +260,7 @@ export function Navigation({
                         level="body-lg"
                         sx={{
                           fontWeight: isActive(item.href) ? '600' : 'normal',
-                          color: 'text.primary',
+                          color: '#2c3e50',
                         }}
                       >
                         {item.name}

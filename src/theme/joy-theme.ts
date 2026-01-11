@@ -132,10 +132,10 @@ const colorSchemes = {
       },
       // Text Colors
       text: {
-        primary: '#2A2A2A',
-        secondary: '#5A5A5A',
-        tertiary: '#7D7668',
-        icon: '#4A4539',
+        primary: '#1a1a1a',
+        secondary: '#4a4a4a',
+        tertiary: '#6a6a6a',
+        icon: '#2c2c2c',
       },
     },
   },
@@ -462,10 +462,8 @@ const components = {
     },
   },
   JoySheet: {
-    styleOverrides: {
-      root: {
-        borderRadius: '8px',
-      },
+    defaultProps: {
+      variant: 'outlined',
     },
   },
 };
