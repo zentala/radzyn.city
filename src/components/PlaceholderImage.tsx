@@ -40,16 +40,19 @@ export default function PlaceholderImage({
   
   // Generate a background color based on the title (for visual variety)
   const generateColor = (text: string) => {
+    // Handle undefined/null text
+    if (!text) return 'hsl(0, 70%, 85%)';
+
     let hash = 0;
     for (let i = 0; i < text.length; i++) {
       hash = text.charCodeAt(i) + ((hash << 5) - hash);
     }
-    
+
     // Generate a pastel color
     const h = hash % 360;
     return `hsl(${h}, 70%, 85%)`;
   };
-  
+
   const bgColor = generateColor(title);
   
   // Base box styling for all variants
