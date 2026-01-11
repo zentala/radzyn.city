@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { NewsCategory, NewsTag } from '@/utils/types';
 import { getAllCategories, getAllTags } from '@/services/newsService';
-import { 
-  Typography, Chip, List, ListItem, ListItemButton, 
-  ListItemText, Skeleton, Box, Stack, Paper
-} from '@mui/material';
+import {
+  Typography, Chip, List, ListItem, ListItemButton,
+  Skeleton, Box, Stack, Sheet
+} from '@mui/joy';
 
 interface NewsFiltersProps {
   activeCategory?: string;
@@ -51,13 +51,13 @@ export default function NewsFilters({
         <Skeleton variant="text" width="33%" height={32} sx={{ mb: 2 }} />
         <Box sx={{ mb: 3 }}>
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} variant="rectangular" height={48} sx={{ mb: 1, borderRadius: 1 }} />
+            <Skeleton key={i} variant="rectangular" height={48} sx={{ mb: 1 }} />
           ))}
         </Box>
         <Skeleton variant="text" width="33%" height={32} sx={{ my: 2 }} />
         <Stack direction="row" flexWrap="wrap" gap={1}>
           {Array.from({ length: 8 }).map((_, i) => (
-            <Skeleton key={i} variant="rectangular" width={80} height={32} sx={{ borderRadius: 8 }} />
+            <Skeleton key={i} variant="rectangular" width={80} height={32} />
           ))}
         </Stack>
       </Box>
@@ -66,13 +66,13 @@ export default function NewsFilters({
   
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h5" component="h3" fontWeight="medium" sx={{ mb: 2 }}>
+      <Typography level="h3" sx={{ mb: 2, fontWeight: 'medium' }}>
         Kategorie
       </Typography>
-      
-      <Paper variant="outlined" sx={{ mb: 3, borderRadius: 2, overflow: 'hidden' }}>
-        <List disablePadding>
-          <ListItem disablePadding>
+
+      <Sheet variant="outlined" sx={{ mb: 3, borderRadius: 'md', overflow: 'hidden' }}>
+        <List>
+          <ListItem>
             <ListItemButton
               component={Link}
               href="/news"
@@ -80,31 +80,27 @@ export default function NewsFilters({
               sx={{
                 py: 1.5,
                 '&.Mui-selected': {
-                  bgcolor: 'primary.main',
-                  color: 'common.white',
+                  bgcolor: 'primary.solidBg',
+                  color: 'primary.solidColor',
                   '&:hover': {
-                    bgcolor: 'primary.dark',
+                    bgcolor: 'primary.solidHoverBg',
                   }
                 }
               }}
             >
-              <ListItemText 
-                primary={
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    Wszystkie aktualności
-                    {showCounts && (
-                      <Typography component="span" variant="body2" sx={{ ml: 1, opacity: 0.8 }}>
-                        ({categories.length})
-                      </Typography>
-                    )}
-                  </Box>
-                } 
-              />
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Typography>Wszystkie aktualności</Typography>
+                {showCounts && (
+                  <Typography level="body-sm" sx={{ ml: 1, opacity: 0.8 }}>
+                    ({categories.length})
+                  </Typography>
+                )}
+              </Box>
             </ListItemButton>
           </ListItem>
-          
+
           {categories.map((category) => (
-            <ListItem key={category.id} disablePadding>
+            <ListItem key={category.id}>
               <ListItemButton
                 component={Link}
                 href={`/news/category/${category.slug}`}
@@ -112,42 +108,41 @@ export default function NewsFilters({
                 sx={{
                   py: 1.5,
                   '&.Mui-selected': {
-                    bgcolor: 'primary.main',
-                    color: 'common.white',
+                    bgcolor: 'primary.solidBg',
+                    color: 'primary.solidColor',
                     '&:hover': {
-                      bgcolor: 'primary.dark',
+                      bgcolor: 'primary.solidHoverBg',
                     }
                   }
                 }}
               >
-                <ListItemText primary={category.name} />
+                <Typography>{category.name}</Typography>
               </ListItemButton>
             </ListItem>
           ))}
         </List>
-      </Paper>
-      
-      <Typography variant="h5" component="h3" fontWeight="medium" sx={{ mb: 2 }}>
+      </Sheet>
+
+      <Typography level="h3" sx={{ mb: 2, fontWeight: 'medium' }}>
         Tagi
       </Typography>
-      
+
       <Stack direction="row" flexWrap="wrap" gap={1}>
         {tags.map((tag) => (
           <Chip
             key={tag.id}
-            label={`#${tag.name}`}
             component={Link}
             href={`/news/tag/${tag.slug}`}
-            clickable
-            color={activeTag === tag.slug ? "primary" : "default"}
-            variant={activeTag === tag.slug ? "filled" : "outlined"}
-            sx={{ 
-              borderRadius: 4,
+            color={activeTag === tag.slug ? "primary" : "neutral"}
+            variant={activeTag === tag.slug ? "solid" : "outlined"}
+            sx={{
               '&:hover': {
-                bgcolor: activeTag === tag.slug ? 'primary.dark' : 'action.hover',
+                bgcolor: activeTag === tag.slug ? 'primary.solidHoverBg' : 'neutral.outlinedHoverBg',
               }
             }}
-          />
+          >
+            #{tag.name}
+          </Chip>
         ))}
       </Stack>
     </Box>
