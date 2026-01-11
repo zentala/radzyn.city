@@ -545,6 +545,11 @@ const components = {
           ? 'rgba(255, 255, 255, 0.02)' // Much more subtle
           : 'rgba(0, 0, 0, 0.08)',
 
+        // Increased padding for better space utilization in outlined/soft variants
+        '&.MuiSheet-variantOutlined, &.MuiSheet-variantSoft': {
+          padding: '24px',
+        },
+
         // Remove border entirely for plain variant sheets in dark mode
         '&.MuiSheet-variantPlain': {
           border: 'none',

@@ -230,9 +230,17 @@ const dashboardWidgets: WidgetConfig[] = [
 
 export default function Home() {
   return (
-    <div>
-      {/* Hero Section */}
-      <Box sx={{ position: 'relative', mb: 6 }}>
+    <>
+      {/* Hero Section - Full width without borders */}
+      <Box
+        sx={{
+          position: 'relative',
+          mb: 6,
+          width: '100%',
+          mx: 0,
+          px: 0,
+        }}
+      >
         <Box sx={{ height: { xs: '50vh', md: '60vh' }, overflow: 'hidden' }}>
           <PlaceholderImage
             title="Panorama Radzynia Podlaskiego"
@@ -291,6 +299,6 @@ export default function Home() {
       <DashboardProvider initialWidgets={dashboardWidgets}>
         <Dashboard widgets={dashboardWidgets} />
       </DashboardProvider>
-    </div>
+    </>
   );
 }

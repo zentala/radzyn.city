@@ -25,9 +25,9 @@ export default function CityHighlights() {
       className="city-highlights-section"
       sx={{
         my: 4,
-        paddingX: 2,
-        maxWidth: '1200px',
-        marginX: 'auto'
+        px: { xs: 2, md: 4 },
+        maxWidth: 'xl',
+        mx: 'auto'
       }}
     >
       <Typography
@@ -50,8 +50,7 @@ export default function CityHighlights() {
               sx={{
                 height: '100%',
                 overflow: 'hidden',
-                borderRadius: 2,
-                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                borderRadius: '12px', // Consistent with theme Card styling
               }}
             >
               <Box sx={{ height: 192 }}>
@@ -63,7 +62,7 @@ export default function CityHighlights() {
                   sx={{ width: '100%', height: '100%' }}
                 />
               </Box>
-              <CardContent>
+              <CardContent sx={{ p: 3 }}>
                 <Typography
                   level="h4"
                   component="h3"
