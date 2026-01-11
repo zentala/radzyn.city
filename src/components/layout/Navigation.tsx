@@ -13,7 +13,6 @@ import {
   ListItem,
   ListItemButton,
   ListItemContent,
-  useScrollTrigger,
 } from '@mui/joy';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -52,11 +51,21 @@ export function Navigation({
   showMobileMenu = true,
 }: NavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   const currentPath = usePathname();
-  const trigger = useScrollTrigger({
-    disableHysteresis: true,
-    threshold: 10,
-  });
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== trigger) {
+        setTrigger(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [trigger]);
 
   // Close mobile menu when changing route
   useEffect(() => {
