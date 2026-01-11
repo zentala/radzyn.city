@@ -81,11 +81,11 @@ const dashboardWidgets: WidgetConfig[] = [
                 }
               }}
             >
-              <HomeIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-              <Typography level="h3" sx={{ color: 'white' }}>
+              <HomeIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
+              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 O mieście
               </Typography>
-              <Typography level="body-sm" sx={{ color: 'white' }}>
+              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Historia i atrakcje
               </Typography>
             </Card>
@@ -110,11 +110,11 @@ const dashboardWidgets: WidgetConfig[] = [
                 }
               }}
             >
-              <EventIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-              <Typography level="h3" sx={{ color: 'white' }}>
+              <EventIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
+              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Wydarzenia
               </Typography>
-              <Typography level="body-sm" sx={{ color: 'white' }}>
+              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Kalendarz imprez
               </Typography>
             </Card>
@@ -139,11 +139,11 @@ const dashboardWidgets: WidgetConfig[] = [
                 }
               }}
             >
-              <MapIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-              <Typography level="h3" sx={{ color: 'white' }}>
+              <MapIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
+              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Mapa miasta
               </Typography>
-              <Typography level="body-sm" sx={{ color: 'white' }}>
+              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Punkty zainteresowania
               </Typography>
             </Card>
@@ -168,11 +168,11 @@ const dashboardWidgets: WidgetConfig[] = [
                 }
               }}
             >
-              <PhoneIcon sx={{ fontSize: 40, mb: 1, color: 'white' }} />
-              <Typography level="h3" sx={{ color: 'white' }}>
+              <PhoneIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
+              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Kontakt
               </Typography>
-              <Typography level="body-sm" sx={{ color: 'white' }}>
+              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
                 Dane kontaktowe
               </Typography>
             </Card>

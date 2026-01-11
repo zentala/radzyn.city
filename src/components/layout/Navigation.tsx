@@ -103,22 +103,23 @@ export function Navigation({
           }}
         >
           {/* Logo */}
-          <Link href={logoHref} style={{ textDecoration: 'none' }}>
-            {logo || (
-              <Typography
-                level="h4"
-                sx={{
-                  color: 'white',
-                  fontWeight: 'bold',
-                  '&:hover': {
-                    opacity: 0.9,
-                  },
-                }}
-              >
-                Radzyń Podlaski
-              </Typography>
-            )}
-          </Link>
+          {logo || (
+            <Typography
+              component={Link}
+              href={logoHref}
+              level="h4"
+              sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                textDecoration: 'none',
+                '&:hover': {
+                  opacity: 0.9,
+                },
+              }}
+            >
+              Radzyń Podlaski
+            </Typography>
+          )}
 
           {/* Desktop navigation */}
           <Stack

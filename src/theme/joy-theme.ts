@@ -33,6 +33,10 @@ const colorSchemes = {
         300: '#F6C271',
         400: '#F3AE47',
         500: '#BE9C55', // Main secondary
+        solidBg: '#BE9C55',
+        solidHoverBg: '#9F7F3A',
+        solidActiveBg: '#80622F',
+        solidColor: '#FFFFFF',
         600: '#9F7F3A',
         700: '#80622F',
         800: '#614624',
@@ -61,6 +65,10 @@ const colorSchemes = {
         300: '#81C784',
         400: '#66BB6A',
         500: '#556B4F', // Main success - Sage green
+        solidBg: '#556B4F',
+        solidHoverBg: '#43A047',
+        solidActiveBg: '#388E3C',
+        solidColor: '#FFFFFF',
         600: '#43A047',
         700: '#388E3C',
         800: '#2E7D32',
@@ -73,6 +81,10 @@ const colorSchemes = {
         300: '#FFD54F',
         400: '#FFCA28',
         500: '#B2734F', // Main warning - Terracotta
+        solidBg: '#B2734F',
+        solidHoverBg: '#9F5F3A',
+        solidActiveBg: '#8B4A2F',
+        solidColor: '#FFFFFF',
         600: '#FFA000',
         700: '#FF8F00',
         800: '#FF6F00',
@@ -85,6 +97,10 @@ const colorSchemes = {
         300: '#E57373',
         400: '#EF5350',
         500: '#8B3A41', // Main error - Burgundy
+        solidBg: '#8B3A41',
+        solidHoverBg: '#7A2F35',
+        solidActiveBg: '#6A252A',
+        solidColor: '#FFFFFF',
         600: '#E53935',
         700: '#D32F2F',
         800: '#C62828',
@@ -97,6 +113,10 @@ const colorSchemes = {
         300: '#64B5F6',
         400: '#42A5F5',
         500: '#5D7895', // Main info - Steel blue
+        solidBg: '#5D7895',
+        solidHoverBg: '#4A6277',
+        solidActiveBg: '#3A4E5E',
+        solidColor: '#FFFFFF',
         600: '#1E88E5',
         700: '#1976D2',
         800: '#1565C0',
@@ -132,6 +152,7 @@ const colorSchemes = {
         solidBg: '#6B8CB9',
         solidHoverBg: '#8FA9CB',
         solidActiveBg: '#B5C6DD',
+        solidColor: '#FFFFFF',
         600: '#8FA9CB',
         700: '#B5C6DD',
         800: '#D4DEEB',
@@ -145,6 +166,10 @@ const colorSchemes = {
         300: '#9F7F3A',
         400: '#BE9C55',
         500: '#F3AE47', // Main secondary for dark mode
+        solidBg: '#F3AE47',
+        solidHoverBg: '#F6C271',
+        solidActiveBg: '#F9D69B',
+        solidColor: '#2A2A2A', // Dark text on bright gold
         600: '#F6C271',
         700: '#F9D69B',
         800: '#FCE9C5',
@@ -173,6 +198,10 @@ const colorSchemes = {
         300: '#43A047',
         400: '#556B4F',
         500: '#81C784', // Main success
+        solidBg: '#81C784',
+        solidHoverBg: '#A5D6A7',
+        solidActiveBg: '#C8E6C9',
+        solidColor: '#1B5E20', // Dark green text on light green bg
         600: '#A5D6A7',
         700: '#C8E6C9',
         800: '#E8F5E9',
@@ -185,6 +214,10 @@ const colorSchemes = {
         300: '#FFA000',
         400: '#B2734F',
         500: '#FFD54F', // Main warning
+        solidBg: '#FFD54F',
+        solidHoverBg: '#FFE082',
+        solidActiveBg: '#FFECB3',
+        solidColor: '#2A2A2A', // Dark text na jasnym tle!
         600: '#FFE082',
         700: '#FFECB3',
         800: '#FFF8E1',
@@ -197,6 +230,10 @@ const colorSchemes = {
         300: '#E53935',
         400: '#8B3A41',
         500: '#EF5350', // Main error
+        solidBg: '#EF5350',
+        solidHoverBg: '#E57373',
+        solidActiveBg: '#EF9A9A',
+        solidColor: '#FFFFFF',
         600: '#E57373',
         700: '#EF9A9A',
         800: '#FFCDD2',
@@ -209,6 +246,10 @@ const colorSchemes = {
         300: '#1E88E5',
         400: '#5D7895',
         500: '#64B5F6', // Main info
+        solidBg: '#64B5F6',
+        solidHoverBg: '#90CAF9',
+        solidActiveBg: '#BBDEFB',
+        solidColor: '#0D47A1', // Dark blue text on light blue bg
         600: '#90CAF9',
         700: '#BBDEFB',
         800: '#E3F2FD',

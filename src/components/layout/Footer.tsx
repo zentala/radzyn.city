@@ -71,6 +71,8 @@ export function Footer({
       sx={{
         bgcolor: 'background.level3',
         mt: 'auto',
+        borderRadius: 0, // No rounding for full-width footer
+        width: '100%',
       }}
     >
       <Box

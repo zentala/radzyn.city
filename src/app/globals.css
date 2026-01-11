@@ -11,6 +11,18 @@
   box-sizing: border-box;
 }
 
+/* Prevent transitions on first load (FOUC prevention) */
+html:not(.color-scheme-ready) * {
+  transition: none !important;
+}
+
+/* Smooth theme transitions after hydration */
+html.color-scheme-ready * {
+  transition: background-color 0.2s ease,
+              color 0.2s ease,
+              border-color 0.2s ease;
+}
+
 html,
 body {
   margin: 0;

@@ -37,11 +37,30 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pl">
+    <html lang="pl" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const savedMode = localStorage.getItem('joy-mode');
+                  const systemMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  const mode = savedMode || systemMode;
+                  document.documentElement.setAttribute('data-joy-color-scheme', mode);
+                  document.documentElement.style.colorScheme = mode;
+                  document.documentElement.classList.add('color-scheme-ready');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+        <meta name="color-scheme" content="light dark" />
+      </head>
       <body>
         <ThemeRegistry>
           <Navigation />
-          <Box component="main" sx={{ pt: 8 }}>
+          <Box component="main">
             {children}
           </Box>
           <Footer />
