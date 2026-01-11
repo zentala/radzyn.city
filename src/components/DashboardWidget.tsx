@@ -28,18 +28,19 @@ interface DashboardWidgetProps {
   noHeaderDivider?: boolean;
 }
 
-export default function DashboardWidget({
-  title,
-  subtitle,
-  children,
-  loading = false,
-  onRefresh,
-  actions,
-  height = 'auto',
-  headerAction,
-  noPadding = false,
-  noHeaderDivider = false
-}: DashboardWidgetProps) {
+export default function DashboardWidget(props: DashboardWidgetProps) {
+  const {
+    title,
+    subtitle,
+    children,
+    loading = false,
+    onRefresh,
+    actions,
+    height = 'auto',
+    headerAction,
+    noPadding = false,
+    noHeaderDivider = false
+  } = props || {};
   return (
     <Card
       sx={{
