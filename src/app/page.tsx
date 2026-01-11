@@ -280,7 +280,7 @@ export default function Home() {
         <Typography level="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
           Witaj w Radzyniu Podlaskim
         </Typography>
-        <Typography level="body-lg" sx={{ maxWidth: 'lg' }}>
+        <Typography level="body-lg" sx={{ maxWidth: 'xl' }}>
           Odkryj piękno i historię miasta Radzyń Podlaski i powiatu radzyńskiego.
           Nasza strona jest Twoim przewodnikiem po lokalnych atrakcjach,
           wydarzeniach i usługach.

@@ -4,7 +4,7 @@ import { Typography, Grid, Box } from '@mui/joy';
 
 export default function NewsPage() {
   return (
-    <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+    <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
       <Typography level="h1" sx={{ mb: 2, fontWeight: 'bold' }}>
         Aktualności
       </Typography>

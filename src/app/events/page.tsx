@@ -178,7 +178,7 @@ export default function EventsPage() {
   };
 
   return (
-    <Box sx={{ py: 4, pt: 10, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+    <Box sx={{ py: 4, pt: 10, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
       <Typography level="h2" sx={{ mb: 4, fontWeight: 'bold' }}>
         Wydarzenia w Radzyniu Podlaskim i Powiecie
       </Typography>

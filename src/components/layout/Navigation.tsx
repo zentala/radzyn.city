@@ -138,7 +138,7 @@ export function Navigation({
           sx={{
             px: { xs: 2, md: 4 },
             py: 1.5,
-            maxWidth: 'lg',
+            maxWidth: 'xl',
             mx: 'auto',
           }}
         >

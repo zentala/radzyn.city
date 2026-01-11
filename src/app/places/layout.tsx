@@ -7,7 +7,7 @@ export default function PlacesLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Box sx={{ maxWidth: 'lg', mx: 'auto', my: 4, px: { xs: 2, md: 3 } }}>
+    <Box sx={{ maxWidth: 'xl', mx: 'auto', my: 4, px: { xs: 2, md: 3 } }}>
       <Box sx={{ mb: 4 }}>
         <Typography level="h3" component="h1" sx={{ mb: 2 }}>
           Miejsca w Radzyniu

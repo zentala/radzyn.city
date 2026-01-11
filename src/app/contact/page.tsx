@@ -43,7 +43,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <Box sx={{ py: 8, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+    <Box sx={{ py: 8, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
       <Typography level="h1" sx={{ mb: 6, fontWeight: 'bold' }}>
         Kontakt
       </Typography>

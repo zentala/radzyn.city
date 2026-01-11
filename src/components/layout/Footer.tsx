@@ -84,7 +84,7 @@ export function Footer({
     >
       <Box
         sx={{
-          maxWidth: 'lg',
+          maxWidth: 'xl',
           mx: 'auto',
           px: { xs: 2, md: 4 },
           py: 4,

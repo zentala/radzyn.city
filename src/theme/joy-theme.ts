@@ -441,6 +441,7 @@ const components = {
     styleOverrides: {
       root: ({ theme }: any) => ({
         borderRadius: '12px', // More rounded (Apple-style)
+        padding: '24px', // Increased padding for better space utilization
 
         // Light mode: subtle shadow, Dark mode: border
         boxShadow: theme.palette.mode === 'light'

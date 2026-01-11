@@ -51,7 +51,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
 
   if (isLoading) {
     return (
-      <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+      <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
         <Skeleton variant="text" width="75%" sx={{ mb: 6 }} />
         <Skeleton variant="text" width="25%" sx={{ mb: 8 }} />
         <Skeleton variant="rectangular" width="100%" height={384} sx={{ mb: 8 }} />
@@ -68,7 +68,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
 
   if (error || !article) {
     return (
-      <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+      <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
         <Alert color="danger" sx={{ mb: 6 }}>
           {error || 'Nie znaleziono artykułu'}
         </Alert>
@@ -101,7 +101,7 @@ export default function NewsDetailPage({ params }: NewsDetailPageProps) {
   };
 
   return (
-    <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'lg', mx: 'auto', width: '100%' }}>
+    <Box sx={{ py: 8, pt: 20, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
       <Box sx={{ mb: 6 }}>
         <Link
           href="/news"
