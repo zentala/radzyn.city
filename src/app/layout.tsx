@@ -45,8 +45,7 @@ export default function RootLayout({
               (function() {
                 try {
                   const savedMode = localStorage.getItem('joy-mode');
-                  const systemMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-                  const mode = savedMode || systemMode;
+                  const mode = savedMode || 'light';
                   document.documentElement.setAttribute('data-joy-color-scheme', mode);
                   document.documentElement.style.colorScheme = mode;
                   document.documentElement.classList.add('color-scheme-ready');
