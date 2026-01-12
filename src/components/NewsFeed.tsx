@@ -5,19 +5,21 @@ import {
   Typography,
   Box,
   Grid,
-  Button,
   Alert,
   Skeleton,
-  Container
+  Container,
+  Button as JoyButton
 } from '@mui/joy';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
 import NewsCard from './NewsCard';
+import Button from './foundation/Button';
 import { NewsArticle } from '@/utils/types';
 import { getAllNewsArticles } from '@/services/newsService';
 import { startScrapers } from '@/services/scraperService';
 import Link from 'next/link';
-import DashboardWidget from './DashboardWidget';
+import SectionWrapper from './SectionWrapper';
 
 interface NewsFeedProps {
   limit?: number;
@@ -126,9 +128,9 @@ export default function NewsFeed({
       severity="error" 
       sx={{ mb: 3 }}
       action={
-        <Button color="inherit" size="small" onClick={fetchNews}>
+        <JoyButton color="neutral" size="sm" onClick={fetchNews}>
           Spróbuj ponownie
-        </Button>
+        </JoyButton>
       }
     >
       {error}
@@ -209,36 +211,40 @@ export default function NewsFeed({
       
       {hasMoreNews && (
         <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Button
-            variant="contained"
+          <JoyButton
+            variant="solid"
             color="primary"
             onClick={loadMoreNews}
-            startIcon={<ExpandMoreIcon />}
-            size="large"
+            startDecorator={<ExpandMoreIcon />}
+            size="lg"
           >
             Pokaż więcej aktualności
-          </Button>
+          </JoyButton>
         </Box>
       )}
     </>
   );
 
-  // If in dashboard mode, wrap in DashboardWidget
+  // If in dashboard mode, wrap in SectionWrapper
   if (dashboardMode) {
     return (
-      <DashboardWidget 
+      <SectionWrapper
         title={title}
-        loading={isLoading}
-        onRefresh={fetchNews}
+        disableCardStyling={true}
         actions={
           showMoreLink ? (
-            <Button 
+            <Button
               component={Link}
               href="/news"
-              variant="text"
-              color="primary"
-              size="small"
-              endIcon={<ArrowForwardIcon />}
+              variant="soft"
+              size="md"
+              startDecorator={<NewspaperIcon />}
+              endDecorator={<ArrowForwardIcon />}
+              sx={{
+                px: 3,
+                py: 1.5,
+                fontSize: '0.95rem',
+              }}
             >
               Wszystkie aktualności
             </Button>
@@ -246,7 +252,7 @@ export default function NewsFeed({
         }
       >
         {isLoading ? loadingContent : error ? errorContent : newsContent}
-      </DashboardWidget>
+      </SectionWrapper>
     );
   }
 
@@ -264,15 +270,15 @@ export default function NewsFeed({
         </Typography>
         
         {showMoreLink && (
-          <Button
+          <JoyButton
             component={Link}
             href="/news"
-            variant="text"
+            variant="plain"
             color="primary"
-            endIcon={<ArrowForwardIcon />}
+            endDecorator={<ArrowForwardIcon />}
           >
             Wszystkie aktualności
-          </Button>
+          </JoyButton>
         )}
       </Box>
       

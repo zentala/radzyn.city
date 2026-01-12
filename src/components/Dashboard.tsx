@@ -4,7 +4,7 @@ import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 import { Box, Grid, Typography } from '@mui/joy';
 
 // Define widget sizes
-export type WidgetSize = 'small' | 'medium' | 'large' | 'full';
+export type WidgetSize = 'small' | 'medium' | 'half' | 'large' | 'full';
 
 // Define widget configuration
 export interface WidgetConfig {
@@ -84,6 +84,8 @@ const getSizeProps = (size: WidgetSize) => {
       return { xs: 12, sm: 6, md: 4, lg: 3 };
     case 'medium':
       return { xs: 12, sm: 12, md: 6, lg: 4 };
+    case 'half':
+      return { xs: 12, sm: 12, md: 6, lg: 6 };
     case 'large':
       return { xs: 12, sm: 12, md: 12, lg: 8 };
     case 'full':

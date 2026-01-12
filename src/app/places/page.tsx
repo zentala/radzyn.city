@@ -4,127 +4,145 @@ import { useState, useMemo } from 'react';
 import {
   Box,
   Grid,
-  Card,
-  CardCover,
-  CardContent,
   Typography,
   Chip,
-  CardActions,
-  Button,
   Input,
   Stack,
   Select,
   Option,
 } from '@mui/joy';
 import { locations, CATEGORY_COLORS } from '@/utils/locationData';
-import PlaceholderImage from '@/components/PlaceholderImage';
+import { ContentCard } from '@/components/foundation/Card';
+import Button from '@/components/foundation/Button';
 import Link from 'next/link';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import StarIcon from '@mui/icons-material/Star';
 
 // Create a new component for place card
 function PlaceCard({ place }) {
   return (
-    <Card sx={{
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      transition: 'transform 0.2s, box-shadow 0.2s',
-      '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: 'lg',
-      }
-    }}>
-      {place.imageUrl ? (
-        <CardCover component="img" src={place.imageUrl} alt={place.name} />
-      ) : (
-        <PlaceholderImage height={160} />
-      )}
+    <ContentCard
+      imageUrl={place.imageUrl}
+      imageAlt={place.name}
+      imageHeight={180}
+      title={place.name}
+      metadata={
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          {/* Address */}
+          {place.address && (
+            <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+              <LocationOnIcon
+                sx={{
+                  fontSize: '1rem',
+                  mr: 0.75,
+                  color: 'text.secondary',
+                  flexShrink: 0,
+                  mt: 0.1
+                }}
+              />
+              <Typography
+                level="body-sm"
+                sx={{
+                  color: 'text.secondary',
+                  fontSize: '0.875rem',
+                  lineHeight: 1.4
+                }}
+              >
+                {place.address}
+              </Typography>
+            </Box>
+          )}
 
-      <CardContent sx={{ flexGrow: 1, pb: 1 }}>
-        <Box sx={{ mb: 1 }}>
+          {/* Rating */}
+          {place.rating && (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <StarIcon
+                sx={{
+                  fontSize: '1rem',
+                  mr: 0.75,
+                  color: 'warning.500',
+                }}
+              />
+              <Typography
+                level="body-sm"
+                sx={{
+                  color: 'text.primary',
+                  fontWeight: 500,
+                  fontSize: '0.875rem',
+                  lineHeight: 1.4
+                }}
+              >
+                {place.rating.toFixed(1)} / 5.0
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      }
+      description={place.description}
+      descriptionLines={3}
+      imageOverlay={
+        <Box sx={{ position: 'absolute', top: 12, left: 12 }}>
           <Chip
-            label={place.category}
             size="sm"
             sx={{
               bgcolor: CATEGORY_COLORS[place.category] || CATEGORY_COLORS.default,
               color: 'white',
-              mb: 1
+              fontWeight: 600,
+              px: 1.5,
+              py: 0.5,
             }}
-          />
+          >
+            {place.category}
+          </Chip>
         </Box>
-
-        <Typography level="h3" sx={{ mb: 1 }}>
-          {place.name}
-        </Typography>
-
-        <Typography level="body-sm" sx={{ color: 'text.secondary', mb: 2 }}>
-          {place.description.length > 120
-            ? `${place.description.substring(0, 120)}...`
-            : place.description}
-        </Typography>
-
-        {place.address && (
-          <Typography level="body-sm" sx={{ color: 'text.secondary', mb: 1 }}>
-            <strong>Adres:</strong> {place.address}
-          </Typography>
-        )}
-
-        {place.rating && (
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Typography level="body-sm" sx={{ color: 'warning.500' }}>
-              {'⭐'.repeat(Math.floor(place.rating))}
-            </Typography>
-            <Typography level="body-sm" sx={{ ml: 0.5, color: 'text.secondary' }}>
-              {place.rating.toFixed(1)}
-            </Typography>
-          </Box>
-        )}
-
-        {place.amenities && place.amenities.length > 0 && (
-          <Box sx={{ mt: 2 }}>
-            <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+      }
+      footer={
+        <Box sx={{ mt: 'auto', pt: 2 }}>
+          {/* Amenities */}
+          {place.amenities && place.amenities.length > 0 && (
+            <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap sx={{ mb: 2 }}>
               {place.amenities.slice(0, 3).map((amenity, index) => (
                 <Chip
                   key={index}
-                  label={amenity}
                   size="sm"
                   variant="outlined"
                   sx={{
                     fontSize: '0.7rem',
                     height: 22,
-                    mb: 0.5,
                   }}
-                />
+                >
+                  {amenity}
+                </Chip>
               ))}
               {place.amenities.length > 3 && (
                 <Chip
-                  label={`+${place.amenities.length - 3}`}
                   size="sm"
                   variant="outlined"
                   sx={{
                     fontSize: '0.7rem',
                     height: 22,
-                    mb: 0.5,
                   }}
-                />
+                >
+                  +{place.amenities.length - 3}
+                </Chip>
               )}
             </Stack>
-          </Box>
-        )}
-      </CardContent>
+          )}
 
-      <CardActions sx={{ p: 2, pt: 0 }}>
-        <Button
-          component={Link}
-          href={`/places/${place.id}`}
-          size="sm"
-          color="primary"
-          variant="solid"
-          fullWidth
-        >
-          Szczegóły
-        </Button>
-      </CardActions>
-    </Card>
+          {/* Button */}
+          <Button
+            component={Link}
+            href={`/places/${place.id}`}
+            size="md"
+            color="primary"
+            variant="solid"
+            fullWidth
+          >
+            Zobacz szczegóły
+          </Button>
+        </Box>
+      }
+    />
   );
 }
 

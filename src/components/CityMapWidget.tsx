@@ -1,12 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, Typography } from '@mui/joy';
+import { Box, Typography } from '@mui/joy';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { locations, CATEGORY_COLORS } from '@/utils/locationData';
 import { LocationPoint } from './Map';
-import DashboardWidget from './DashboardWidget';
+import SectionWrapper from './SectionWrapper';
+import Button from './foundation/Button';
+import MapIcon from '@mui/icons-material/Map';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 // Dynamically import the Map component with no SSR to avoid leaflet issues
 const Map = dynamic(() => import('./Map'), { ssr: false });
@@ -30,92 +33,95 @@ export default function CityMapWidget({ widgetSize = 'medium' }: CityMapWidgetPr
   };
 
   return (
-    <DashboardWidget
+    <SectionWrapper
       title="Mapa miasta"
-      subtitle={selectedLocation ? selectedLocation.name : "Punkty zainteresowania"}
       actions={
-        <Button 
-          component={Link} 
-          href="/map" 
-          size="small" 
-          color="primary"
-          variant="outlined"
-          sx={{ 
-            borderRadius: '20px',
-            px: 2,
-            fontWeight: 500,
-            boxShadow: '0 2px 5px rgba(0, 0, 0, 0.08)',
-            '&:hover': {
-              boxShadow: '0 4px 10px rgba(0, 0, 0, 0.12)'
-            }
+        <Button
+          component={Link}
+          href="/map"
+          variant="soft"
+          size="md"
+          startDecorator={<MapIcon />}
+          endDecorator={<ArrowForwardIcon />}
+          sx={{
+            px: 3,
+            py: 1.5,
+            fontSize: '0.95rem',
           }}
         >
           Pełna mapa
         </Button>
       }
     >
-      <Box 
-        sx={{ 
-          height: getMapHeight(), 
-          width: '100%',
-          position: 'relative',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          '&::after': selectedLocation ? {
-            content: '""',
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '40px',
-            background: 'linear-gradient(to top, rgba(0,0,0,0.2), transparent)',
-            pointerEvents: 'none',
-            zIndex: 500
-          } : {}
-        }}
-      >
-        <Map 
-          locations={locations}
-          height={getMapHeight()}
-          center={selectedLocation ? selectedLocation.position : undefined}
-          onMarkerClick={setSelectedLocation}
-          selectedLocationId={selectedLocation?.id}
-        />
-        
+      <Box>
         {selectedLocation && (
-          <Box sx={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: '10px 16px',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(5px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            zIndex: 1000,
-            borderTop: '1px solid rgba(0,0,0,0.05)'
-          }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box 
-                sx={{ 
-                  width: 10, 
-                  height: 10, 
-                  borderRadius: '50%', 
-                  backgroundColor: CATEGORY_COLORS[selectedLocation.category] || CATEGORY_COLORS.default 
-                }} 
-              />
-              <Typography level="body-sm" sx={{ fontWeight: 600 }}>
-                {selectedLocation.name}
+          <Typography level="body-sm" sx={{ mb: 2, color: 'text.secondary' }}>
+            {selectedLocation.name}
+          </Typography>
+        )}
+        <Box
+          sx={{
+            height: getMapHeight(),
+            width: '100%',
+            position: 'relative',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            '&::after': selectedLocation ? {
+              content: '""',
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '40px',
+              background: 'linear-gradient(to top, rgba(0,0,0,0.2), transparent)',
+              pointerEvents: 'none',
+              zIndex: 500
+            } : {}
+          }}
+        >
+          <Map
+            locations={locations}
+            height={getMapHeight()}
+            center={selectedLocation ? selectedLocation.position : undefined}
+            onMarkerClick={setSelectedLocation}
+            selectedLocationId={selectedLocation?.id}
+          />
+
+          {selectedLocation && (
+            <Box sx={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: '10px 16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(5px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              zIndex: 1000,
+              borderTop: '1px solid rgba(0,0,0,0.05)'
+            }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box
+                  sx={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: '50%',
+                    backgroundColor: CATEGORY_COLORS[selectedLocation.category] || CATEGORY_COLORS.default
+                  }}
+                />
+                <Typography level="body-sm" sx={{ fontWeight: 600 }}>
+                  {selectedLocation.name}
+                </Typography>
+              </Box>
+              <Typography level="body-xs" sx={{ color: 'text.secondary' }}>
+                {selectedLocation.category}
               </Typography>
             </Box>
-            <Typography level="body-xs" sx={{ color: 'text.secondary' }}>
-              {selectedLocation.category}
-            </Typography>
-          </Box>
-        )}
+          )}
+        </Box>
       </Box>
-    </DashboardWidget>
+    </SectionWrapper>
   );
 }

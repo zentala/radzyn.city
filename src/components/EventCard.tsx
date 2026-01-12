@@ -2,23 +2,20 @@
 
 import { useState } from 'react';
 import {
-  Card,
-  CardContent,
   Typography,
   Box,
-  Button,
   Chip,
   Menu,
   MenuItem,
   ListItemDecorator,
-  ListItemContent,
-  Divider
+  ListItemContent
 } from '@mui/joy';
+import { ContentCard } from './foundation/Card';
+import Button from './foundation/Button';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import GoogleIcon from '@mui/icons-material/Google';
 import DownloadIcon from '@mui/icons-material/Download';
-import PlaceholderImage from './PlaceholderImage';
 
 interface EventProps {
   title: string;
@@ -151,85 +148,79 @@ export default function EventCard({ title, date, location, description, category
   const categoryColor = getCategoryColor(category);
   
   return (
-    <Card 
-      sx={{ 
-        height: '100%', 
-        display: 'flex', 
-        flexDirection: 'column',
-        transition: 'box-shadow 0.3s, transform 0.3s',
-        '&:hover': {
-          boxShadow: 3,
-          transform: 'translateY(-4px)'
-        }
-      }}
-    >
-      <Box sx={{ position: 'relative' }}>
-        <Box sx={{ height: 180, overflow: 'hidden' }}>
-          <PlaceholderImage
-            title={title}
-            src={imageUrl}
-            sx={{ width: '100%', height: '100%' }}
-            height={180}
-            aspectRatio="landscape"
-          />
+    <ContentCard
+      imageUrl={imageUrl}
+      imageAlt={title}
+      imageHeight={180}
+      title={title}
+      metadata={
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          {/* Date */}
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <CalendarTodayIcon
+              sx={{
+                fontSize: '1rem',
+                mr: 0.75,
+                color: 'text.secondary'
+              }}
+            />
+            <Typography
+              level="body-sm"
+              sx={{
+                color: 'text.primary',
+                fontWeight: 500,
+                fontSize: '0.875rem',
+                lineHeight: 1.4
+              }}
+            >
+              {date}
+            </Typography>
+          </Box>
+
+          {/* Location */}
+          <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+            <LocationOnIcon
+              sx={{
+                fontSize: '1rem',
+                mr: 0.75,
+                color: 'text.secondary',
+                flexShrink: 0,
+                mt: 0.1
+              }}
+            />
+            <Typography
+              level="body-sm"
+              sx={{
+                color: 'text.secondary',
+                fontSize: '0.875rem',
+                lineHeight: 1.4
+              }}
+            >
+              {location}
+            </Typography>
+          </Box>
         </Box>
+      }
+      description={description}
+      descriptionLines={3}
+      imageOverlay={
         <Box sx={{ position: 'absolute', top: 12, left: 12 }}>
           <Chip
-            label={category.charAt(0).toUpperCase() + category.slice(1)}
             color={categoryColor as any}
-            size="small"
-            variant="filled"
+            size="sm"
+            variant="solid"
             sx={{ fontWeight: 500 }}
-          />
+          >
+            {category.charAt(0).toUpperCase() + category.slice(1)}
+          </Chip>
         </Box>
-      </Box>
-      
-      <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="h6" component="h3" gutterBottom fontWeight="medium">
-          {title}
-        </Typography>
-        
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, color: 'primary.main' }}>
-          <CalendarTodayIcon fontSize="small" sx={{ mr: 1 }} />
-          <Typography variant="body2">
-            {date}
-          </Typography>
-        </Box>
-        
-        <Box sx={{ display: 'flex', mb: 2 }}>
-          <LocationOnIcon 
-            fontSize="small" 
-            sx={{ mr: 1, mt: 0.3, color: 'text.secondary', flexShrink: 0 }} 
-          />
-          <Typography variant="body2" color="text.secondary">
-            {location}
-          </Typography>
-        </Box>
-        
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{
-            mb: 3,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            display: '-webkit-box',
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: 'vertical',
-            flexGrow: 1
-          }}
-        >
-          {description}
-        </Typography>
-        
-        <Divider sx={{ mt: 'auto', mb: 2 }} />
-        
+      }
+      footer={
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <Box>
             <Button
-              variant="outlined"
-              color="primary"
-              size="small"
+              variant="soft"
+              size="md"
               onClick={handleMenuClick}
               startDecorator={<CalendarTodayIcon />}
               aria-controls={isMenuOpen ? 'calendar-menu' : undefined}
@@ -256,8 +247,8 @@ export default function EventCard({ title, date, location, description, category
                 horizontal: 'right',
               }}
             >
-              <MenuItem 
-                component="a" 
+              <MenuItem
+                component="a"
                 href={googleCalendarLink}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -268,7 +259,7 @@ export default function EventCard({ title, date, location, description, category
                 </ListItemDecorator>
                 <ListItemContent>Google Calendar</ListItemContent>
               </MenuItem>
-              <MenuItem 
+              <MenuItem
                 onClick={() => {
                   handleMenuClose();
                   alert('Pobieranie pliku .ics zostanie zaimplementowane w przyszłej wersji');
@@ -282,7 +273,7 @@ export default function EventCard({ title, date, location, description, category
             </Menu>
           </Box>
         </Box>
-      </CardContent>
-    </Card>
+      }
+    />
   );
 }

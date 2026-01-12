@@ -2,21 +2,24 @@ import WeatherWidget from '@/components/WeatherWidget';
 import CityHighlights from '@/components/CityHighlights';
 import PlaceholderImage from '@/components/PlaceholderImage';
 import NewsFeed from '@/components/NewsFeed';
+import SectionWrapper from '@/components/SectionWrapper';
+import Button from '@/components/foundation/Button';
+import QuickLinkCard from '@/components/QuickLinkCard';
 import {
   Box,
   Typography,
   Grid,
-  Card,
-  CardOverflow,
-  Chip,
+  Stack,
 } from '@mui/joy';
 import HomeIcon from '@mui/icons-material/Home';
 import EventIcon from '@mui/icons-material/Event';
 import MapIcon from '@mui/icons-material/Map';
-import PhoneIcon from '@mui/icons-material/Phone';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import Link from 'next/link';
 import Dashboard, { DashboardProvider, WidgetConfig } from '@/components/Dashboard';
-import DashboardWidget from '@/components/DashboardWidget';
 import EventCard from '@/components/EventCard';
 import dynamic from 'next/dynamic';
 
@@ -53,165 +56,140 @@ const dashboardWidgets: WidgetConfig[] = [
   {
     id: 'weather',
     component: <WeatherWidget />,
-    size: 'medium',
+    size: 'half',
     order: 1
   },
   {
     id: 'quickLinks',
     component: (
-      <DashboardWidget title="Na skróty">
-        <Grid container spacing={2}>
-          <Grid xs={6}>
-            <Card
-              component={Link}
+      <SectionWrapper title="Na skróty" disableCardStyling={true}>
+        <Grid container spacing={3}>
+          <Grid xs={12} md={6}>
+            <QuickLinkCard
               href="/city"
-              variant="solid"
-              color="primary"
-              sx={{
-                height: '100%',
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 'lg',
-                }
-              }}
-            >
-              <HomeIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
-              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                O mieście
-              </Typography>
-              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Historia i atrakcje
-              </Typography>
-            </Card>
+              icon={<HomeIcon sx={{ fontSize: 48 }} />}
+              title="O mieście"
+              description="Historia i atrakcje"
+              colorRgb="25, 118, 210"
+            />
           </Grid>
-          <Grid xs={6}>
-            <Card
-              component={Link}
+          <Grid xs={12} md={6}>
+            <QuickLinkCard
               href="/events"
-              variant="solid"
-              color="warning"
-              sx={{
-                height: '100%',
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 'lg',
-                }
-              }}
-            >
-              <EventIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
-              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Wydarzenia
-              </Typography>
-              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Kalendarz imprez
-              </Typography>
-            </Card>
+              icon={<EventIcon sx={{ fontSize: 48 }} />}
+              title="Wydarzenia"
+              description="Kalendarz imprez"
+              colorRgb="255, 167, 38"
+            />
           </Grid>
-          <Grid xs={6}>
-            <Card
-              component={Link}
+          <Grid xs={12} md={6}>
+            <QuickLinkCard
               href="/map"
-              variant="solid"
-              color="success"
-              sx={{
-                height: '100%',
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 'lg',
-                }
-              }}
-            >
-              <MapIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
-              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Mapa miasta
-              </Typography>
-              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Punkty zainteresowania
-              </Typography>
-            </Card>
+              icon={<MapIcon sx={{ fontSize: 48 }} />}
+              title="Mapa miasta"
+              description="Punkty zainteresowania"
+              colorRgb="46, 125, 50"
+            />
           </Grid>
-          <Grid xs={6}>
-            <Card
-              component={Link}
-              href="/contact"
-              variant="solid"
-              color="neutral"
-              sx={{
-                height: '100%',
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textDecoration: 'none',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: 'lg',
-                }
-              }}
-            >
-              <PhoneIcon sx={{ fontSize: 40, mb: 1, color: 'var(--variant-solidColor, white)' }} />
-              <Typography level="h3" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Kontakt
-              </Typography>
-              <Typography level="body-sm" sx={{ color: 'var(--variant-solidColor, white)' }}>
-                Dane kontaktowe
-              </Typography>
-            </Card>
+          <Grid xs={12} md={6}>
+            <QuickLinkCard
+              href="/announcements"
+              icon={<CampaignIcon sx={{ fontSize: 48 }} />}
+              title="Ogłoszenia"
+              description="Lokalne ogłoszenia"
+              colorRgb="211, 47, 47"
+            />
           </Grid>
         </Grid>
-      </DashboardWidget>
+      </SectionWrapper>
     ),
-    size: 'medium',
+    size: 'half',
     order: 2
   },
   {
     id: 'cityMap',
     component: <CityMapWidget />,
-    size: 'medium',
+    size: 'half',
     order: 3
+  },
+  {
+    id: 'memories',
+    component: (
+      <SectionWrapper
+        title="Wspomnienia"
+        actions={
+          <Button
+            component={Link}
+            href="/memories"
+            variant="soft"
+            size="md"
+            startDecorator={<AutoStoriesIcon />}
+            endDecorator={<ArrowForwardIcon />}
+            sx={{
+              px: 3,
+              py: 1.5,
+              fontSize: '0.95rem',
+            }}
+          >
+            Zobacz wszystkie
+          </Button>
+        }
+      >
+        <Stack alignItems="center" spacing={2} sx={{ py: 4 }}>
+          <AutoStoriesIcon sx={{ fontSize: 64, color: 'text.tertiary' }} />
+          <Typography level="body-md" sx={{ color: 'text.secondary', textAlign: 'center' }}>
+            Wspomnienia to miejsce gdzie ludzie dzielą się ciekawymi treściami z sieci -
+            artykułami, postami i innymi materiałami związanymi z Radzyniem.
+          </Typography>
+          <Button
+            component={Link}
+            href="/memories"
+            variant="solid"
+            color="primary"
+            endDecorator={<ArrowForwardIcon />}
+          >
+            Przeglądaj wspomnienia
+          </Button>
+        </Stack>
+      </SectionWrapper>
+    ),
+    size: 'half',
+    order: 4
   },
   {
     id: 'news',
     component: <NewsFeed limit={3} showFeatured={true} dashboardMode={true} />,
     size: 'full',
-    order: 4
+    order: 5
   },
   {
     id: 'cityHighlights',
     component: <CityHighlights />,
     size: 'full',
-    order: 5
+    order: 6
   },
   {
     id: 'events',
     component: (
-      <DashboardWidget
+      <SectionWrapper
         title="Nadchodzące wydarzenia"
+        disableCardStyling={true}
         actions={
-          <Link href="/events" style={{ textDecoration: 'none' }}>
-            <Chip variant="soft" color="primary">
-              Zobacz kalendarz
-            </Chip>
-          </Link>
+          <Button
+            component={Link}
+            href="/events"
+            variant="soft"
+            size="md"
+            startDecorator={<CalendarMonthIcon />}
+            endDecorator={<ArrowForwardIcon />}
+            sx={{
+              px: 3,
+              py: 1.5,
+              fontSize: '0.95rem',
+            }}
+          >
+            Zobacz kalendarz
+          </Button>
         }
       >
         <Grid container spacing={3}>
@@ -221,10 +199,10 @@ const dashboardWidgets: WidgetConfig[] = [
             </Grid>
           ))}
         </Grid>
-      </DashboardWidget>
+      </SectionWrapper>
     ),
     size: 'full',
-    order: 6
+    order: 7
   }
 ];
 

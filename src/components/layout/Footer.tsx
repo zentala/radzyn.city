@@ -9,7 +9,6 @@ import {
   Box,
   Divider,
 } from '@mui/joy';
-import { Button } from '../foundation/Button';
 
 export interface FooterLink {
   name: string;
@@ -34,16 +33,16 @@ const defaultSections: FooterSection[] = [
       { name: 'Strona główna', href: '/' },
       { name: 'O mieście', href: '/city' },
       { name: 'Powiat', href: '/county' },
-      { name: 'Mapa', href: '/map' },
+      { name: 'Mapa i miejsca', href: '/map' },
     ],
   },
   {
-    title: 'Miejsca',
+    title: 'Aktywność',
     links: [
-      { name: 'Miejsca', href: '/places' },
       { name: 'Wydarzenia', href: '/events' },
       { name: 'Aktualności', href: '/news' },
-      { name: 'Kontakt', href: '/contact' },
+      { name: 'Ogłoszenia', href: '/announcements' },
+      { name: 'Wspomnienia', href: '/memories' },
     ],
   },
   // Temporarily hidden until pages are created
@@ -110,33 +109,31 @@ export function Footer({
 
           {/* Footer sections */}
           {sections.map((section) => (
-            <Box key={section.title} sx={{ flex: 1 }}>
+            <Box key={section.title} sx={{ flex: 0, pr: '100px' }}>
               <Typography level="title-md" sx={{ mb: 2, fontWeight: 'bold' }}>
                 {section.title}
               </Typography>
-              <Stack spacing={0.5}>
+              <Stack spacing={1}>
                 {section.links.map((link) => (
-                  <Button
+                  <Link
                     key={link.name}
-                    variant="plain"
-                    component={Link}
                     href={link.href}
-                    color="neutral"
-                    sx={{
-                      justifyContent: 'flex-start',
-                      px: 1,
-                      py: 0.5,
-                      minHeight: 36,
-                      color: 'text.secondary',
-                      fontWeight: 500,
-                      '&:hover': {
-                        color: 'primary.500',
-                        bgcolor: 'neutral.softHoverBg',
-                      },
-                    }}
+                    style={{ textDecoration: 'none' }}
                   >
-                    {link.name}
-                  </Button>
+                    <Typography
+                      level="body-sm"
+                      sx={{
+                        color: 'text.secondary',
+                        fontWeight: 500,
+                        transition: 'color 0.2s ease',
+                        '&:hover': {
+                          color: 'primary.500',
+                        },
+                      }}
+                    >
+                      {link.name}
+                    </Typography>
+                  </Link>
                 ))}
               </Stack>
             </Box>
@@ -157,10 +154,28 @@ export function Footer({
           </Typography>
 
           {showSocialLinks && (
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={2} alignItems="center">
               <Typography level="body-sm" sx={{ color: 'text.tertiary' }}>
                 Stworzono z ❤️ dla Radzynia Podlaskiego
               </Typography>
+              <Typography level="body-sm" sx={{ color: 'text.tertiary' }}>
+                •
+              </Typography>
+              <Link href="/contact" style={{ textDecoration: 'none' }}>
+                <Typography
+                  level="body-sm"
+                  sx={{
+                    color: 'text.tertiary',
+                    fontWeight: 500,
+                    transition: 'color 0.2s ease',
+                    '&:hover': {
+                      color: 'primary.500',
+                    },
+                  }}
+                >
+                  Kontakt
+                </Typography>
+              </Link>
             </Stack>
           )}
         </Stack>

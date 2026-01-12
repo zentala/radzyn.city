@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 import {
   Typography, Box, Grid, Alert, Divider,
-  CircularProgress, Button, Chip, Sheet,
-  Stack
+  CircularProgress, Stack
 } from '@mui/joy';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Link from 'next/link';
-import DashboardWidget from './DashboardWidget';
+import SectionWrapper from './SectionWrapper';
+import Button from './foundation/Button';
 import { getCurrentWeather, getWeatherForecast, DailyForecast } from '@/services/weatherService';
 
 export default function WeatherWidget() {
@@ -46,36 +46,34 @@ export default function WeatherWidget() {
 
   if (error) {
     return (
-      <DashboardWidget title="Pogoda w Radzyniu Podlaskim">
+      <SectionWrapper title="Pogoda w Radzyniu Podlaskim">
         <Alert severity="error">{error}</Alert>
-      </DashboardWidget>
+      </SectionWrapper>
     );
   }
 
   const widgetContent = !weather ? null : (
     <>
       {isDemo && (
-        <Alert severity="info" sx={{ mb: 2 }} variant="outlined" size="small">
+        <Alert severity="info" sx={{ mb: 3 }} variant="soft" size="sm">
           Tryb demonstracyjny - dane pogodowe są symulowane
         </Alert>
       )}
-      
+
       {/* Current weather */}
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          mt: 1,
-          borderRadius: 2,
-          p: 2,
-          background: 'linear-gradient(135deg, rgba(66,133,244,0.1) 0%, rgba(66,133,244,0.05) 100%)',
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          mb: 3,
         }}
       >
         <Box sx={{ position: 'relative', width: 80, height: 80, flexShrink: 0 }}>
-          <img 
+          <img
             src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
             alt={weather.weather[0].description}
-            style={{ 
+            style={{
               position: 'absolute',
               width: '100%',
               height: '100%',
@@ -85,109 +83,102 @@ export default function WeatherWidget() {
             }}
           />
         </Box>
-        <Box sx={{ ml: 1, flexGrow: 1 }}>
-          <Stack direction="row" alignItems="baseline" spacing={1}>
-            <Typography variant="h3" component="p" fontWeight="bold">
+        <Box sx={{ flexGrow: 1 }}>
+          <Stack direction="row" alignItems="baseline" spacing={0.5} sx={{ mb: 0.5 }}>
+            <Typography level="h2" fontWeight="bold">
               {Math.round(weather.main.temp)}°
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.9rem' }}>
+            <Typography level="body-lg" sx={{ color: 'text.secondary' }}>
               C
             </Typography>
           </Stack>
-          <Typography 
-            variant="body1" 
-            color="text.secondary" 
-            sx={{ 
+          <Typography
+            level="body-md"
+            sx={{
               textTransform: 'capitalize',
-              fontWeight: 500
+              fontWeight: 500,
+              color: 'text.secondary',
+              mb: 1
             }}
           >
             {weather.weather[0].description}
           </Typography>
-        </Box>
-        <Stack direction="column" spacing={1} alignItems="flex-end">
-          <Chip 
-            label={`Odczuwalna: ${Math.round(weather.main.feels_like)}°C`} 
-            size="small"
-            sx={{ 
-              backgroundColor: 'primary.light',
-              color: 'white',
-              fontWeight: 500,
-              fontSize: '0.7rem'
-            }}
-          />
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
-            <Typography variant="caption" color="text.secondary">
+          <Stack direction="row" spacing={2}>
+            <Typography level="body-sm" sx={{ color: 'text.tertiary' }}>
+              Odczuwalna: {Math.round(weather.main.feels_like)}°C
+            </Typography>
+            <Typography level="body-sm" sx={{ color: 'text.tertiary' }}>
               Wilgotność: {weather.main.humidity}%
             </Typography>
-            <Typography variant="caption" color="text.secondary">
+            <Typography level="body-sm" sx={{ color: 'text.tertiary' }}>
               Wiatr: {Math.round(weather.wind.speed * 3.6)} km/h
             </Typography>
-          </Box>
-        </Stack>
+          </Stack>
+        </Box>
       </Box>
-      
+
+      <Divider sx={{ my: 3 }} />
+
       {/* Forecast for next days */}
-      <Box sx={{ mt: 2 }}>
-        <Divider sx={{ my: 2 }} />
-        <Typography variant="subtitle1" sx={{ mb: 2, fontWeight: 'medium' }}>
+      <Box>
+        <Typography level="title-md" sx={{ mb: 2, fontWeight: 'bold' }}>
           Prognoza na kolejne dni
         </Typography>
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
           {forecast.map((day, index) => (
-            <Grid item xs={4} key={index}>
-              <Sheet
-                variant="outlined"
+            <Grid xs={4} key={index}>
+              <Box
                 sx={{
-                  p: 1.5,
+                  p: 2,
                   textAlign: 'center',
-                  borderRadius: 2,
+                  borderRadius: 'md',
+                  bgcolor: 'background.level1',
                   transition: 'all 0.2s',
                   '&:hover': {
-                    boxShadow: 'sm',
+                    bgcolor: 'background.level2',
                     transform: 'translateY(-2px)'
                   }
                 }}
               >
-                <Typography 
-                  variant="body2" 
-                  sx={{ 
-                    fontWeight: 'medium',
-                    color: 'primary.main'
+                <Typography
+                  level="body-sm"
+                  sx={{
+                    fontWeight: 'bold',
+                    color: 'text.primary',
+                    mb: 1
                   }}
                 >
                   {day.dayName.substring(0, 3)}
                 </Typography>
-                <Box sx={{ 
-                  display: 'flex', 
+                <Box sx={{
+                  display: 'flex',
                   justifyContent: 'center',
-                  my: 1
+                  mb: 1
                 }}>
-                  <img 
+                  <img
                     src={`https://openweathermap.org/img/wn/${day.icon}.png`}
                     alt={day.description}
                     width={40}
                     height={40}
                   />
                 </Box>
-                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                <Typography level="title-lg" sx={{ fontWeight: 'bold', mb: 0.5 }}>
                   {Math.round(day.temp.day)}°C
                 </Typography>
-                <Typography 
-                  variant="caption" 
-                  color="text.secondary" 
-                  sx={{ 
+                <Typography
+                  level="body-xs"
+                  sx={{
+                    color: 'text.tertiary',
                     display: 'block',
                     textOverflow: 'ellipsis',
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',
                     textTransform: 'capitalize',
-                    mt: 0.5
                   }}
                 >
                   {day.description}
                 </Typography>
-              </Sheet>
+              </Box>
             </Grid>
           ))}
         </Grid>
@@ -197,28 +188,24 @@ export default function WeatherWidget() {
 
   const loadingContent = (
     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', p: 3, flexGrow: 1 }}>
-      <CircularProgress size={40} thickness={4} />
+      <CircularProgress size="lg" />
     </Box>
   );
 
   return (
-    <DashboardWidget 
+    <SectionWrapper
       title="Pogoda w Radzyniu Podlaskim"
-      loading={loading}
-      onRefresh={fetchWeather}
       actions={
-        <Button 
-          size="small" 
-          endIcon={<ArrowForwardIcon />}
+        <Button
           component={Link}
           href="/pogoda"
+          variant="soft"
+          size="md"
+          endDecorator={<ArrowForwardIcon />}
           sx={{
-            fontWeight: 500,
-            borderRadius: '20px',
-            px: 1.5,
-            '&:hover': {
-              backgroundColor: 'rgba(25, 118, 210, 0.08)'
-            }
+            px: 3,
+            py: 1.5,
+            fontSize: '0.95rem',
           }}
         >
           Pełna prognoza
@@ -226,6 +213,6 @@ export default function WeatherWidget() {
       }
     >
       {loading ? loadingContent : widgetContent}
-    </DashboardWidget>
+    </SectionWrapper>
   );
 }
