@@ -143,9 +143,10 @@ Requires Supabase CLI authentication:
 - Edge Function `api-v1` implemented with PostGIS support and category joins.
 - `radzyn.city` has `guideDataProvider` and feature-flag ready in `MapClient`.
 - Local `.env.local` for `guide` prepared with discovered keys.
+- **SUCCESS**: Edge Function verified via Deno bypass in WSL2 (coordinates parsing fixed).
+- **SUCCESS**: Database tables created manually via Studio.
 
 **Not done yet:**
-- Manual verification of local edge function serve (agent shell had SSL/Docker network issues).
 - Verified remote deployed function URL.
 - Switched `/map` default data source to API (remains behind a feature flag).
 
