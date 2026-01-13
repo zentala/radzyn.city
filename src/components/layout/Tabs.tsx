@@ -14,6 +14,7 @@ export interface TabItem {
   value: string;
   icon?: React.ReactNode;
   disabled?: boolean;
+  children?: React.ReactNode;
 }
 
 export interface TabsProps {
