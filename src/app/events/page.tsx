@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Typography,
   Box,
@@ -8,157 +8,82 @@ import {
   Sheet,
   Input,
   Select,
+  Option,
   Button,
   Chip,
-  Divider,
-  Stack,
+  Skeleton,
 } from '@mui/joy';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import NoEventsIcon from '@mui/icons-material/FolderOff';
 import EventCard from '@/components/EventCard';
 import { months } from '@/utils/dates';
+import { useEvents } from '@/hooks/useEvents';
 
 // Metadata is moved to a separate layout.tsx file
 
-interface Event {
-  title: string;
-  date: string;
-  location: string;
-  description: string;
-  category: string;
-  imageUrl?: string;
-}
-
 export default function EventsPage() {
-  // Sample event data
-  const events = [
-    {
-      title: 'Dni Radzynia Podlaskiego',
-      date: '24-26 czerwca 2025',
-      location: 'Park Miejski, Radzyń Podlaski',
-      description: 'Coroczne święto miasta z koncertami, pokazami artystycznymi i atrakcjami dla całych rodzin.',
-      category: 'kulturalne',
-    },
-    {
-      title: 'Festiwal Kultury Ludowej',
-      date: '15 maja 2025',
-      location: 'Oranżeria, Radzyń Podlaski',
-      description: 'Prezentacja lokalnego folkloru, muzyki ludowej i tradycyjnego rękodzieła z regionu radzyńskiego.',
-      category: 'kulturalne',
-    },
-    {
-      title: 'Radzyński Bieg Uliczny',
-      date: '3 kwietnia 2025',
-      location: 'Centrum miasta, Radzyń Podlaski',
-      description: 'Zawody biegowe na dystansie 5 i 10 km, biegi dla dzieci i zawody dla niepełnosprawnych.',
-      category: 'sportowe',
-    },
-    {
-      title: 'Targi Pracy i Edukacji',
-      date: '12 kwietnia 2025',
-      location: 'Zespół Szkół Ponadpodstawowych, Radzyń Podlaski',
-      description: 'Spotkanie pracodawców, instytucji edukacyjnych i osób poszukujących pracy z powiatu radzyńskiego.',
-      category: 'edukacyjne',
-    },
-    {
-      title: 'Koncert Symfoniczny „Muzyka Mistrzów"',
-      date: '28 marca 2025',
-      location: 'Sala koncertowa Pałacu Potockich, Radzyń Podlaski',
-      description: 'Wykonanie dzieł klasyków muzyki poważnej przez Lubelską Orkiestrę Kameralną.',
-      category: 'kulturalne',
-    },
-    {
-      title: 'Zawody Wędkarskie o Puchar Starosty',
-      date: '10 maja 2025',
-      location: 'Zalew w Radzyniu Podlaskim',
-      description: 'Coroczne zawody wędkarskie otwarte dla wszystkich mieszkańców powiatu.',
-      category: 'sportowe',
-    },
-    {
-      title: 'Piknik Historyczny',
-      date: '7 czerwca 2025',
-      location: 'Dziedziniec Pałacu Potockich, Radzyń Podlaski',
-      description: 'Rekonstrukcje historyczne, prezentacja dawnego rzemiosła i zwyczajów z regionu radzyńskiego.',
-      category: 'kulturalne',
-    },
-    {
-      title: 'Forum Gospodarcze Powiatu Radzyńskiego',
-      date: '21 kwietnia 2025',
-      location: 'Starostwo Powiatowe, Radzyń Podlaski',
-      description: 'Spotkanie przedsiębiorców, samorządowców i instytucji wspierających rozwój gospodarczy regionu.',
-      category: 'biznesowe',
-    },
-  ];
-
-  // Get unique categories
-  const allCategories = [...new Set(events.map(event => event.category))];
-  const allMonths = [...new Set(events.map(event => {
-    // Extract month from date
-    const monthStr = event.date.split(' ')[1].toLowerCase();
-    return monthStr;
-  }))];
+  const { events, categories, loading } = useEvents();
 
   // State for filters
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>(events);
   const [searchQuery, setSearchQuery] = useState('');
+  const [hydrated, setHydrated] = useState(false);
 
-  // Apply filters
   useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  const monthOptions = useMemo(() => {
+    const seen = new Set<number>();
+    for (const e of events) {
+      const d = new Date(e.startAt);
+      if (!Number.isNaN(d.getTime())) seen.add(d.getMonth());
+    }
+    return Array.from(seen.values())
+      .sort((a, b) => a - b)
+      .map((m) => ({ value: String(m), label: months.plNames[m] ?? String(m) }));
+  }, [events]);
+
+  const filteredEvents = useMemo(() => {
     let filtered = [...events];
 
-    // Filter by category
     if (selectedCategory) {
-      filtered = filtered.filter(event => event.category === selectedCategory);
+      filtered = filtered.filter((e) => (e.category?.id ?? '') === selectedCategory);
     }
 
-    // Filter by month
     if (selectedMonth) {
-      filtered = filtered.filter(event => {
-        const monthStr = event.date.split(' ')[1].toLowerCase();
-        return monthStr === selectedMonth;
+      const monthIndex = Number(selectedMonth);
+      filtered = filtered.filter((e) => {
+        const d = new Date(e.startAt);
+        return !Number.isNaN(d.getTime()) && d.getMonth() === monthIndex;
       });
     }
 
-    // Filter by search query
-    if (searchQuery.trim() !== '') {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(event =>
-        event.title.toLowerCase().includes(query) ||
-        event.description.toLowerCase().includes(query) ||
-        event.location.toLowerCase().includes(query)
-      );
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      filtered = filtered.filter((e) => {
+        const loc = `${e.location?.name ?? ''} ${e.location?.address ?? ''}`.toLowerCase();
+        return (
+          e.title.toLowerCase().includes(q) ||
+          e.description.toLowerCase().includes(q) ||
+          loc.includes(q)
+        );
+      });
     }
 
-    setFilteredEvents(filtered);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory, selectedMonth, searchQuery]);
+    return filtered;
+  }, [events, searchQuery, selectedCategory, selectedMonth]);
 
   // Format category for display
   const formatCategory = (category: string) => {
     return category.charAt(0).toUpperCase() + category.slice(1);
   };
 
-  // Format month for display
-  const formatMonth = (month: string) => {
-    const monthNames: Record<string, string> = {
-      'stycznia': 'Styczeń',
-      'lutego': 'Luty',
-      'marca': 'Marzec',
-      'kwietnia': 'Kwiecień',
-      'maja': 'Maj',
-      'czerwca': 'Czerwiec',
-      'lipca': 'Lipiec',
-      'sierpnia': 'Sierpień',
-      'września': 'Wrzesień',
-      'października': 'Październik',
-      'listopada': 'Listopad',
-      'grudnia': 'Grudzień'
-    };
-
-    return monthNames[month] || month;
+  const formatMonth = (monthIndexStr: string) => {
+    const idx = Number(monthIndexStr);
+    return months.plNames[idx] ?? monthIndexStr;
   };
 
   // Get category color for chips
@@ -179,6 +104,19 @@ export default function EventsPage() {
 
   return (
     <Box sx={{ py: 4, pt: 10, px: { xs: 2, md: 4 }, maxWidth: 'xl', mx: 'auto', width: '100%' }}>
+      {hydrated ? (
+        <Box
+          data-testid="events-page-hydrated"
+          sx={{
+            position: 'absolute',
+            width: 1,
+            height: 1,
+            opacity: 0,
+            overflow: 'hidden',
+            pointerEvents: 'none',
+          }}
+        />
+      ) : null}
       <Typography level="h2" sx={{ mb: 4, fontWeight: 'bold' }}>
         Wydarzenia w Radzyniu Podlaskim i Powiecie
       </Typography>
@@ -216,11 +154,11 @@ export default function EventsPage() {
                 placeholder="Wszystkie kategorie"
                 onChange={(_, value) => setSelectedCategory(value as string | null)}
               >
-                <option value="">Wszystkie kategorie</option>
-                {allCategories.map(category => (
-                  <option key={category} value={category}>
-                    {formatCategory(category)}
-                  </option>
+                <Option value="">Wszystkie kategorie</Option>
+                {categories.map((c) => (
+                  <Option key={c.id} value={c.id}>
+                    {c.name ?? formatCategory(c.id)}
+                  </Option>
                 ))}
               </Select>
             </Grid>
@@ -233,11 +171,11 @@ export default function EventsPage() {
                 placeholder="Wszystkie miesiące"
                 onChange={(_, value) => setSelectedMonth(value as string | null)}
               >
-                <option value="">Wszystkie miesiące</option>
-                {allMonths.map(month => (
-                  <option key={month} value={month}>
-                    {formatMonth(month)}
-                  </option>
+                <Option value="">Wszystkie miesiące</Option>
+                {monthOptions.map((m) => (
+                  <Option key={m.value} value={m.value}>
+                    {m.label}
+                  </Option>
                 ))}
               </Select>
             </Grid>
@@ -294,20 +232,36 @@ export default function EventsPage() {
         </Sheet>
 
         {/* Results section */}
-        {filteredEvents.length > 0 ? (
+        {loading ? (
           <Grid container spacing={3}>
-            {filteredEvents.map((event, index) => (
-              <Grid xs={12} sm={6} lg={4} key={index}>
-                <EventCard
-                  title={event.title}
-                  date={event.date}
-                  location={event.location}
-                  description={event.description}
-                  category={event.category}
-                  imageUrl={event.imageUrl}
-                />
+            {[1, 2, 3].map((n) => (
+              <Grid key={n} xs={12} sm={6} lg={4}>
+                <Skeleton variant="rectangular" height={300} />
               </Grid>
             ))}
+          </Grid>
+        ) : filteredEvents.length > 0 ? (
+          <Grid container spacing={3}>
+            {filteredEvents.map((event) => {
+              const locationLabel = event.location?.address
+                ? `${event.location.name}, ${event.location.address}`
+                : event.location?.name ?? 'Lokalizacja do ustalenia';
+              const categoryLabel = event.category?.id ?? 'inne';
+              return (
+                <Grid xs={12} sm={6} lg={4} key={event.slug}>
+                  <EventCard
+                    title={event.title}
+                    startAt={event.startAt}
+                    endAt={event.endAt}
+                    location={locationLabel}
+                    description={event.description}
+                    category={categoryLabel}
+                    imageUrl={event.featuredImageUrl ?? undefined}
+                    detailsHref={`/events/${event.slug}`}
+                  />
+                </Grid>
+              );
+            })}
           </Grid>
         ) : (
           <Sheet variant="outlined" sx={{ textAlign: 'center', py: 5, px: 2, borderRadius: 'md', bgcolor: 'background.surface' }}>

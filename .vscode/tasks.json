@@ -1,0 +1,105 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev: Portal (radzyn.city)",
+      "type": "shell",
+      "command": "pnpm dev",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "browser"
+      }
+    },
+    {
+      "label": "Dev: Shared GeoMap (@radzyn/geo-map)",
+      "type": "shell",
+      "command": "cd guide/packages/geo-map && pnpm dev",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "group": "dev"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "package"
+      }
+    },
+    {
+      "label": "Supabase: Start",
+      "type": "shell",
+      "command": "cd guide && supabase start",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "database"
+      }
+    },
+    {
+      "label": "Supabase: Serve Functions",
+      "type": "shell",
+      "command": "cd guide && supabase functions serve api-v1 --no-verify-jwt",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "terminal"
+      }
+    },
+    {
+      "label": "Scrape: All News",
+      "type": "shell",
+      "command": "pnpm scrape",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "cloud-download"
+      }
+    },
+    {
+      "label": "Test: Playwright",
+      "type": "shell",
+      "command": "pnpm test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "test-view-icon"
+      }
+    },
+    {
+      "label": "Run All Dev Services",
+      "dependsOn": [
+        "Dev: Portal (radzyn.city)",
+        "Dev: Shared GeoMap (@radzyn/geo-map)",
+        "Supabase: Serve Functions"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      },
+      "problemMatcher": [],
+      "icon": {
+        "id": "play-circle"
+      }
+    }
+  ]
+}

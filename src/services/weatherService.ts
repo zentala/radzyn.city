@@ -116,14 +116,9 @@ const CACHE_TIME = 30 * 60 * 1000;
 
 // Cache storage
 let weatherCache: {
-  current?: { data: CurrentWeather; timestamp: number };
-  forecast?: { data: ForecastResponse; timestamp: number };
+  current?: { data: CurrentWeather; timestamp: number; isDemo: boolean };
+  forecast?: { data: ForecastResponse; timestamp: number; isDemo: boolean };
 } = {};
-
-// API configuration
-const API_BASE_URL = 'https://api.openweathermap.org/data/2.5';
-const CITY = 'Radzyn Podlaski,pl';
-const UNITS = 'metric';
 
 // Helper to check if cache is valid
 const isCacheValid = (timestamp: number) => {
@@ -143,14 +138,8 @@ const formatTime = (timestamp: number, timezone: number = 0): string => {
   return `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
 };
 
-// Get API key with fallback to demo mode
-const getApiKey = (): string | null => {
-  const apiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
-  if (!apiKey || apiKey === 'DEMO_KEY') {
-    return null;
-  }
-  return apiKey;
-};
+// Weather data is fetched via server-side API routes (/api/weather/*),
+// so the OpenWeather API key stays on the server (OPENWEATHER_API_KEY).
 
 // Process forecast data to get daily forecast
 const processForecastData = (forecastData: ForecastResponse): DailyForecast[] => {
@@ -342,35 +331,21 @@ const createMockForecast = (): ForecastResponse => {
 export const getCurrentWeather = async (forceFresh = false): Promise<{ data: CurrentWeather; isDemo: boolean }> => {
   // Use cache if available and valid
   if (!forceFresh && weatherCache.current && isCacheValid(weatherCache.current.timestamp)) {
-    return { data: weatherCache.current.data, isDemo: !getApiKey() };
+    return { data: weatherCache.current.data, isDemo: weatherCache.current.isDemo };
   }
-  
-  const apiKey = getApiKey();
-  
-  // Use mock data if no API key
-  if (!apiKey) {
-    const mockData = {...mockWeatherData};
-    weatherCache.current = { data: mockData, timestamp: Date.now() };
-    return { data: mockData, isDemo: true };
-  }
-  
+
   try {
-    const response = await axios.get<CurrentWeather>(`${API_BASE_URL}/weather`, {
-      params: {
-        q: CITY,
-        units: UNITS,
-        appid: apiKey
-      }
-    });
+    const response = await axios.get<CurrentWeather>('/api/weather/current');
     
     // Update cache
-    weatherCache.current = { data: response.data, timestamp: Date.now() };
+    weatherCache.current = { data: response.data, timestamp: Date.now(), isDemo: false };
     return { data: response.data, isDemo: false };
   } catch (error) {
     console.error('Error fetching current weather:', error);
     
     // Fallback to mock data on error
     const mockData = {...mockWeatherData};
+    weatherCache.current = { data: mockData, timestamp: Date.now(), isDemo: true };
     return { data: mockData, isDemo: true };
   }
 };
@@ -380,30 +355,14 @@ export const getWeatherForecast = async (forceFresh = false): Promise<{ data: Da
   // Use cache if available and valid
   if (!forceFresh && weatherCache.forecast && isCacheValid(weatherCache.forecast.timestamp)) {
     const processedData = processForecastData(weatherCache.forecast.data);
-    return { data: processedData, isDemo: !getApiKey() };
+    return { data: processedData, isDemo: weatherCache.forecast.isDemo };
   }
-  
-  const apiKey = getApiKey();
-  
-  // Use mock data if no API key
-  if (!apiKey) {
-    const mockData = createMockForecast();
-    weatherCache.forecast = { data: mockData, timestamp: Date.now() };
-    const processedData = processForecastData(mockData);
-    return { data: processedData, isDemo: true };
-  }
-  
+
   try {
-    const response = await axios.get<ForecastResponse>(`${API_BASE_URL}/forecast`, {
-      params: {
-        q: CITY,
-        units: UNITS,
-        appid: apiKey
-      }
-    });
+    const response = await axios.get<ForecastResponse>('/api/weather/forecast');
     
     // Update cache
-    weatherCache.forecast = { data: response.data, timestamp: Date.now() };
+    weatherCache.forecast = { data: response.data, timestamp: Date.now(), isDemo: false };
     const processedData = processForecastData(response.data);
     return { data: processedData, isDemo: false };
   } catch (error) {
@@ -411,6 +370,7 @@ export const getWeatherForecast = async (forceFresh = false): Promise<{ data: Da
     
     // Fallback to mock data on error
     const mockData = createMockForecast();
+    weatherCache.forecast = { data: mockData, timestamp: Date.now(), isDemo: true };
     const processedData = processForecastData(mockData);
     return { data: processedData, isDemo: true };
   }

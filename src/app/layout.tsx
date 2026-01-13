@@ -1,9 +1,11 @@
+import React from 'react';
 import type { Metadata } from 'next';
 import { Navigation } from '@/components/layout/Navigation';
 import { Footer } from '@/components/layout/Footer';
 import './globals.css';
+import 'leaflet/dist/leaflet.css';
 import ThemeRegistry from '@/components/ThemeRegistry';
-import { Box, Stack } from '@mui/joy';
+import { Box } from '@mui/joy';
 
 export const metadata: Metadata = {
   title: {

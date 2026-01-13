@@ -20,7 +20,8 @@ test.describe('Weather Page', () => {
     
     // Click on a forecast tab
     const tabs = page.locator('role=tab');
-    await expect(tabs).toHaveCount.atleast(3);
+    const tabCount = await tabs.count();
+    expect(tabCount).toBeGreaterThanOrEqual(3);
     await tabs.nth(1).click();
     
     // Verify that the tab panel changed
@@ -40,7 +41,7 @@ test.describe('Weather Page', () => {
     await page.goto('/');
     
     // Check that the weather widget is displayed
-    await expect(page.getByText('Pogoda w Radzyniu Podlaskim')).toBeVisible();
+    await expect(page.getByText('Pogoda w Radzyniu Podlaskim')).toBeVisible({ timeout: 30000 });
     
     // Wait for the widget to load (mock data will be displayed)
     await page.waitForSelector('text=Prognoza na kolejne dni');

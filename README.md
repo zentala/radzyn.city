@@ -27,8 +27,11 @@ Otwarty portal dla miasta Radzyń Podlaski i powiatu radzyńskiego, oferujący i
 # Zainstaluj zależności
 pnpm install
 
-# Skopiuj plik zmiennych środowiskowych i dodaj swoje klucze API
-cp .env.local.example .env.local
+# Utwórz .env.local i dodaj swoje klucze API (plik nie jest commitowany)
+cat > .env.local << 'EOF'
+# OpenWeatherMap API key (server-side, not exposed to the browser)
+OPENWEATHER_API_KEY=YOUR_KEY_HERE
+EOF
 
 # Uruchom serwer deweloperski
 pnpm dev

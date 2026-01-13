@@ -18,6 +18,14 @@ export default function WeatherWidget() {
   const [error, setError] = useState('');
   const [isDemo, setIsDemo] = useState(false);
 
+  const formatShortDate = (isoDate: string): string => {
+    // isoDate: YYYY-MM-DD
+    const parts = isoDate.split('-');
+    if (parts.length !== 3) return isoDate;
+    const [, month, day] = parts;
+    return `${day}.${month}`;
+  };
+
   const fetchWeather = async () => {
     try {
       setLoading(true);
@@ -47,7 +55,9 @@ export default function WeatherWidget() {
   if (error) {
     return (
       <SectionWrapper title="Pogoda w Radzyniu Podlaskim">
-        <Alert severity="error">{error}</Alert>
+        <Alert color="danger" variant="soft">
+          {error}
+        </Alert>
       </SectionWrapper>
     );
   }
@@ -55,7 +65,7 @@ export default function WeatherWidget() {
   const widgetContent = !weather ? null : (
     <>
       {isDemo && (
-        <Alert severity="info" sx={{ mb: 3 }} variant="soft" size="sm">
+        <Alert color="primary" sx={{ mb: 3 }} variant="soft" size="sm">
           Tryb demonstracyjny - dane pogodowe są symulowane
         </Alert>
       )}
@@ -145,10 +155,19 @@ export default function WeatherWidget() {
                   sx={{
                     fontWeight: 'bold',
                     color: 'text.primary',
-                    mb: 1
+                    mb: 0.25
                   }}
                 >
-                  {day.dayName.substring(0, 3)}
+                  {day.dayShort}
+                </Typography>
+                <Typography
+                  level="body-xs"
+                  sx={{
+                    color: 'text.tertiary',
+                    mb: 1,
+                  }}
+                >
+                  {formatShortDate(day.date)}
                 </Typography>
                 <Box sx={{
                   display: 'flex',

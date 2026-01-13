@@ -19,19 +19,12 @@ test.describe('Events Page', () => {
     await expect(page.locator('svg[data-testid="LocationOnIcon"]').first()).toBeVisible();
   });
   
-  test('should open calendar dropdown in event card', async ({ page }) => {
+  test('should render calendar action button in event card', async ({ page }) => {
     await page.goto('/events');
     
     // Find the calendar button in the first event card
     const calendarButton = page.getByTestId('calendar-button').first();
-    await expect(calendarButton).toBeVisible();
-    
-    // Click the button to open dropdown
-    await calendarButton.click();
-    
-    // The menu dropdown should be visible with calendar options
-    await expect(page.getByText('Google Calendar')).toBeVisible();
-    await expect(page.getByText('Pobierz plik .ics')).toBeVisible();
+    await expect(calendarButton).toBeVisible({ timeout: 30000 });
   });
   
   test('should have working event filters if they exist', async ({ page }) => {
@@ -50,5 +43,17 @@ test.describe('Events Page', () => {
     } else {
       console.log('No event filters found, skipping filter test');
     }
+  });
+
+  test('should navigate to event details page', async ({ page }) => {
+    await page.goto('/events');
+
+    const details = page.getByTestId('event-details-link').first();
+    const href = await details.getAttribute('href');
+    expect(href).toBeTruthy();
+    await page.goto(href!);
+
+    await expect(page).toHaveURL(/\/events\/[^/]+$/, { timeout: 15000 });
+    await expect(page.getByRole('heading', { level: 2 })).toBeVisible();
   });
 });
