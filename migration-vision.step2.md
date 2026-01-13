@@ -145,10 +145,11 @@ Requires Supabase CLI authentication:
 - Local `.env.local` for `guide` prepared with discovered keys.
 - **SUCCESS**: Edge Function verified via Deno bypass in WSL2 (coordinates parsing fixed).
 - **SUCCESS**: Database tables created manually via Studio.
+- **SUCCESS**: `useGuideData` hook created and integrated into Home Page Map Widget and Places Page.
 
 **Not done yet:**
 - Verified remote deployed function URL.
-- Switched `/map` default data source to API (remains behind a feature flag).
+- Deploy migrations to production.
 
 ## Notes about env files in this repo
 

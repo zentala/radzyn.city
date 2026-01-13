@@ -71,9 +71,10 @@
 - [x] Add minimal observability (API errors, empty state, fallback UI)
 - [x] Create Supabase Edge Functions API v1 in `guide` (implemented + queries fixed)
 - [x] Configure local env for Edge Function (`guide/supabase/.env.local`)
-- [ ] Deploy + verify Supabase Edge Function (local serve + curl, then deploy + curl)
-- [ ] Set `NEXT_PUBLIC_GUIDE_API_BASE_URL` to the *Supabase API gateway* host (not Studio)
-- [ ] Connect `radzyn.city` to use API as primary source (keep local fallback until stable)
+- [x] Verified local Edge Function serve via terminal (Deno bypass for WSL2)
+- [x] Sync Home Page and Places Page with new API source (useGuideData hook)
+- [ ] Deploy + verify Supabase Edge Function to production Supabase
+- [ ] Set `NEXT_PUBLIC_GUIDE_API_BASE_URL` for production env
 - [ ] Finalize docs: use `migration-vision.step2.md` as the single source of truth
 
 ---
@@ -88,3 +89,9 @@
 - [ ] Admin moderation UI (status changes, merging duplicates)
 - [ ] API endpoints (public read, public vote, admin update)
 
+
+---
+
+## ✅ Completed Features
+- [x] **Developer Experience**: Added VS Code tasks and launch configurations for project services (Portal, GeoMap package, Supabase, Scraper)
+- [x] **Graceful Shutdown**: Implemented port checking and cleanup handlers for dev server and background services

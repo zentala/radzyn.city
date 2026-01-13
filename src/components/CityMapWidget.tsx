@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import { Box, Typography } from '@mui/joy';
+import { useState, useMemo } from 'react';
+import { Box, Typography, Skeleton } from '@mui/joy';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { locations, CATEGORY_COLORS } from '@/utils/locationData';
+import { CATEGORY_COLORS } from '@/utils/locationData';
 import { LocationPoint } from './Map';
 import SectionWrapper from './SectionWrapper';
 import Button from './foundation/Button';
 import MapIcon from '@mui/icons-material/Map';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useGuideData } from '@/hooks/useGuideData';
 
 // Dynamically import the Map component with no SSR to avoid leaflet issues
 const Map = dynamic(() => import('./Map'), { ssr: false });
@@ -19,7 +20,22 @@ interface CityMapWidgetProps {
 }
 
 export default function CityMapWidget({ widgetSize = 'medium' }: CityMapWidgetProps) {
-  const [selectedLocation, setSelectedLocation] = useState<LocationPoint | null>(null);
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
+  const { pois, loading } = useGuideData();
+
+  const mapLocations = useMemo(() => {
+    return pois.map(p => ({
+      id: p.id,
+      name: p.name,
+      position: [p.coordinates[1], p.coordinates[0]] as [number, number],
+      category: p.category?.name || 'Inne',
+      description: p.description
+    }));
+  }, [pois]);
+
+  const selectedLocation = useMemo(() => {
+    return mapLocations.find(l => l.id === selectedLocationId) || null;
+  }, [mapLocations, selectedLocationId]);
   
   // Determine map height based on widget size
   const getMapHeight = () => {
@@ -79,13 +95,17 @@ export default function CityMapWidget({ widgetSize = 'medium' }: CityMapWidgetPr
             } : {}
           }}
         >
-          <Map
-            locations={locations}
-            height={getMapHeight()}
-            center={selectedLocation ? selectedLocation.position : undefined}
-            onMarkerClick={setSelectedLocation}
-            selectedLocationId={selectedLocation?.id}
-          />
+          {loading ? (
+            <Skeleton variant="rectangular" height={getMapHeight()} />
+          ) : (
+            <Map
+              locations={mapLocations}
+              height={getMapHeight()}
+              center={selectedLocation ? selectedLocation.position : undefined}
+              onMarkerClick={(loc: LocationPoint) => setSelectedLocationId(loc.id)}
+              selectedLocationId={selectedLocationId || undefined}
+            />
+          )}
 
           {selectedLocation && (
             <Box sx={{
