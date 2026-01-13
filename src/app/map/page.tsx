@@ -1,6 +1,3 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { Section } from '@/components/layout/Section';
 import { Typography } from '@/components/foundation/Typography';

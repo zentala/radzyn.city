@@ -115,9 +115,9 @@
 
 ### Phase 1: Persistence & Tracking
 - [x] Create Supabase schema for `news_sources`, `news_articles`, and `news_categories`
-- [ ] Implement central scraper configuration (selectors + frequencies)
-- [ ] Migrate `scraperService.ts` to use Supabase instead of memory
-- [ ] Implement deduplication logic based on `source_url`
+- [x] Implement central scraper configuration (selectors + frequencies)
+- [x] Migrate `scraperService.ts` to use Supabase instead of memory
+- [x] Implement deduplication logic based on `source_url`
 
 ### Phase 2: Implementation & Integration
 - [ ] Implement `iledzisiaj.pl` scraper (cheerio/puppeteer)

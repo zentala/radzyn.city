@@ -1,10 +1,10 @@
 import { NewsArticleData } from '../utils/types';
-import { addNewsArticle } from './newsService';
 import * as cheerio from 'cheerio';
-import * as db from '../utils/db';
+import { supabase } from '../lib/supabase';
 import { analyzeContent, categorizeArticle, extractTags as aiExtractTags, generateSummary } from './aiService';
+import { NEWS_SOURCES_CONFIG } from './scraper/config';
 
-// Dynamically import puppeteer only in server context to avoid client-side issues
+// Dynamically import puppeteer only in server context
 let puppeteer: any = null;
 if (typeof window === 'undefined') {
   import('puppeteer').then(module => {
@@ -14,8 +14,8 @@ if (typeof window === 'undefined') {
   });
 }
 
-// Interface for a scraper configuration
-interface ScraperConfig {
+export interface ScraperConfig {
+  sourceId?: string;
   sourceName: string;
   sourceUrl: string;
   selectors: {
@@ -26,49 +26,11 @@ interface ScraperConfig {
     image?: string;
     link?: string;
   };
-  // How often to scrape (in minutes)
   scrapeInterval: number;
-  // Whether to use puppeteer (for JS-heavy sites) instead of simple fetch
   usePuppeteer?: boolean;
-  // Whether to follow links to scrape full article content
   followLinks?: boolean;
-  // Date format pattern to parse
   dateFormat?: string;
 }
-
-// Configuration for each source we want to scrape
-const scraperConfigs: ScraperConfig[] = [
-  {
-    sourceName: 'Radzyń Info',
-    sourceUrl: 'https://example.com/radzyn-info',
-    selectors: {
-      articles: '.article-item',
-      title: '.article-title',
-      content: '.article-content',
-      date: '.article-date',
-      image: '.article-image img',
-      link: '.article-title a'
-    },
-    scrapeInterval: 60, // Check every hour
-    usePuppeteer: false,
-    followLinks: true
-  },
-  {
-    sourceName: 'Radzyń Podlaski (Oficjalna strona)',
-    sourceUrl: 'https://www.radzyn-podl.pl',
-    selectors: {
-      articles: '.news-item',
-      title: '.news-title',
-      content: '.news-text',
-      date: '.news-date',
-      image: '.news-image img',
-      link: '.news-title a'
-    },
-    scrapeInterval: 120, // Check every 2 hours
-    usePuppeteer: false,
-    followLinks: true
-  }
-];
 
 // Generate a slug from a title
 const generateSlug = (title: string): string => {
@@ -80,357 +42,190 @@ const generateSlug = (title: string): string => {
     .trim();
 };
 
-// Format a date string based on various potential input formats
+// Format a date string
 const formatDate = (dateStr: string): string => {
-  // Try to parse the date using different patterns
   try {
     let date: Date;
-    
-    // Check if the date is already in ISO format
     if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(dateStr)) {
       return dateStr;
     }
-    
-    // Polish date format: "dd.mm.yyyy" or "dd.mm.yyyy hh:mm"
     if (/^\d{1,2}\.\d{1,2}\.\d{4}/.test(dateStr)) {
       const [datePart, timePart] = dateStr.split(' ');
       const [day, month, year] = datePart.split('.').map(Number);
-      
       if (timePart) {
         const [hour, minute] = timePart.split(':').map(Number);
         date = new Date(year, month - 1, day, hour, minute);
       } else {
         date = new Date(year, month - 1, day);
       }
-      
       return date.toISOString();
     }
-    
-    // Try standard Date parsing as a fallback
     date = new Date(dateStr);
-    if (!isNaN(date.getTime())) {
-      return date.toISOString();
-    }
-    
-    // If all else fails, use current date
-    return new Date().toISOString();
+    return isNaN(date.getTime()) ? new Date().toISOString() : date.toISOString();
   } catch (error) {
-    console.error('Error parsing date:', dateStr, error);
     return new Date().toISOString();
   }
 };
 
-// Fetch HTML content with fetch API
+// Fetch HTML
 const fetchHtml = async (url: string): Promise<string> => {
   const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
-  }
+  if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.status}`);
   return await response.text();
 };
 
-// Fetch HTML content with puppeteer for JavaScript-heavy sites
+// Fetch HTML with Puppeteer
 const fetchHtmlWithPuppeteer = async (url: string): Promise<string> => {
-  // If in client-side environment or puppeteer failed to load, use fallback
-  if (typeof window !== 'undefined' || !puppeteer) {
-    console.warn('Puppeteer is not available in this environment, using fetch instead');
-    return fetchHtml(url);
-  }
-  
-  console.log(`Starting puppeteer to fetch: ${url}`);
-  const browser = await puppeteer.launch({
-    headless: 'new',
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-  
+  if (typeof window !== 'undefined' || !puppeteer) return fetchHtml(url);
+  const browser = await puppeteer.launch({ headless: 'new', args: ['--no-sandbox'] });
   try {
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-    
-    // Wait a bit to ensure all content is loaded
-    await page.waitForTimeout(2000);
-    
-    const content = await page.content();
-    return content;
+    return await page.content();
   } finally {
     await browser.close();
-    console.log(`Puppeteer closed for: ${url}`);
   }
 };
 
-// Extract the value of an attribute from a selected element
-const extractAttribute = ($element: cheerio.Cheerio, selector: string, attribute: string): string | null => {
-  const el = $element.find(selector);
-  if (el.length === 0) return null;
-  return el.attr(attribute) || null;
-};
-
-// Resolve relative URLs to absolute URLs
 const resolveUrl = (baseUrl: string, relativeUrl: string | null): string | null => {
   if (!relativeUrl) return null;
   if (relativeUrl.startsWith('http')) return relativeUrl;
-  
   try {
-    const url = new URL(relativeUrl, baseUrl);
-    return url.toString();
-  } catch (error) {
-    console.error(`Error resolving URL ${relativeUrl} with base ${baseUrl}:`, error);
+    return new URL(relativeUrl, baseUrl).toString();
+  } catch {
     return null;
   }
 };
 
-// Scrape a single article's full content by following its link
-const scrapeArticleContent = async (
-  articleUrl: string,
-  config: ScraperConfig
-): Promise<{ content: string, imageUrl: string | null }> => {
+const scrapeArticleContent = async (articleUrl: string, config: ScraperConfig): Promise<{ content: string, imageUrl: string | null }> => {
   try {
-    const html = config.usePuppeteer 
-      ? await fetchHtmlWithPuppeteer(articleUrl)
-      : await fetchHtml(articleUrl);
-    
+    const html = config.usePuppeteer ? await fetchHtmlWithPuppeteer(articleUrl) : await fetchHtml(articleUrl);
     const $ = cheerio.load(html);
-    
-    // Extract the full content
-    const contentEl = $(config.selectors.content);
-    const content = contentEl.text().trim();
-    
-    // Extract image if available
+    const content = $(config.selectors.content).text().trim();
     let imageUrl: string | null = null;
     if (config.selectors.image) {
-      const imgEl = $(config.selectors.image);
-      imageUrl = imgEl.attr('src') || null;
-      
-      if (imageUrl) {
-        imageUrl = resolveUrl(articleUrl, imageUrl);
-      }
+      imageUrl = resolveUrl(articleUrl, $(config.selectors.image).attr('src') || null);
     }
-    
     return { content, imageUrl };
   } catch (error) {
-    console.error(`Error scraping article content from ${articleUrl}:`, error);
+    console.error(`Error scraping ${articleUrl}:`, error);
     return { content: '', imageUrl: null };
   }
 };
 
-// Scrape articles from a source
-export const scrapeSource = async (config: ScraperConfig): Promise<void> => {
+export const scrapeSource = async (config: ScraperConfig, sourceId: string): Promise<void> => {
   try {
-    console.log(`Scraping ${config.sourceName} at ${config.sourceUrl}`);
-    
-    // Check if we've scraped this source recently to avoid duplicates
-    const lastScrape = db.getLastScrape(config.sourceName);
-    const now = Date.now();
-    
-    if (lastScrape && (now - lastScrape.timestamp < config.scrapeInterval * 60 * 1000)) {
-      console.log(`Skipping ${config.sourceName} - scraped recently (${Math.round((now - lastScrape.timestamp) / 60000)} minutes ago)`);
-      return;
+    console.log(`Scraping ${config.sourceName} (${sourceId})`);
+
+    // Check last scrape from Supabase
+    const { data: sourceData } = await supabase
+      .from('news_sources')
+      .select('last_scrape_at, frequency_minutes')
+      .eq('id', sourceId)
+      .single();
+
+    if (sourceData?.last_scrape_at) {
+      const lastScrape = new Date(sourceData.last_scrape_at).getTime();
+      const now = Date.now();
+      if (now - lastScrape < (sourceData.frequency_minutes || config.scrapeInterval) * 60 * 1000) {
+        console.log(`Skipping ${config.sourceName} - too soon`);
+        return;
+      }
     }
-    
-    // Fetch the HTML from the source
-    const html = config.usePuppeteer 
-      ? await fetchHtmlWithPuppeteer(config.sourceUrl)
-      : await fetchHtml(config.sourceUrl);
-    
-    // Parse the HTML with cheerio
+
+    const html = config.usePuppeteer ? await fetchHtmlWithPuppeteer(config.sourceUrl) : await fetchHtml(config.sourceUrl);
     const $ = cheerio.load(html);
-    
-    // Find all article elements
     const articleElements = $(config.selectors.articles);
-    console.log(`Found ${articleElements.length} potential articles on ${config.sourceName}`);
-    
-    if (articleElements.length === 0) {
-      console.warn(`No articles found on ${config.sourceName} using selector ${config.selectors.articles}`);
-      return;
-    }
-    
-    // Track scraped URLs to avoid duplicates
-    const scrapedUrls: string[] = [];
-    
-    // Process each article element
-    const scrapedArticlesPromises = Array.from(articleElements).map(async (element, index) => {
+
+    for (const element of Array.from(articleElements)) {
       try {
-        const $element = $(element);
-        
-        // Extract title
-        const title = $element.find(config.selectors.title).text().trim();
-        if (!title) {
-          console.warn(`Skipping article with empty title at index ${index}`);
-          return null;
+        const $el = $(element);
+        const title = $el.find(config.selectors.title).text().trim();
+        if (!title) continue;
+
+        let articleUrl = resolveUrl(config.sourceUrl, $el.find(config.selectors.link || 'a').attr('href') || null);
+        if (!articleUrl) continue;
+
+        // Deduplication check
+        const { data: existing } = await supabase
+          .from('news_articles')
+          .select('id')
+          .eq('source_url', articleUrl)
+          .maybeSingle();
+
+        if (existing) {
+          console.log(`Already have: ${title}`);
+          continue;
         }
+
+        console.log(`New article found: ${title}`);
         
-        // Extract article link if available
-        let articleUrl: string | null = null;
-        if (config.selectors.link) {
-          const linkHref = extractAttribute($element, config.selectors.link, 'href');
-          articleUrl = resolveUrl(config.sourceUrl, linkHref);
-        }
-        
-        // Skip if we've already processed this URL
-        if (articleUrl && lastScrape && lastScrape.urls.includes(articleUrl)) {
-          console.log(`Skipping already scraped article: ${title}`);
-          scrapedUrls.push(articleUrl);
-          return null;
-        }
-        
-        // Extract date
-        let dateText = $element.find(config.selectors.date).text().trim();
-        let date = formatDate(dateText);
-        
-        // Extract content and image
         let content: string;
         let imageUrl: string | null = null;
-        
-        // If we should follow links to get full content
-        if (config.followLinks && articleUrl) {
-          const articleData = await scrapeArticleContent(articleUrl, config);
-          content = articleData.content;
-          imageUrl = articleData.imageUrl;
+
+        if (config.followLinks) {
+          const detailed = await scrapeArticleContent(articleUrl, config);
+          content = detailed.content;
+          imageUrl = detailed.imageUrl;
         } else {
-          // Just extract the content from the list page
-          content = $element.find(config.selectors.content).text().trim();
-          
-          // Extract image if available
-          if (config.selectors.image) {
-            const imgSrc = extractAttribute($element, config.selectors.image, 'src');
-            imageUrl = resolveUrl(config.sourceUrl, imgSrc);
-          }
+          content = $el.find(config.selectors.content).text().trim();
+          imageUrl = resolveUrl(config.sourceUrl, $el.find(config.selectors.image || 'img').attr('src') || null);
         }
-        
-        // Skip if we couldn't extract meaningful content
-        if (!content || content.length < 20) {
-          console.warn(`Skipping article with insufficient content: ${title}`);
-          return null;
-        }
-        
-        // Generate slug
+
+        if (!content || content.length < 20) continue;
+
+        const date = formatDate($el.find(config.selectors.date).text().trim());
         const slug = generateSlug(title);
-        
-        // Use AI to categorize and extract tags
         const categoryId = await categorizeArticle(title, content);
         const tagIds = await aiExtractTags(title, content);
-        
-        // Generate a summary if content is long
-        const summary = content.length > 200
-          ? await generateSummary(content)
-          : content.split('.')[0] + '.';
-        
-        // Get AI analysis
+        const summary = content.length > 200 ? await generateSummary(content) : content;
         const aiAnalysis = await analyzeContent(title, content);
-        
-        // Create article data
-        const articleData: Omit<NewsArticleData, 'id'> = {
-          title,
-          summary,
-          content,
-          date,
-          sourceUrl: articleUrl || config.sourceUrl,
-          sourceName: config.sourceName,
-          categoryId,
-          tagIds,
-          slug,
-          featured: index === 0, // First article is featured
-          imageUrl,
-          aiAnalysis
-        };
-        
-        // If this article has a URL, add it to scraped URLs
-        if (articleUrl) {
-          scrapedUrls.push(articleUrl);
-        }
-        
-        return articleData;
-      } catch (error) {
-        console.error(`Error processing article at index ${index}:`, error);
-        return null;
+
+        const { error: insertError } = await supabase
+          .from('news_articles')
+          .insert({
+            title,
+            summary,
+            content,
+            published_at: date,
+            source_url: articleUrl,
+            source_name: config.sourceName,
+            source_id: sourceId,
+            category_id: categoryId,
+            tag_ids: tagIds,
+            slug,
+            image_url: imageUrl,
+            ai_analysis: aiAnalysis
+          });
+
+        if (insertError) console.error(`Error saving ${title}:`, insertError);
+        else console.log(`Saved: ${title}`);
+
+      } catch (err) {
+        console.error('Error processing element:', err);
       }
-    });
-    
-    // Wait for all article promises to resolve
-    const scrapedArticles = (await Promise.all(scrapedArticlesPromises)).filter(Boolean) as Omit<NewsArticleData, 'id'>[];
-    
-    console.log(`Processed ${scrapedArticles.length} valid articles from ${config.sourceName}`);
-    
-    // Save the scraped articles to the database
-    for (const article of scrapedArticles) {
-      await addNewsArticle(article);
     }
-    
-    // Update last scrape time and URLs
-    db.updateLastScrape(config.sourceName, scrapedUrls);
-    
-    console.log(`Successfully scraped ${scrapedArticles.length} articles from ${config.sourceName}`);
+
+    // Update last scrape time
+    await supabase
+      .from('news_sources')
+      .update({ last_scrape_at: new Date().toISOString() })
+      .eq('id', sourceId);
+
   } catch (error) {
-    console.error(`Error scraping ${config.sourceName}:`, error);
+    console.error(`Scrape failed for ${config.sourceName}:`, error);
   }
 };
 
-// Start the scraper for all configured sources
 export const startScrapers = async (): Promise<void> => {
-  // Skip operation entirely if we're in client-side environment
-  // This ensures we don't try to do server-side operations in the browser
-  if (typeof window !== 'undefined') {
-    console.log('Running in browser environment - only fetching existing news');
-    return;
-  }
-
-  console.log('Starting news scrapers in server environment...');
-  
-  // Initial scrape of all sources
-  for (const config of scraperConfigs) {
-    await scrapeSource(config);
-  }
-  
-  // Note: In a production environment, we would NOT set up intervals here.
-  // Instead, we would use a separate cron job or scheduled task to run the
-  // scraper at regular intervals. Setting intervals here is only for development
-  // and demo purposes and might cause memory leaks in long-running applications.
-  
-  console.log('News scrapers started successfully');
-};
-
-// Stop all running scrapers (used for cleanup)
-export const stopScrapers = (): void => {
-  console.log('Stopping news scrapers...');
-  
-  // No-op in both client and server environments since we're not using intervals anymore
-  console.log('No running scrapers to stop');
-};
-
-// Export the scraperConfigs for testing or admin panels
-export const getScraperConfigs = (): ScraperConfig[] => {
-  return [...scraperConfigs];
-};
-
-// Add or update a scraper configuration
-export const updateScraperConfig = (config: ScraperConfig): ScraperConfig => {
-  const existingIndex = scraperConfigs.findIndex(c => c.sourceName === config.sourceName);
-  
-  if (existingIndex !== -1) {
-    // Update existing config
-    scraperConfigs[existingIndex] = {
-      ...scraperConfigs[existingIndex],
-      ...config
-    };
-    return scraperConfigs[existingIndex];
-  } else {
-    // Add new config
-    scraperConfigs.push(config);
-    return config;
+  if (typeof window !== 'undefined') return;
+  console.log('Starting scrapers...');
+  for (const [id, config] of Object.entries(NEWS_SOURCES_CONFIG)) {
+    await scrapeSource(config, id);
   }
 };
 
-// Remove a scraper configuration
-export const removeScraperConfig = (sourceName: string): boolean => {
-  const initialLength = scraperConfigs.length;
-  const newConfigs = scraperConfigs.filter(c => c.sourceName !== sourceName);
-  
-  if (newConfigs.length !== initialLength) {
-    // Update the array in place
-    scraperConfigs.length = 0;
-    scraperConfigs.push(...newConfigs);
-    return true;
-  }
-  
-  return false;
+export const getScraperConfigs = () => {
+  console.log('DEBUG: getScraperConfigs called, keys:', Object.keys(NEWS_SOURCES_CONFIG));
+  return NEWS_SOURCES_CONFIG;
 };

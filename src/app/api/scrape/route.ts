@@ -9,13 +9,17 @@ export async function GET(request: Request) {
     if (source) {
       // Scrape a specific source
       const configs = getScraperConfigs();
-      const sourceConfig = configs.find(config => config.sourceName.toLowerCase() === source.toLowerCase());
+      const sourceEntry = Object.entries(configs).find(([id, config]) => 
+        id.toLowerCase() === source.toLowerCase() || 
+        config.sourceName.toLowerCase() === source.toLowerCase()
+      );
       
-      if (!sourceConfig) {
+      if (!sourceEntry) {
         return NextResponse.json({ error: 'Source not found' }, { status: 404 });
       }
       
-      await scrapeSource(sourceConfig);
+      const [sourceId, sourceConfig] = sourceEntry;
+      await scrapeSource(sourceConfig, sourceId);
       return NextResponse.json({ 
         message: `Successfully scraped source: ${sourceConfig.sourceName}`,
         source: sourceConfig.sourceName

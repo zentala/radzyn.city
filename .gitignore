@@ -39,3 +39,7 @@ next-env.d.ts
 
 # deno
 deno
+
+# Claude Code
+
+tmpclaude*
