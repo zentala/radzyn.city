@@ -38,6 +38,14 @@
    - Use MUI Skeleton components
    - Implement loading states for data-dependent components
 
+## Database Commands (Self-hosted Supabase)
+- `pnpm db:push` - Push migrations to database (uses PowerShell script, reads .env)
+- `pnpm db:clean` - Drop all tables (with confirmation)
+- VS Code Task: Ctrl+Shift+P → "Supabase: Push Migrations"
+- Database: postgres@localhost:5433 (supabase/postgres with PostGIS)
+- Studio: https://supabase.dev.zntl
+- See SUPABASE.md for details
+
 ## Code Standards
 - Write all comments, UI text, and code in English
 - Include JSDoc comments for future developer reference

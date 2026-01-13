@@ -1,3 +1,6 @@
 [submodule "guide"]
 	path = guide
 	url = git@github.com:zentala/guide.git
+[submodule "to-migrate"]
+	path = to-migrate
+	url = git@github.com:zentala/radzyn-connectivity-hub.git
