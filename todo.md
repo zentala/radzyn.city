@@ -111,6 +111,28 @@
 
 ---
 
+## 📰 News: Multi-source scraper system (Supabase-backed)
+
+### Phase 1: Persistence & Tracking
+- [x] Create Supabase schema for `news_sources`, `news_articles`, and `news_categories`
+- [ ] Implement central scraper configuration (selectors + frequencies)
+- [ ] Migrate `scraperService.ts` to use Supabase instead of memory
+- [ ] Implement deduplication logic based on `source_url`
+
+### Phase 2: Implementation & Integration
+- [ ] Implement `iledzisiaj.pl` scraper (cheerio/puppeteer)
+- [ ] Implement `radzyn.24wspolnota.pl` scraper
+- [ ] Implement `kochamradzyn.pl` scraper
+- [ ] Implement official city/gmina portal scrapers
+- [ ] Implement AI-driven categorization and summaries
+
+### Phase 3: Scheduling & Maintenance
+- [ ] Set up GitHub Actions workflow for periodic scraping
+- [ ] Add `frequency_minutes` check to the scraper orchestrator
+- [ ] Implement basic error reporting for failed scrapes
+
+---
+
 ## ✅ Completed Features
 - [x] **Developer Experience**: Cleaned up VS Code tasks by removing non-functional geo-map dev script and updating service dependencies
 - [x] **Developer Experience**: Added VS Code tasks and launch configurations for project services (Portal, GeoMap package, Supabase, Scraper)

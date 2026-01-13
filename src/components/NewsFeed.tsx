@@ -106,7 +106,7 @@ export default function NewsFeed({
   const loadingContent = (
     <Grid container spacing={3}>
       {Array.from({ length: limit }).map((_, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
+        <Grid xs={12} sm={6} md={4} key={index}>
           <Box sx={{ height: '100%' }}>
             <Skeleton variant="rectangular" width="100%" height={180} />
             <Box sx={{ pt: 2 }}>
@@ -143,7 +143,7 @@ export default function NewsFeed({
       <Grid container spacing={3}>
         {/* Featured news item takes up more columns */}
         {featuredNewsItem && (
-          <Grid item xs={12} md={dashboardMode ? 12 : 8}>
+          <Grid xs={12} md={dashboardMode ? 12 : 8}>
             <NewsCard
               title={featuredNewsItem.title}
               summary={featuredNewsItem.summary}
@@ -162,7 +162,7 @@ export default function NewsFeed({
         {/* Regular news items */}
         {regularNews.length > 0 ? (
           regularNews.map((news) => (
-            <Grid item xs={12} sm={6} md={dashboardMode ? 6 : 4} key={news.id}>
+            <Grid xs={12} sm={6} md={dashboardMode ? 6 : 4} key={news.id}>
               <NewsCard
                 title={news.title}
                 summary={news.summary}
@@ -177,7 +177,7 @@ export default function NewsFeed({
             </Grid>
           ))
         ) : (
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <Box sx={{ 
               textAlign: 'center', 
               py: 6, 

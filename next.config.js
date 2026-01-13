@@ -3,7 +3,13 @@ const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@radzyn/geo-map'],
   images: {
-    domains: ['openweathermap.org'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'openweathermap.org',
+        pathname: '/img/wn/**',
+      },
+    ],
   },
   // Performance optimizations
   poweredByHeader: false, // Disable x-powered-by header
