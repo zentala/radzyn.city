@@ -292,6 +292,281 @@ Jeśli chcesz jeszcze wygodniejszy dev loop i możliwość używania `pnpm -r` /
 można dodać `pnpm-workspace.yaml` w root i włączyć `guide/packages/*` do workspace.
 To nie jest wymagane do startu, ale ułatwia pracę długofalowo.
 
+---
+
+### Status wdrożenia w tym repo (zrobione) — 2026-01-13
+
+Poniżej jest **faktyczny stan kodu** w `radzyn.city` po wdrożeniu wariantu A (local `file:`) oraz minimalny zestaw testów. To jest też “checklista” dla mid devów.
+
+#### Co było przeszkodą przy “reuse” istniejących komponentów `guide`
+
+W `guide` istnieją już komponenty mapy web (`guide/src/components/geoMap/LeafletMapView.tsx`, `LeafletMapEditor.tsx`), ale są **sprzężone z aplikacją `guide`**:
+- zależą od Tailwind utility classes (`cn(...)`), wewnętrznych aliasów `@/*` i typów,
+- mają side‑effecty analytics (`trackEvent(...)`),
+- zakładają konkretne “plumbing” `guide`.
+
+W praktyce oznacza to, że najbezpieczniej jest wyciągnąć **host-agnostic** mapę do paczki i nie próbować importować gotowych komponentów `guide/src/components/geoMap/*` wprost.
+
+#### Co zostało dodane/zmienione (konkretne pliki)
+
+**1) Shared package w `guide`**
+- Dodano paczkę `@radzyn/geo-map` w: `guide/packages/geo-map/`
+- Pliki paczki (MVP, bez bundlera):
+  - `guide/packages/geo-map/package.json`
+  - `guide/packages/geo-map/index.js`
+  - `guide/packages/geo-map/index.d.ts`
+  - `guide/packages/geo-map/GeoMap.js`
+
+**Kontrakt paczki (MVP)**
+- `GeoMap` przyjmuje:
+  - `pois?: GeoMapPoi[]` (tryb “static”)
+  - `dataProvider?: GeoMapDataProvider` (tryb “API”, jeszcze placeholder viewport)
+  - `selectedPoiId?: string`, `onPoiSelect?: (poi) => void`
+  - `testId?: string` (dla E2E)
+- Format współrzędnych w paczce: **`[lng, lat]`** (zgodne z GeoJSON / `guide`).
+
+**2) Podłączenie paczki do `radzyn.city`**
+- `radzyn.city/package.json`:
+  - dodano zależność lokalną: `"@radzyn/geo-map": "file:./guide/packages/geo-map"`
+- `radzyn.city/next.config.js`:
+  - dodano: `transpilePackages: ['@radzyn/geo-map']`
+- `radzyn.city/src/app/layout.tsx`:
+  - dodano globalny import: `import 'leaflet/dist/leaflet.css';`
+
+**3) Realna mapa na route `/map`**
+- Dodano klientowy wrapper: `radzyn.city/src/app/map/MapClient.tsx`
+  - dynamic import mapy: `dynamic(() => import('@radzyn/geo-map').then(m => m.GeoMap), { ssr: false })`
+  - mapuje lokalne dane `src/utils/locationData.ts`
+  - konwertuje współrzędne z `radzyn.city` (**`[lat,lng]`**) do paczki (**`[lng,lat]`**)
+  - implementuje filtr kategorii i panel szczegółów
+- Zmieniono: `radzyn.city/src/app/map/page.tsx`
+  - renderuje `MapClient`
+  - obsługuje deep linki:
+    - `?poi=<id>` (wybór POI i pokazanie w panelu)
+    - `?category=<slug>` (wstępny filtr kategorii)
+
+#### Testy (dodane) + dowód wykonania
+
+**Nowy test E2E (Playwright)**
+- Plik: `radzyn.city/tests/map.spec.ts`
+- Co sprawdza (MVP):
+  - czy `/map` renderuje mapę (`data-testid="geo-map"`) oraz `.leaflet-container`
+  - czy deep link `/map?poi=palac-potockich` pokazuje “Pałac Potockich” w panelu
+
+**Komenda uruchomienia**
+```bash
+pnpm test -- tests/map.spec.ts
+```
+
+**Status wykonania**
+- Test został uruchom i przeszedł lokalnie: **1 passed (chromium)**.
+
+#### Znane ograniczenie (nie blokuje dev/E2E, ale blokuje `pnpm build`)
+
+`pnpm build` w tym repo aktualnie może failować na istniejących (pre-existing) błędach ESLint/TS w innych modułach (np. brak `import React` w layoutach i inne problemy). To jest niezależne od mapy, ale musi zostać posprzątane przed produkcyjnym buildem.
+
+#### Proponowane commity (conventional commits)
+
+1) `feat(geo-map): add host-agnostic @radzyn/geo-map package in guide submodule`
+2) `feat(map): use shared GeoMap on /map with category filter and deep-link`
+3) `test(map): add Playwright coverage for /map and poi deep-link`
+
+---
+
+### Co jeszcze jest do zrobienia (żeby devy “dokończyły” wizję) — checklisty + DoD
+
+Ta sekcja jest celowo “operacyjna”: mówi **co** zrobić, **gdzie**, **jak sprawdzić**, i **co może pójść źle**.
+
+#### Cel końcowy (Definition of Done)
+
+Uznajemy migrację mapy za “skończoną” dopiero, gdy spełnione są wszystkie poniższe punkty:
+- `radzyn.city` nie ma już żadnych “hardcoded POI” jako docelowego źródła (lokalne dane mogą pozostać wyłącznie jako fallback/cache na awarie API).
+- `guide` jest **single source of truth** dla POI i kategorii (Supabase + publiczne API).
+- `radzyn.city/map` renderuje mapę z paczki `@radzyn/geo-map` i pobiera dane przez HTTP z `guide`.
+- Deep linking działa w obie strony:
+  - wejście na `radzyn.city/map?poi=<id>` otwiera wskazany POI,
+  - klik na marker aktualizuje URL (co najmniej `?poi=<id>`),
+  - opcjonalnie: `?category=<slug>` i `?q=<query>`.
+- Jest jasny plan wersjonowania paczki (semver) i kontrola kompatybilności.
+- Testy: minimum smoke E2E + testy kontraktowe DTO / dataProvider.
+- Produkcyjny build i CI: `pnpm build` przechodzi w `radzyn.city` (obecnie repo ma pre-existing błędy lint/TS — trzeba je naprawić osobnym PR-em).
+
+#### Etap 1 (MVP już zrobione): local data → shared UI package
+
+To jest obecny stan tego repo: paczka działa i `/map` jest realną mapą. Devy NIE muszą już robić nic w tym etapie.
+
+#### Etap 2 (V1): `dataProvider` + API z `guide` (najważniejsze “co dalej”)
+
+**2.1) Guide: publiczne endpointy API**
+- W `guide` zaimplementować stabilne, wersjonowane endpointy:
+  - `GET /api/v1/pois?bbox=west,south,east,north&q=...&category=...`
+  - `GET /api/v1/pois/:id`
+  - `GET /api/v1/poi-categories`
+- Minimalne zasady:
+  - zwracamy tylko `published`/public POI,
+  - rate limiting + cache headers (przynajmniej `ETag` lub `Cache-Control`),
+  - CORS: zezwolić na `https://radzyn.city` (i lokalnie `http://localhost:3800`).
+
+**2.2) Kontrakt DTO (wspólny)**
+- Ustalić 1 format DTO, najlepiej w paczce `@radzyn/geo-map` jako typy exportowane (docelowo TS, w MVP może być d.ts):
+  - `PoiListItem`: `id`, `name`, `coordinates: [lng,lat]`, `category: {slug,name}`
+  - `PoiDetails`: jw + opcjonalne: `description`, `address`, `media`, `openingHours`
+  - `PoiCategory`: `slug`, `name`
+- Wymuszenie porządku współrzędnych: **zawsze `[lng, lat]` w API i w paczce**.
+
+**2.3) Radzyn.city: implementacja `dataProvider`**
+- Dodać plik: `radzyn.city/src/app/map/dataProvider.ts` (albo `src/services/geoMapDataProvider.ts`)
+  - export: `createGuideDataProvider({ apiBaseUrl })`
+  - implementuje `listPois({ viewport, q, category })`
+  - mapuje odpowiedź z API → `GeoMapPoi[]`.
+- Zmienić `MapClient.tsx`:
+  - zamiast `pois={filteredPois}` zacząć używać `dataProvider={...}` i trzymać stan `pois` w hoście (żeby móc filtrować i trzymać panel szczegółów).
+  - dodać obsługę błędów (toast/alert) i fallback do lokalnych danych tylko, jeśli API nie działa (feature flag).
+
+**2.4) URL sync (żeby devy się nie pogubiły)**
+- Zasada: host (`radzyn.city`) jest właścicielem URL.
+- Minimalnie:
+  - przy starcie: czytaj `searchParams.poi` i ustaw `selectedPoiId`
+  - przy kliknięciu markera: `router.replace({ query: { ... , poi: id } })` (bez full reload)
+- Dodaj test E2E:
+  - klik marker → URL zawiera `poi=...` (i nadal widoczne szczegóły).
+
+**Definition of Done (Etap 2)**
+- Można wyłączyć lokalne `locationData` jako domyślne źródło na `/map` (zostaje fallback).
+- `radzyn.city/tests/map.spec.ts` ma test na:
+  - render mapy,
+  - deep link,
+  - url update on click (nowy).
+
+#### Etap 3 (V2): bbox loading + cache + perf
+
+**3.1) BBOX-driven loading**
+- `GeoMap` powinien raportować viewport (bbox/zoom/center) do hosta (np. callback `onViewportChange`).
+- Host woła `dataProvider.listPois({ viewport })` i robi debouncing (np. 250–400ms).
+
+**3.2) Cache**
+- Cache na hoście (in-memory) po `(bbox, category, q)` + TTL.
+- Opcjonalnie: Service Worker / edge cache.
+
+**3.3) Observability**
+- telemetry: latency, error rate, empty results.
+
+#### Etap 4: dystrybucja paczki (semver) — kiedy wyjść poza `file:`
+
+Wariant A (`file:`) jest świetny na start, ale docelowo:
+- przenieść paczkę na TS (`src/index.ts`, `src/GeoMap.tsx`) i dodać bundler (`tsup`/Vite lib mode),
+- dodać `exports` i build do `dist/`,
+- publikacja (GitHub Packages / npm) i instalacja po wersji (semver).
+
+#### FAQ / gotchas (żeby devy się nie wywróciły)
+
+- **Leaflet + SSR**: mapę zawsze importuj dynamicznie z `ssr:false`, inaczej będą błędy `window is not defined`.
+- **Leaflet CSS**: musi być importowany globalnie (`src/app/layout.tsx` lub `globals.css`), inaczej brak ikon/rozjechany layout.
+- **Porządek współrzędnych**: paczka i API to `[lng,lat]`. `radzyn.city` historycznie ma `[lat,lng]` → zawsze konwertuj na granicy.
+- **CORS**: bez poprawnego CORS API z `guide` nie zadziała w przeglądarce, nawet jeśli “curl działa”.
+- **Submodule workflow**: zmiany w `guide/packages/geo-map` wymagają commitów w repo `guide` + update wskazania submodule w `radzyn.city` (osobny commit).
+- **`pnpm build`**: to repo ma pre-existing lint/TS errors niezwiązane z mapą — naprawić osobnym PR-em, inaczej “green build” nie będzie możliwy.
+
+---
+
+### Next step (V1): `dataProvider` pod API `guide` + DTO (kontrakt) + minimalny fetch (bez zmiany UI)
+
+Ta sekcja jest gotowa do skopiowania przez devów 1:1.
+
+#### Kontrakt API (v1) — odpowiedzi DTO (przykłady JSON)
+
+**1) `GET /api/v1/pois?bbox=west,south,east,north&category=<slug>&q=<text>`**
+
+Preferowany format: **zwracamy listę** (bez wrappera), bo to upraszcza integrację:
+
+```json
+[
+  {
+    "id": "palac-potockich",
+    "name": "Pałac Potockich",
+    "coordinates": [22.6190, 51.7830],
+    "category": { "slug": "zabytki", "name": "Zabytki" }
+  }
+]
+```
+
+**2) `GET /api/v1/pois/:id`**
+
+```json
+{
+  "id": "palac-potockich",
+  "name": "Pałac Potockich",
+  "coordinates": [22.6190, 51.7830],
+  "category": { "slug": "zabytki", "name": "Zabytki" },
+  "description": "Barokowy pałac z XVIII wieku…",
+  "address": "ul. Jana Pawła II 2, 21-300 Radzyń Podlaski",
+  "website": "https://palacpotockich.pl"
+}
+```
+
+**3) `GET /api/v1/poi-categories`**
+
+```json
+[
+  { "slug": "zabytki", "name": "Zabytki" },
+  { "slug": "kultura", "name": "Kultura" }
+]
+```
+
+**Zasada krytyczna (żeby nie było bugów w geometrii):** `coordinates` w API to zawsze **`[lng, lat]`**.
+
+#### Minimalny `dataProvider` (radzyn.city) — gotowy kod
+
+W `radzyn.city` dodaj plik:
+- `src/app/map/guideDataProvider.ts`
+
+Wymagania:
+- `apiBaseUrl` np. `https://guide.radzyn.city` (albo staging)
+- `listPois(...)` mapuje response DTO → `GeoMapPoi[]`
+- Obsługa query params: `bbox`, `q`, `category`
+
+> Uwaga: ten provider może być dodany już teraz **bez przepinania UI** — na start zostaje lokalne `locationData`, a provider służy jako “next step” do włączenia feature flagą.
+
+#### Guide: jak realnie wystawić to API (w praktyce — Supabase Edge Functions)
+
+`guide` jest Vite/Expo i dziś nie ma serwera Node w repo. Najprostszy stabilny hosting API to:
+- **Supabase Edge Functions** (Deno) w katalogu `guide/supabase/functions/`.
+
+**Pliki do utworzenia (w `guide`)**
+
+1) `guide/supabase/functions/api-v1/index.ts`
+2) (opcjonalnie) `guide/supabase/functions/api-v1/_shared/cors.ts`
+3) `guide/supabase/functions/api-v1/README.md` (instrukcja uruchomienia)
+
+**Checklist (guide)**
+- Zaimplementować endpointy:
+  - `/api/v1/pois` (list)
+  - `/api/v1/pois/:id` (details)
+  - `/api/v1/poi-categories`
+- CORS:
+  - allow `https://radzyn.city`
+  - allow `http://localhost:3800` (dev)
+- Security:
+  - zwracaj tylko `published = true` / public content
+  - nie używaj service-role do query, jeśli nie musisz (prefer: anon + RLS)
+- Performance:
+  - dodaj cache headers (min. `Cache-Control: public, max-age=60`)
+
+**Komendy (guide)**
+
+```bash
+# inside guide/
+pnpm install
+pnpm env:web # jeśli macie taki krok
+
+# Supabase CLI (przykładowo)
+supabase start
+supabase functions serve api-v1 --no-verify-jwt
+supabase functions deploy api-v1
+```
+
+> Ten fragment jest “operacyjny” i wymaga Supabase CLI skonfigurowanego w repo `guide`. Jeśli `guide` nie ma jeszcze edge functions w projekcie Supabase, trzeba dodać je zgodnie z Supabase docs i skonfigurować `config.toml`.
+
 #### Wariant B: publikacja paczki (GitHub Packages / npm private)
 Gdy stabilizujemy API komponentu mapy:
 - publikujemy `@radzyn/geo-map` (semver),

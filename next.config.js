@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['@radzyn/geo-map'],
   images: {
     domains: ['openweathermap.org'],
   },
