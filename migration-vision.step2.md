@@ -140,11 +140,14 @@ Requires Supabase CLI authentication:
 **Done:**
 - Shared package exists and `/map` renders it.
 - Playwright smoke test for `/map` passes without any external API.
+- Edge Function `api-v1` implemented with PostGIS support and category joins.
+- `radzyn.city` has `guideDataProvider` and feature-flag ready in `MapClient`.
+- Local `.env.local` for `guide` prepared with discovered keys.
 
 **Not done yet:**
-- Verified local edge function serve + curl responses.
+- Manual verification of local edge function serve (agent shell had SSL/Docker network issues).
 - Verified remote deployed function URL.
-- Switched `/map` default data source to API (should remain behind a feature flag until stable).
+- Switched `/map` default data source to API (remains behind a feature flag).
 
 ## Notes about env files in this repo
 

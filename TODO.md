@@ -69,7 +69,8 @@
 - [x] Integrate `@radzyn/geo-map` into `radzyn.city` `/map`
 - [x] Add deep-linking contract (e.g. `?poi=<id>`, `?category=<slug>`)
 - [x] Add minimal observability (API errors, empty state, fallback UI)
-- [x] Create Supabase Edge Functions API v1 in `guide` (skeleton implemented)
+- [x] Create Supabase Edge Functions API v1 in `guide` (implemented + queries fixed)
+- [x] Configure local env for Edge Function (`guide/supabase/.env.local`)
 - [ ] Deploy + verify Supabase Edge Function (local serve + curl, then deploy + curl)
 - [ ] Set `NEXT_PUBLIC_GUIDE_API_BASE_URL` to the *Supabase API gateway* host (not Studio)
 - [ ] Connect `radzyn.city` to use API as primary source (keep local fallback until stable)
