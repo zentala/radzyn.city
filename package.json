@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node scripts/test-setup.js && playwright test",
-    "test:ui": "node scripts/test-setup.js && playwright test --ui",
-    "test:debug": "node scripts/test-setup.js && playwright test --debug",
+    "test": "TEST_SERVER_PORT=3801 node scripts/test-setup.js && PLAYWRIGHT_BASE_URL=http://localhost:3801 playwright test",
+    "test:ui": "TEST_SERVER_PORT=3801 node scripts/test-setup.js && PLAYWRIGHT_BASE_URL=http://localhost:3801 playwright test --ui",
+    "test:debug": "TEST_SERVER_PORT=3801 node scripts/test-setup.js && PLAYWRIGHT_BASE_URL=http://localhost:3801 playwright test --debug",
     "test:report": "playwright show-report",
     "scrape": "node scripts/scrape.js",
     "test:setup": "node scripts/test-setup.js"

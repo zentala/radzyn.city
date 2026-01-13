@@ -37,6 +37,25 @@
 - [ ] Migrate places pages
 - [ ] Migrate contact page
 
+---
+
+## 📅 Events: Supabase-backed calendar (Guide as source of truth)
+
+### Target state
+- [x] Define Events architecture + backlog (`plans/events-calendar-spec.md`)
+- [x] Add Supabase schema migration for `event_categories` + `events` (with `events.location_id → locations.id`)
+- [x] Data model note: Guide POI API exposes `location.id` as UUID (not slug), so Events link to locations via FK `events.location_id` (UUID). Event time is stored as ISO timestamps (`start_at`, `end_at`) and formatted for PL in the portal UI.
+- [x] Add seed sample categories + events linked to venues/POIs
+- [x] Extend `guide` Edge Function `api-v1` with public endpoints:
+  - `GET /event-categories`
+  - `GET /events`
+  - `GET /events/:slug`
+- [x] Portal integration:
+  - Replace hardcoded events on homepage + `/events`
+  - Add `/events/[slug]` details page
+  - Add API-first hooks with local fallback
+- [x] Playwright smoke tests for list + details navigation
+
 ### Phase 5: Page Migration - Admin (Week 10-11)
 - [ ] Migrate admin dashboard
 - [ ] Migrate admin scraper page

@@ -5,11 +5,10 @@ import {
   Typography,
   Box,
   Chip,
-  Menu,
-  MenuItem,
   ListItemDecorator,
   ListItemContent
 } from '@mui/joy';
+import { Menu as MuiMenu, MenuItem as MuiMenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import { ContentCard } from './foundation/Card';
 import Button from './foundation/Button';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -19,93 +18,63 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 interface EventProps {
   title: string;
-  date: string;
   location: string;
   description: string;
   category: string;
   imageUrl?: string;
+  startAt: string; // ISO
+  endAt?: string | null; // ISO
+  detailsHref?: string;
 }
 
-// Function to format date for calendar
-const formatDateForCalendar = (dateStr: string) => {
-  // Handle date ranges like "24-26 czerwca 2025"
-  const isRange = dateStr.includes('-');
-  
-  // Simple Polish to English month translation for the calendar
-  const monthsMapping: Record<string, string> = {
-    'stycznia': 'January',
-    'lutego': 'February', 
-    'marca': 'March',
-    'kwietnia': 'April',
-    'maja': 'May',
-    'czerwca': 'June',
-    'lipca': 'July',
-    'sierpnia': 'August',
-    'września': 'September',
-    'października': 'October',
-    'listopada': 'November',
-    'grudnia': 'December'
-  };
-  
-  const formatPolishDate = (input: string) => {
-    let day, month, year;
-    
-    // Extract components from date string
-    for (const [pl, en] of Object.entries(monthsMapping)) {
-      if (input.includes(pl)) {
-        const parts = input.split(' ');
-        day = parts[0];
-        month = en;
-        year = parts[2];
-        break;
-      }
-    }
-    
-    // Default fallback in case parsing fails
-    if (!day || !month || !year) {
-      return new Date().toISOString().split('T')[0];
-    }
-    
-    // Return ISO format
-    const date = new Date(`${month} ${day}, ${year}`);
-    return date.toISOString().split('T')[0];
-  };
-  
-  if (isRange) {
-    const [startDate, endDate] = dateStr.split('-');
-    // For ranges like "24-26 czerwca 2025", we need to handle specially
-    if (!endDate.includes(' ')) {
-      // It's a day range in the same month
-      const parts = startDate.split(' ');
-      const fullEndDate = `${endDate.trim()} ${parts.slice(1).join(' ')}`;
-      return {
-        start: formatPolishDate(startDate.trim()),
-        end: formatPolishDate(fullEndDate)
-      };
-    } else {
-      // Full date range
-      return {
-        start: formatPolishDate(startDate.trim()),
-        end: formatPolishDate(endDate.trim())
-      };
-    }
-  } else {
-    // Single date
-    return {
-      start: formatPolishDate(dateStr),
-      end: formatPolishDate(dateStr)
-    };
+function toGoogleDateTime(iso: string): string | null {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  // Google Calendar expects: YYYYMMDDTHHMMSSZ
+  return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
+}
+
+function formatEventDateLabel(startAt: string, endAt?: string | null): string {
+  const start = new Date(startAt);
+  const end = endAt ? new Date(endAt) : null;
+  if (Number.isNaN(start.getTime())) return 'Data do ustalenia';
+
+  const sameDay =
+    !!end &&
+    start.getFullYear() === end.getFullYear() &&
+    start.getMonth() === end.getMonth() &&
+    start.getDate() === end.getDate();
+
+  const dateFmt = new Intl.DateTimeFormat('pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+  const timeFmt = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
+  const startDate = dateFmt.format(start);
+  const startTime = timeFmt.format(start);
+
+  if (!end || Number.isNaN(end.getTime())) {
+    return `${startDate}, ${startTime}`;
   }
-};
+
+  const endDate = dateFmt.format(end);
+  const endTime = timeFmt.format(end);
+
+  if (sameDay) {
+    return `${startDate}, ${startTime}–${endTime}`;
+  }
+
+  return `${startDate}, ${startTime} – ${endDate}, ${endTime}`;
+}
 
 const generateGoogleCalendarLink = (event: EventProps) => {
   const { title, location, description } = event;
-  const dates = formatDateForCalendar(event.date);
+  const start = toGoogleDateTime(event.startAt);
+  const end = toGoogleDateTime(event.endAt ?? event.startAt);
+  const datesValue = start && end ? `${start}/${end}` : '';
   
   const params = new URLSearchParams({
     action: 'TEMPLATE',
     text: title,
-    dates: `${dates.start.replace(/-/g, '')}/${dates.end.replace(/-/g, '')}`,
+    dates: datesValue,
     details: description,
     location: location,
   });
@@ -129,20 +98,13 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-export default function EventCard({ title, date, location, description, category, imageUrl }: EventProps) {
+export default function EventCard({ title, location, description, category, imageUrl, startAt, endAt, detailsHref }: EventProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
-  
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-  
+
   // Generate calendar links
-  const googleCalendarLink = generateGoogleCalendarLink({ title, date, location, description, category });
+  const googleCalendarLink = generateGoogleCalendarLink({ title, location, description, category, startAt, endAt, imageUrl, detailsHref });
+  const dateLabel = formatEventDateLabel(startAt, endAt);
   
   // Category styling
   const categoryColor = getCategoryColor(category);
@@ -173,7 +135,7 @@ export default function EventCard({ title, date, location, description, category
                 lineHeight: 1.4
               }}
             >
-              {date}
+              {dateLabel}
             </Typography>
           </Box>
 
@@ -216,61 +178,64 @@ export default function EventCard({ title, date, location, description, category
         </Box>
       }
       footer={
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {detailsHref ? (
+              <a href={detailsHref} data-testid="event-details-link" style={{ textDecoration: 'none' }}>
+                <Button variant="solid" size="md" color="primary" component="span">
+                  Szczegóły
+                </Button>
+              </a>
+            ) : (
+              <Box />
+            )}
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button
               variant="soft"
               size="md"
-              onClick={handleMenuClick}
               startDecorator={<CalendarTodayIcon />}
-              aria-controls={isMenuOpen ? 'calendar-menu' : undefined}
-              aria-haspopup="true"
-              aria-expanded={isMenuOpen ? 'true' : undefined}
               data-testid="calendar-button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setAnchorEl(e.currentTarget);
+              }}
             >
               Dodaj do kalendarza
             </Button>
-            <Menu
-              id="calendar-menu"
+
+            <MuiMenu
               anchorEl={anchorEl}
               open={isMenuOpen}
-              onClose={handleMenuClose}
-              MenuListProps={{
-                'aria-labelledby': 'calendar-button',
-              }}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
+              onClose={() => setAnchorEl(null)}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             >
-              <MenuItem
+              <MuiMenuItem
                 component="a"
                 href={googleCalendarLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={handleMenuClose}
+                onClick={() => setAnchorEl(null)}
               >
-                <ListItemDecorator>
+                <ListItemIcon>
                   <GoogleIcon fontSize="small" />
-                </ListItemDecorator>
-                <ListItemContent>Google Calendar</ListItemContent>
-              </MenuItem>
-              <MenuItem
+                </ListItemIcon>
+                <ListItemText primary="Google Calendar" />
+              </MuiMenuItem>
+              <MuiMenuItem
                 onClick={() => {
-                  handleMenuClose();
+                  setAnchorEl(null);
                   alert('Pobieranie pliku .ics zostanie zaimplementowane w przyszłej wersji');
                 }}
               >
-                <ListItemDecorator>
+                <ListItemIcon>
                   <DownloadIcon fontSize="small" />
-                </ListItemDecorator>
-                <ListItemContent>Pobierz plik .ics</ListItemContent>
-              </MenuItem>
-            </Menu>
+                </ListItemIcon>
+                <ListItemText primary="Pobierz plik .ics" />
+              </MuiMenuItem>
+            </MuiMenu>
           </Box>
         </Box>
       }

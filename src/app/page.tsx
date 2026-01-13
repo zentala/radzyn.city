@@ -20,36 +20,11 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import Link from 'next/link';
 import Dashboard, { DashboardProvider, WidgetConfig } from '@/components/Dashboard';
-import EventCard from '@/components/EventCard';
 import dynamic from 'next/dynamic';
+import HomeEventsWidget from '@/components/home/HomeEventsWidget';
 
 // Dynamically import CityMapWidget to avoid SSR issues with Leaflet
 const CityMapWidget = dynamic(() => import('@/components/CityMapWidget'), { ssr: false });
-
-// Define example upcoming events
-const upcomingEvents = [
-  {
-    title: "Dni Radzynia Podlaskiego",
-    date: "24-26 czerwca 2025",
-    location: "Plac Wolności, Radzyń Podlaski",
-    description: "Coroczne święto miasta z koncertami i atrakcjami.",
-    category: "kulturalne",
-  },
-  {
-    title: "Radzyński Bieg Uliczny",
-    date: "3 kwietnia 2025",
-    location: "Centrum miasta, Radzyń Podlaski",
-    description: "Zawody biegowe na dystansie 5 i 10 km.",
-    category: "sportowe",
-  },
-  {
-    title: "Forum Gospodarcze Powiatu",
-    date: "21 kwietnia 2025",
-    location: "Urząd Miasta, Radzyń Podlaski",
-    description: "Spotkanie przedsiębiorców i samorządowców.",
-    category: "biznesowe",
-  }
-];
 
 // Define dashboard widgets
 const dashboardWidgets: WidgetConfig[] = [
@@ -170,37 +145,7 @@ const dashboardWidgets: WidgetConfig[] = [
   },
   {
     id: 'events',
-    component: (
-      <SectionWrapper
-        title="Nadchodzące wydarzenia"
-        disableCardStyling={true}
-        actions={
-          <Button
-            component={Link}
-            href="/events"
-            variant="soft"
-            size="md"
-            startDecorator={<CalendarMonthIcon />}
-            endDecorator={<ArrowForwardIcon />}
-            sx={{
-              px: 3,
-              py: 1.5,
-              fontSize: '0.95rem',
-            }}
-          >
-            Zobacz kalendarz
-          </Button>
-        }
-      >
-        <Grid container spacing={3}>
-          {upcomingEvents.map((event, index) => (
-            <Grid xs={12} md={4} key={index}>
-              <EventCard {...event} />
-            </Grid>
-          ))}
-        </Grid>
-      </SectionWrapper>
-    ),
+    component: <HomeEventsWidget />,
     size: 'full',
     order: 7
   }
