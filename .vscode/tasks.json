@@ -20,20 +20,6 @@
       }
     },
     {
-      "label": "Dev: Shared GeoMap (@radzyn/geo-map)",
-      "type": "shell",
-      "command": "cd guide/packages/geo-map && pnpm dev",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "group": "dev"
-      },
-      "problemMatcher": [],
-      "icon": {
-        "id": "package"
-      }
-    },
-    {
       "label": "Supabase: Start",
       "type": "shell",
       "command": "cd guide && supabase start",
@@ -89,7 +75,6 @@
       "label": "Run All Dev Services",
       "dependsOn": [
         "Dev: Portal (radzyn.city)",
-        "Dev: Shared GeoMap (@radzyn/geo-map)",
         "Supabase: Serve Functions"
       ],
       "presentation": {

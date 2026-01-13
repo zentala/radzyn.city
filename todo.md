@@ -37,6 +37,25 @@
 - [ ] Migrate places pages
 - [ ] Migrate contact page
 
+---
+
+## 📅 Events: Supabase-backed calendar (Guide as source of truth)
+
+### Target state
+- [x] Define Events architecture + backlog (`plans/events-calendar-spec.md`)
+- [x] Add Supabase schema migration for `event_categories` + `events` (with `events.location_id → locations.id`)
+- [x] Data model note: Guide POI API exposes `location.id` as UUID (not slug), so Events link to locations via FK `events.location_id` (UUID). Event time is stored as ISO timestamps (`start_at`, `end_at`) and formatted for PL in the portal UI.
+- [x] Add seed sample categories + events linked to venues/POIs
+- [x] Extend `guide` Edge Function `api-v1` with public endpoints:
+  - `GET /event-categories`
+  - `GET /events`
+  - `GET /events/:slug`
+- [x] Portal integration:
+  - Replace hardcoded events on homepage + `/events`
+  - Add `/events/[slug]` details page
+  - Add API-first hooks with local fallback
+- [x] Playwright smoke tests for list + details navigation
+
 ### Phase 5: Page Migration - Admin (Week 10-11)
 - [ ] Migrate admin dashboard
 - [ ] Migrate admin scraper page
@@ -63,12 +82,19 @@
 ## 🗺️ Map migration: reuse `guide` map as React component (no iframe)
 
 ### Target state
-- [ ] Define shared contract: `MapDataProvider` (fetch POIs, categories, details)
-- [ ] Create shared package in `guide`: `@radzyn/geo-map` (React component + types)
-- [ ] Publish distribution strategy (workspace first, then GH Packages / npm)
-- [ ] Integrate `@radzyn/geo-map` into `radzyn.city` `/map`
-- [ ] Add deep-linking contract (e.g. `?poi=<id>`, `?category=<slug>`)
-- [ ] Add minimal observability (API errors, empty state, fallback UI)
+- [x] Define shared contract: `MapDataProvider` (fetch POIs, categories, details)
+- [x] Create shared package in `guide`: `@radzyn/geo-map` (React component + types)
+- [x] Publish distribution strategy (workspace first, then GH Packages / npm)
+- [x] Integrate `@radzyn/geo-map` into `radzyn.city` `/map`
+- [x] Add deep-linking contract (e.g. `?poi=<id>`, `?category=<slug>`)
+- [x] Add minimal observability (API errors, empty state, fallback UI)
+- [x] Create Supabase Edge Functions API v1 in `guide` (implemented + queries fixed)
+- [x] Configure local env for Edge Function (`guide/supabase/.env.local`)
+- [x] Verified local Edge Function serve via terminal (Deno bypass for WSL2)
+- [x] Sync Home Page and Places Page with new API source (useGuideData hook)
+- [ ] Deploy + verify Supabase Edge Function to production Supabase
+- [ ] Set `NEXT_PUBLIC_GUIDE_API_BASE_URL` for production env
+- [ ] Finalize docs: use `migration-vision.step2.md` as the single source of truth
 
 ---
 
@@ -82,3 +108,11 @@
 - [ ] Admin moderation UI (status changes, merging duplicates)
 - [ ] API endpoints (public read, public vote, admin update)
 
+
+---
+
+## ✅ Completed Features
+- [x] **Developer Experience**: Cleaned up VS Code tasks by removing non-functional geo-map dev script and updating service dependencies
+- [x] **Developer Experience**: Added VS Code tasks and launch configurations for project services (Portal, GeoMap package, Supabase, Scraper)
+- [x] **Graceful Shutdown**: Implemented port checking and cleanup handlers for dev server and background services
+- [x] **County Page**: Reworked "Historia (oś czasu)" into a proper Joy UI timeline component (dots + connectors + date chip)
