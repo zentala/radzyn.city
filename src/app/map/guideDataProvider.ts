@@ -1,10 +1,16 @@
 import type { GeoMapDataProvider, GeoMapPoi, GeoMapViewport } from '@radzyn/geo-map';
 
+type PoiCategory = { slug: string; name: string };
+
+export type GuideDataProvider = GeoMapDataProvider & {
+  listCategories?: () => Promise<PoiCategory[]>;
+};
+
 type CreateGuideDataProviderInput = {
   /**
    * Example:
    * - production: "https://guide.radzyn.city"
-   * - dev: "http://localhost:8080"
+   * - dev: "http://supabase.dev.zntl"
    */
   apiBaseUrl: string;
   /**
@@ -48,12 +54,15 @@ function mapPoi(dto: GuidePoiDto): GeoMapPoi {
 export function createGuideDataProvider({
   apiBaseUrl,
   fetchImpl = fetch,
-}: CreateGuideDataProviderInput): GeoMapDataProvider {
+}: CreateGuideDataProviderInput): GuideDataProvider {
   const base = apiBaseUrl.replace(/\/+$/, '');
 
   return {
     async listPois({ viewport, q, category }) {
-      const url = new URL(`${base}/api/v1/pois`);
+      // We "live with functions": apiBaseUrl should point to the function root:
+      // - production: https://<project>.supabase.co/functions/v1/api-v1
+      // - local: http://127.0.0.1:54321/functions/v1/api-v1
+      const url = new URL(`${base}/pois`);
       url.searchParams.set('bbox', buildBboxParam(viewport));
       if (q) url.searchParams.set('q', q);
       if (category) url.searchParams.set('category', category);
@@ -72,6 +81,22 @@ export function createGuideDataProvider({
       const json = await res.json();
       const items = asArray<GuidePoiDto>(json);
       return items.map(mapPoi);
+    },
+
+    async listCategories() {
+      const res = await fetchImpl(`${base}/poi-categories`, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Guide API error: ${res.status} ${res.statusText}`);
+      }
+
+      const json = await res.json();
+      return asArray<PoiCategory>(json);
     },
   };
 }

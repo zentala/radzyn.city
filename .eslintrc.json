@@ -3,6 +3,9 @@
     "next/core-web-vitals",
     "eslint:recommended"
   ],
+  "ignorePatterns": [
+    "guide/**"
+  ],
   "rules": {
     "no-unused-vars": "warn",
     "react/no-unescaped-entities": "off"
