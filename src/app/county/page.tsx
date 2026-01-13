@@ -19,10 +19,13 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import StraightenIcon from '@mui/icons-material/Straighten';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import InsightsIcon from '@mui/icons-material/Insights';
+import { CoatOfArms } from '@/components/geo/CoatOfArms';
 
 type GminaMetricKey = 'area' | 'population' | 'density' | 'trend';
 
 type GminaData = {
+  id: string;
+  crest: { entityType: 'gmina' | 'city'; entityId: string };
   name: string;
   type: 'miejska' | 'wiejska' | 'miejsko-wiejska' | 'unknown';
   areaKm2: number;
@@ -30,6 +33,10 @@ type GminaData = {
   densityPerKm2: number;
   trendLabel: string;
   trendSortValue: number;
+  villagesLabel?: string;
+  firmsCount?: number;
+  avgWagePln?: number;
+  avgNewHomeSizeM2?: number;
   notes?: string[];
   approximate?: boolean;
 };
@@ -49,6 +56,8 @@ const COUNTY_STATS = {
 
 const GMINY: GminaData[] = [
   {
+    id: 'miasto-radzyn-podlaski',
+    crest: { entityType: 'city', entityId: 'miasto-radzyn-podlaski' },
     name: 'Radzyń Podlaski (miasto)',
     type: 'miejska',
     areaKm2: 19,
@@ -62,6 +71,8 @@ const GMINY: GminaData[] = [
     ],
   },
   {
+    id: 'gmina-radzyn-podlaski',
+    crest: { entityType: 'gmina', entityId: 'gmina-radzyn-podlaski' },
     name: 'Radzyń Podlaski (gmina)',
     type: 'wiejska',
     areaKm2: 155,
@@ -69,9 +80,15 @@ const GMINY: GminaData[] = [
     densityPerKm2: 52,
     trendLabel: 'stabilna (ok. -0,2% w dekadzie)',
     trendSortValue: -0.2,
-    notes: ['24 wsie', 'Kompleksy leśne + pałace wiejskie (Branica, Białka, Żabików)'],
+    villagesLabel: '24 wsie',
+    notes: [
+      'Jedyna gmina ze stabilną demografią w powiecie (najmniejszy spadek)',
+      'Kompleksy leśne + pałace wiejskie (Branica, Białka, Żabików)',
+    ],
   },
   {
+    id: 'gmina-wohyn',
+    crest: { entityType: 'gmina', entityId: 'gmina-wohyn' },
     name: 'Wohyń',
     type: 'wiejska',
     areaKm2: 178,
@@ -79,9 +96,15 @@ const GMINY: GminaData[] = [
     densityPerKm2: 36,
     trendLabel: 'spadek ok. 10% (2011→2021)',
     trendSortValue: -10,
-    notes: ['Największa powierzchnia w powiecie', 'Najniższa gęstość w powiecie'],
+    villagesLabel: '~22 wsie',
+    notes: [
+      'Największa powierzchnia w powiecie',
+      'Najniższa gęstość zaludnienia w powiecie',
+    ],
   },
   {
+    id: 'gmina-kakolewnica',
+    crest: { entityType: 'gmina', entityId: 'gmina-kakolewnica' },
     name: 'Kąkolewnica',
     type: 'wiejska',
     areaKm2: 147,
@@ -89,9 +112,16 @@ const GMINY: GminaData[] = [
     densityPerKm2: 54,
     trendLabel: 'spadek ok. 8% (2011→2021)',
     trendSortValue: -8,
-    notes: ['Użytki rolne ok. 70%', 'Lasy ok. 24,7%'],
+    villagesLabel: '20 wsi',
+    notes: [
+      'Najwięcej firm w zestawieniu (ok. 581)',
+      'Użytki rolne ok. 70%, lasy ok. 24,7%',
+    ],
+    firmsCount: 581,
   },
   {
+    id: 'gmina-borki',
+    crest: { entityType: 'gmina', entityId: 'gmina-borki' },
     name: 'Borki',
     type: 'wiejska',
     areaKm2: 112,
@@ -99,9 +129,17 @@ const GMINY: GminaData[] = [
     densityPerKm2: 53,
     trendLabel: 'spadek ok. 5% (2011→2021)',
     trendSortValue: -5,
-    notes: ['Najmłodsza średnia wieku: 39,5 lat', 'Największa średnia powierzchnia nowych mieszkań (ok. 153 m²)'],
+    villagesLabel: '15 wsi',
+    notes: [
+      'Najmłodsza średnia wieku: 39,5 lat',
+      'Największa średnia powierzchnia nowych mieszkań (ok. 153 m²)',
+      'Gmina powstała w 1973 r. (połączenie gromad Borki i Wola Osowińska)',
+    ],
+    avgNewHomeSizeM2: 153,
   },
   {
+    id: 'gmina-ulan-majorat',
+    crest: { entityType: 'gmina', entityId: 'gmina-ulan-majorat' },
     name: 'Ulan-Majorat',
     type: 'wiejska',
     areaKm2: 108,
@@ -109,19 +147,34 @@ const GMINY: GminaData[] = [
     densityPerKm2: 55,
     trendLabel: 'spadek ok. 10% (2011→2021)',
     trendSortValue: -10,
-    notes: ['Rzeka Bystrzyca (wędkarstwo)', 'OSP i sieć szkół (lokalne zaplecze)'],
+    villagesLabel: '20 wsi',
+    notes: [
+      'Rzeka Bystrzyca (wędkarstwo)',
+      'OSP i sieć szkół (lokalne zaplecze)',
+    ],
   },
   {
+    id: 'gmina-czemierniki',
+    crest: { entityType: 'gmina', entityId: 'gmina-czemierniki' },
     name: 'Czemierniki',
-    type: 'unknown',
+    type: 'miejsko-wiejska',
     areaKm2: 107,
     population: 4240,
     densityPerKm2: 38,
     trendLabel: 'spadek ok. 15% (2011→2021)',
     trendSortValue: -15,
-    notes: ['Pałac w Czemiernikach (XVI w.)', 'Uwaga: typ gminy i część danych wymagają weryfikacji źródłowej'],
+    notes: [
+      'Jedyna gmina miejsko-wiejska w powiecie',
+      'Pałac w Czemiernikach (XVI w.)',
+      'Najwyższe średnie wynagrodzenie w zestawieniu (ok. 7 200 zł)',
+      'Największe domy: średnia nowych mieszkań ok. 156 m²',
+    ],
+    avgWagePln: 7200,
+    avgNewHomeSizeM2: 156,
   },
   {
+    id: 'gmina-komarowka-podlaska',
+    crest: { entityType: 'gmina', entityId: 'gmina-komarowka-podlaska' },
     name: 'Komarówka Podlaska',
     type: 'wiejska',
     areaKm2: 95,
@@ -130,7 +183,11 @@ const GMINY: GminaData[] = [
     trendLabel: 'spadek ok. 11% (2011→2021)',
     trendSortValue: -11,
     approximate: true,
-    notes: ['Najmniejsza gmina wiejska (szacunek powierzchni)', 'Sąsiedztwo innych powiatów = “peryferyjny” charakter'],
+    villagesLabel: '13 sołectw',
+    notes: [
+      'Najmniejsza gmina wiejska (szacunek powierzchni)',
+      'Sąsiaduje tylko z 1 gminą powiatu (Wohyń)',
+    ],
   },
 ];
 
@@ -150,6 +207,20 @@ const ATTRACTIONS = [
     location: 'Czemierniki',
     description: 'Renesansowy pałac z XVI wieku, otoczony parkiem.',
   },
+];
+
+type HistoryEvent = {
+  year: string;
+  text: string;
+};
+
+const COUNTY_HISTORY: HistoryEvent[] = [
+  { year: '1468', text: 'Nadanie praw miejskich Radzyniowi.' },
+  { year: '1749–1756', text: 'Budowa Pałacu Potockich (proj. Jakub Fontana).' },
+  { year: '1810', text: 'Utworzenie powiatu radzyńskiego w Księstwie Warszawskim.' },
+  { year: '1863', text: 'Powstanie Styczniowe (walki 22–23 stycznia w Radzyniu).' },
+  { year: '1999', text: 'Przywrócenie powiatu w reformie administracyjnej.' },
+  { year: '2023', text: '555-lecie praw miejskich Radzynia.' },
 ];
 
 function formatNumber(value: number) {
@@ -199,8 +270,170 @@ const SORT_OPTIONS: Array<{ key: GminaMetricKey; label: string }> = [
   { key: 'population', label: 'Ludność' },
   { key: 'area', label: 'Powierzchnia' },
   { key: 'density', label: 'Gęstość' },
-  { key: 'trend', label: 'Trend' },
+  { key: 'trend', label: 'Trend demogr.' },
 ];
+
+function formatGminaTypeLabel(type: GminaData['type']) {
+  switch (type) {
+    case 'miejska':
+      return 'gmina miejska';
+    case 'wiejska':
+      return 'gmina wiejska';
+    case 'miejsko-wiejska':
+      return 'gmina miejsko-wiejska';
+    default:
+      return 'typ do weryfikacji';
+  }
+}
+
+function getTrendColor(value: number) {
+  // value is a percent-ish delta (negative = decline)
+  if (value >= -1) return 'success.500';
+  if (value >= -8) return 'warning.500';
+  return 'danger.500';
+}
+
+function formatTrendShort(trendLabel: string) {
+  // For the stat row we keep the informative label, but we avoid repeating
+  // extra "Trend..." text around it.
+  return trendLabel;
+}
+
+function StatRow(props: {
+  label: string;
+  value: React.ReactNode;
+  highlighted?: boolean;
+  highlightColor?: string;
+}) {
+  const { label, value, highlighted, highlightColor } = props;
+
+  return (
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="baseline"
+      sx={{
+        px: 1,
+        py: 0.75,
+        borderRadius: 'sm',
+        bgcolor: highlighted ? 'primary.softBg' : 'transparent',
+        border: highlighted ? '1px solid' : '1px solid transparent',
+        borderColor: highlighted ? 'primary.softBorder' : 'transparent',
+      }}
+    >
+      <Typography level="body-sm" sx={{ color: 'text.secondary' }}>
+        {label}
+      </Typography>
+      <Typography
+        level="body-sm"
+        sx={{
+          fontWeight: highlighted ? 700 : 600,
+          color: highlightColor ?? 'text.primary',
+          textAlign: 'right',
+        }}
+      >
+        {value}
+      </Typography>
+    </Stack>
+  );
+}
+
+/**
+ * History timeline UI for County page.
+ * Renders a vertical timeline with dots and connectors, optimized for readability.
+ */
+function HistoryTimeline(props: { items: HistoryEvent[] }) {
+  const { items } = props;
+
+  return (
+    <Stack spacing={2} sx={{ maxWidth: 880 }}>
+      {items.map((item, idx) => {
+        const isLast = idx === items.length - 1;
+        return (
+          <Stack
+            key={`${item.year}-${item.text}`}
+            direction="row"
+            spacing={2}
+            sx={{ alignItems: 'flex-start' }}
+          >
+            <Box
+              sx={(theme) => ({
+                position: 'relative',
+                width: 24,
+                display: 'flex',
+                justifyContent: 'center',
+                pt: 0.75,
+                color: theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.16)'
+                  : 'rgba(0, 0, 0, 0.14)',
+              })}
+              aria-hidden="true"
+            >
+              <Box
+                sx={(theme) => ({
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  bgcolor: theme.palette.secondary?.[500] ?? theme.palette.primary[500],
+                  boxShadow: theme.palette.mode === 'dark'
+                    ? '0 0 0 3px rgba(228, 184, 98, 0.14)'
+                    : '0 0 0 3px rgba(201, 162, 90, 0.16)',
+                })}
+              />
+              {!isLast ? (
+                <Box
+                  sx={(theme) => ({
+                    position: 'absolute',
+                    top: 18,
+                    bottom: -20,
+                    width: 2,
+                    borderRadius: '999px',
+                    bgcolor: theme.palette.mode === 'dark'
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : 'rgba(0, 0, 0, 0.12)',
+                  })}
+                />
+              ) : null}
+            </Box>
+
+            <Card sx={{ p: 2, flex: 1 }}>
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={1}
+                sx={{ alignItems: { sm: 'baseline' } }}
+              >
+                <Chip
+                  size="sm"
+                  variant="soft"
+                  color="neutral"
+                  sx={(theme) => ({
+                    width: 'fit-content',
+                    fontWeight: 700,
+                    bgcolor: theme.palette.mode === 'dark'
+                      ? 'rgba(228, 184, 98, 0.18)'
+                      : 'rgba(201, 162, 90, 0.18)',
+                    border: '1px solid',
+                    borderColor: theme.palette.mode === 'dark'
+                      ? 'rgba(228, 184, 98, 0.28)'
+                      : 'rgba(201, 162, 90, 0.28)',
+                    color: theme.palette.mode === 'dark'
+                      ? theme.palette.neutral[900]
+                      : theme.palette.primary[700],
+                  })}
+                >
+                  {item.year}
+                </Chip>
+                <Typography level="body-md" sx={{ color: 'text.secondary' }}>
+                  {item.text}
+                </Typography>
+              </Stack>
+            </Card>
+          </Stack>
+        );
+      })}
+    </Stack>
+  );
+}
 
 export default function CountyPage() {
   const [metric, setMetric] = React.useState<GminaMetricKey>('population');
@@ -444,7 +677,7 @@ export default function CountyPage() {
         }
       >
         <Typography level="body-md" sx={{ color: 'text.secondary', mb: 2 }}>
-          Wybierz metrykę, aby szybko porównać gminy. Dane są orientacyjne (zestawienie 2021–2024 z notatek researchu).
+          Wybierz sortowanie, aby szybko porównać gminy. Układ kart jest stały — widzisz wszystkie metryki naraz.
         </Typography>
 
         <Stack
@@ -486,13 +719,30 @@ export default function CountyPage() {
               : (value - minMax.min) / range;
 
             return (
-              <Grid xs={12} md={6} key={g.name}>
+              <Grid xs={12} md={6} key={g.id}>
                 <Card sx={{ p: 2 }}>
-                  <Stack direction="row" justifyContent="space-between" alignItems="baseline" spacing={2}>
-                    <Typography level="title-lg">{g.name}</Typography>
-                    <Typography level="title-md" sx={{ fontWeight: 'bold', color: 'primary.500' }}>
-                      {formatMetricValue(g, metric)}
-                    </Typography>
+                  <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 1 }}>
+                    <CoatOfArms
+                      entityType={g.crest.entityType}
+                      entityId={g.crest.entityId}
+                      label={g.name}
+                      size={44}
+                    />
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
+                        <Typography level="title-lg" sx={{ lineHeight: 1.2 }}>
+                          {g.name}
+                        </Typography>
+                        <Chip size="sm" variant="soft" color="neutral">
+                          {formatGminaTypeLabel(g.type)}
+                        </Chip>
+                        {g.villagesLabel ? (
+                          <Chip size="sm" variant="soft" color="neutral">
+                            {g.villagesLabel}
+                          </Chip>
+                        ) : null}
+                      </Stack>
+                    </Box>
                   </Stack>
 
                   <Box
@@ -509,24 +759,33 @@ export default function CountyPage() {
                       sx={{
                         height: '100%',
                         width: `${Math.max(6, Math.round(normalized * 100))}%`,
-                        bgcolor: 'primary.500',
+                        bgcolor: metric === 'trend' ? getTrendColor(value) : 'primary.500',
                       }}
                     />
                   </Box>
 
-                  <Stack direction="row" spacing={1} sx={{ mt: 1.25, flexWrap: 'wrap' }}>
-                    <Chip size="sm" variant={metric === 'area' ? 'solid' : 'soft'} color={metric === 'area' ? 'primary' : 'neutral'}>
-                      {g.approximate ? '~' : ''}{g.areaKm2} km²
-                    </Chip>
-                    <Chip size="sm" variant={metric === 'population' ? 'solid' : 'soft'} color={metric === 'population' ? 'primary' : 'neutral'}>
-                      {formatNumber(g.population)} osób
-                    </Chip>
-                    <Chip size="sm" variant={metric === 'density' ? 'solid' : 'soft'} color={metric === 'density' ? 'primary' : 'neutral'}>
-                      {g.densityPerKm2} os./km²
-                    </Chip>
-                    <Chip size="sm" variant={metric === 'trend' ? 'solid' : 'soft'} color={metric === 'trend' ? 'primary' : 'neutral'}>
-                      {g.trendLabel}
-                    </Chip>
+                  <Stack spacing={0.5} sx={{ mt: 1.25 }}>
+                    <StatRow
+                      label="Ludność"
+                      value={`${formatNumber(g.population)} osób`}
+                      highlighted={metric === 'population'}
+                    />
+                    <StatRow
+                      label="Powierzchnia"
+                      value={`${g.approximate ? '~' : ''}${formatNumber(g.areaKm2)} km²`}
+                      highlighted={metric === 'area'}
+                    />
+                    <StatRow
+                      label="Gęstość"
+                      value={`${formatNumber(g.densityPerKm2)} os./km²`}
+                      highlighted={metric === 'density'}
+                    />
+                    <StatRow
+                      label="Trend demograficzny"
+                      value={formatTrendShort(g.trendLabel)}
+                      highlighted={metric === 'trend'}
+                      highlightColor={metric === 'trend' ? getTrendColor(g.trendSortValue) : undefined}
+                    />
                   </Stack>
 
                   {g.notes?.length ? (
@@ -612,27 +871,7 @@ export default function CountyPage() {
 
       {/* Historia */}
       <SectionWrapper title="Historia (oś czasu)">
-        <Grid container spacing={2}>
-          {[
-            { year: '1468', text: 'Nadanie praw miejskich Radzyniowi.' },
-            { year: '1749–1756', text: 'Budowa Pałacu Potockich (proj. Jakub Fontana).' },
-            { year: '1810', text: 'Utworzenie powiatu radzyńskiego w Księstwie Warszawskim.' },
-            { year: '1863', text: 'Powstanie Styczniowe (walki 22–23 stycznia w Radzyniu).' },
-            { year: '1999', text: 'Przywrócenie powiatu w reformie administracyjnej.' },
-            { year: '2023', text: '555-lecie praw miejskich Radzynia.' },
-          ].map((item) => (
-            <Grid xs={12} md={6} key={item.year}>
-              <Card sx={{ p: 2 }}>
-                <Typography level="title-md" sx={{ mb: 0.5 }}>
-                  {item.year}
-                </Typography>
-                <Typography level="body-md" sx={{ color: 'text.secondary' }}>
-                  {item.text}
-                </Typography>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+        <HistoryTimeline items={COUNTY_HISTORY} />
       </SectionWrapper>
     </>
   );

@@ -95,3 +95,4 @@
 ## ✅ Completed Features
 - [x] **Developer Experience**: Added VS Code tasks and launch configurations for project services (Portal, GeoMap package, Supabase, Scraper)
 - [x] **Graceful Shutdown**: Implemented port checking and cleanup handlers for dev server and background services
+- [x] **County Page**: Reworked "Historia (oś czasu)" into a proper Joy UI timeline component (dots + connectors + date chip)
