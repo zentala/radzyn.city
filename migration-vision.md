@@ -1,5 +1,8 @@
 # Wizja Migracji Architektury Radzyń Podlaski
 
+> **DEPRECATED (2026-01-13):** This file is no longer the source of truth for the map migration.
+> Use `migration-vision.step2.md` for the current, verified plan and tasks.
+
 ## Obecny Stan (Before)
 
 ```
@@ -532,25 +535,23 @@ Wymagania:
 `guide` jest Vite/Expo i dziś nie ma serwera Node w repo. Najprostszy stabilny hosting API to:
 - **Supabase Edge Functions** (Deno) w katalogu `guide/supabase/functions/`.
 
-**Pliki do utworzenia (w `guide`)**
+**Status: ✅ IMPLEMENTED** (2026-01-13)
 
-1) `guide/supabase/functions/api-v1/index.ts`
-2) (opcjonalnie) `guide/supabase/functions/api-v1/_shared/cors.ts`
-3) `guide/supabase/functions/api-v1/README.md` (instrukcja uruchomienia)
+Utworzono kompletny skeleton API v1 w `guide/supabase/functions/api-v1/`:
+- `index.ts` - główny handler z routingiem dla wszystkich endpointów
+- `_shared/cors.ts` - helper CORS
+- `README.md` - dokumentacja i instrukcje
+
+**Zaimplementowane endpointy:**
+- ✅ `GET /api/v1/pois` (list z filtrami bbox, q, category)
+- ✅ `GET /api/v1/pois/:id` (details)
+- ✅ `GET /api/v1/poi-categories`
 
 **Checklist (guide)**
-- Zaimplementować endpointy:
-  - `/api/v1/pois` (list)
-  - `/api/v1/pois/:id` (details)
-  - `/api/v1/poi-categories`
-- CORS:
-  - allow `https://radzyn.city`
-  - allow `http://localhost:3800` (dev)
-- Security:
-  - zwracaj tylko `published = true` / public content
-  - nie używaj service-role do query, jeśli nie musisz (prefer: anon + RLS)
-- Performance:
-  - dodaj cache headers (min. `Cache-Control: public, max-age=60`)
+- ✅ Zaimplementować endpointy (powyżej)
+- ✅ CORS: allow `https://radzyn.city`, `http://localhost:3800`
+- ✅ Security: tylko `kind = 'poi'` (RLS już otwarty dla MVP)
+- ✅ Performance: cache headers (`Cache-Control: public, max-age=60-3600`)
 
 **Komendy (guide)**
 
@@ -559,13 +560,13 @@ Wymagania:
 pnpm install
 pnpm env:web # jeśli macie taki krok
 
-# Supabase CLI (przykładowo)
+# Supabase CLI (wymaga instalacji CLI)
 supabase start
 supabase functions serve api-v1 --no-verify-jwt
 supabase functions deploy api-v1
 ```
 
-> Ten fragment jest “operacyjny” i wymaga Supabase CLI skonfigurowanego w repo `guide`. Jeśli `guide` nie ma jeszcze edge functions w projekcie Supabase, trzeba dodać je zgodnie z Supabase docs i skonfigurować `config.toml`.
+> **Next step**: skonfigurować Supabase CLI w środowisku dev i przetestować lokalnie. API jest gotowe do deploymentu.
 
 #### Wariant B: publikacja paczki (GitHub Packages / npm private)
 Gdy stabilizujemy API komponentu mapy:
