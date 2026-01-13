@@ -9,6 +9,9 @@ const nextConfig = {
   poweredByHeader: false, // Disable x-powered-by header
   compress: true, // Enable gzip compression
   swcMinify: true, // Use SWC minifier
+  experimental: {
+    instrumentationHook: true,
+  },
   // Cache optimization
   onDemandEntries: {
     // period (in ms) where the server will keep pages in the buffer
