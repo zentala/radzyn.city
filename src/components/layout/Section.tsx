@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Box, BoxProps } from '@mui/joy';
+import { Box, BoxProps, Typography } from '@mui/joy';
 
 export interface SectionProps extends BoxProps {
+  /** Optional section title rendered as a heading above content */
+  title?: string;
   variant?: 'default' | 'primary' | 'secondary' | 'neutral';
   spacing?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   children: React.ReactNode;
@@ -13,6 +15,7 @@ export interface SectionProps extends BoxProps {
  * Section - Reusable section wrapper with background and spacing
  */
 export function Section({ 
+  title,
   variant = 'default', 
   spacing = 'lg', 
   children, 
@@ -58,6 +61,13 @@ export function Section({
       }}
       {...props}
     >
+      {title && (
+        <Box sx={{ mb: 3 }}>
+          <Typography level="h2" sx={{ fontWeight: 'bold' }}>
+            {title}
+          </Typography>
+        </Box>
+      )}
       {children}
     </Box>
   );

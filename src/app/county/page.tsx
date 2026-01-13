@@ -20,6 +20,7 @@ import StraightenIcon from '@mui/icons-material/Straighten';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import InsightsIcon from '@mui/icons-material/Insights';
 import { CoatOfArms } from '@/components/geo/CoatOfArms';
+import { HistoryTimeline, type HistoryTimelineItem } from '@/components/county/HistoryTimeline';
 
 type GminaMetricKey = 'area' | 'population' | 'density' | 'trend';
 
@@ -209,12 +210,7 @@ const ATTRACTIONS = [
   },
 ];
 
-type HistoryEvent = {
-  year: string;
-  text: string;
-};
-
-const COUNTY_HISTORY: HistoryEvent[] = [
+const COUNTY_HISTORY: HistoryTimelineItem[] = [
   { year: '1468', text: 'Nadanie praw miejskich Radzyniowi.' },
   { year: '1749–1756', text: 'Budowa Pałacu Potockich (proj. Jakub Fontana).' },
   { year: '1810', text: 'Utworzenie powiatu radzyńskiego w Księstwie Warszawskim.' },
@@ -334,103 +330,6 @@ function StatRow(props: {
       >
         {value}
       </Typography>
-    </Stack>
-  );
-}
-
-/**
- * History timeline UI for County page.
- * Renders a vertical timeline with dots and connectors, optimized for readability.
- */
-function HistoryTimeline(props: { items: HistoryEvent[] }) {
-  const { items } = props;
-
-  return (
-    <Stack spacing={2} sx={{ maxWidth: 880 }}>
-      {items.map((item, idx) => {
-        const isLast = idx === items.length - 1;
-        return (
-          <Stack
-            key={`${item.year}-${item.text}`}
-            direction="row"
-            spacing={2}
-            sx={{ alignItems: 'flex-start' }}
-          >
-            <Box
-              sx={(theme) => ({
-                position: 'relative',
-                width: 24,
-                display: 'flex',
-                justifyContent: 'center',
-                pt: 0.75,
-                color: theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.16)'
-                  : 'rgba(0, 0, 0, 0.14)',
-              })}
-              aria-hidden="true"
-            >
-              <Box
-                sx={(theme) => ({
-                  width: 12,
-                  height: 12,
-                  borderRadius: '50%',
-                  bgcolor: theme.palette.secondary?.[500] ?? theme.palette.primary[500],
-                  boxShadow: theme.palette.mode === 'dark'
-                    ? '0 0 0 3px rgba(228, 184, 98, 0.14)'
-                    : '0 0 0 3px rgba(201, 162, 90, 0.16)',
-                })}
-              />
-              {!isLast ? (
-                <Box
-                  sx={(theme) => ({
-                    position: 'absolute',
-                    top: 18,
-                    bottom: -20,
-                    width: 2,
-                    borderRadius: '999px',
-                    bgcolor: theme.palette.mode === 'dark'
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : 'rgba(0, 0, 0, 0.12)',
-                  })}
-                />
-              ) : null}
-            </Box>
-
-            <Card sx={{ p: 2, flex: 1 }}>
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={1}
-                sx={{ alignItems: { sm: 'baseline' } }}
-              >
-                <Chip
-                  size="sm"
-                  variant="soft"
-                  color="neutral"
-                  sx={(theme) => ({
-                    width: 'fit-content',
-                    fontWeight: 700,
-                    bgcolor: theme.palette.mode === 'dark'
-                      ? 'rgba(228, 184, 98, 0.18)'
-                      : 'rgba(201, 162, 90, 0.18)',
-                    border: '1px solid',
-                    borderColor: theme.palette.mode === 'dark'
-                      ? 'rgba(228, 184, 98, 0.28)'
-                      : 'rgba(201, 162, 90, 0.28)',
-                    color: theme.palette.mode === 'dark'
-                      ? theme.palette.neutral[900]
-                      : theme.palette.primary[700],
-                  })}
-                >
-                  {item.year}
-                </Chip>
-                <Typography level="body-md" sx={{ color: 'text.secondary' }}>
-                  {item.text}
-                </Typography>
-              </Stack>
-            </Card>
-          </Stack>
-        );
-      })}
     </Stack>
   );
 }

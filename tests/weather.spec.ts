@@ -20,7 +20,8 @@ test.describe('Weather Page', () => {
     
     // Click on a forecast tab
     const tabs = page.locator('role=tab');
-    await expect(tabs).toHaveCount.atleast(3);
+    const tabCount = await tabs.count();
+    expect(tabCount).toBeGreaterThanOrEqual(3);
     await tabs.nth(1).click();
     
     // Verify that the tab panel changed

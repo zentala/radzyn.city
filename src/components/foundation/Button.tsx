@@ -3,10 +3,16 @@
 import React, { forwardRef } from 'react';
 import { Button as JoyButton, ButtonProps as JoyButtonProps } from '@mui/joy';
 
-export interface ButtonProps extends Omit<JoyButtonProps, 'variant'> {
+export type ButtonProps = Omit<JoyButtonProps, 'variant'> & {
   variant?: 'solid' | 'soft' | 'outlined' | 'plain';
   loading?: boolean;
-}
+  /**
+   * Allow link-like usage (e.g. `component={Link}` + `href`) without fighting
+   * the generic typing of Joy's polymorphic Button.
+   */
+  href?: string;
+  component?: React.ElementType;
+};
 
 /**
  * Apple-style Button component with multiple variants
@@ -17,7 +23,7 @@ export interface ButtonProps extends Omit<JoyButtonProps, 'variant'> {
  * - soft: Subtle background with border (secondary actions)
  * - plain: No background or border (tertiary actions)
  */
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<any, ButtonProps>(
   ({ variant = 'outlined', sx, ...props }, ref) => {
     return (
       <JoyButton
