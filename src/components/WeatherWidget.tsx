@@ -213,7 +213,7 @@ export default function WeatherWidget() {
 
   return (
     <SectionWrapper
-      title="Pogoda"
+      title="Pogoda w Radzyniu Podlaskim"
       actions={
         <Button
           component={Link}
